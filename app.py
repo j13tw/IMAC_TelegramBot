@@ -38,33 +38,41 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
-data = {"tc": "10", "date": datetime.datetime.now()}
-if (dbDl303TC.find_one() == None):
-    dbDl303TC.insert_one(data)
-else:
-    tmp = dbDl303TC.find_one()['tc']
-    dbDl303TC.update_one({'tc': tmp}, {'$set': data})
 
-data = {"rh": "10", "date": datetime.datetime.now()}
-if (dbDl303RH.find_one() == None):
-    dbDl303RH.insert_one(data)
-else:
-    tmp = dbDl303RH.find_one()['rh']
-    dbDl303RH.update_one({'rh': tmp}, {'$set': data})
+@app.route('/dl303/<module>', methods=['POST'])
+def dl303_update(module):
+    if request.method == 'POST':
+        data = json.loads(str(request.json).replace("'", '"'))
+        if (module == 'tc'):
+            data = {"tc": data['tc'], "date": datetime.datetime.now()}
+            if (dbDl303TC.find_one() == None):
+                dbDl303TC.insert_one(data)
+            else:
+                tmp = dbDl303TC.find_one()['tc']
+                dbDl303TC.update_one({'tc': tmp}, {'$set': data})
 
-data = {"co2": "10", "date": datetime.datetime.now()}
-if (dbDl303CO2.find_one() == None):
-    dbDl303CO2.insert_one(data)
-else:
-    tmp = dbDl303CO2.find_one()['co2']
-    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
+        elif (module == 'rh'):
+            data = {"rh": "10", "date": datetime.datetime.now()}
+            if (dbDl303RH.find_one() == None):
+                dbDl303RH.insert_one(data)
+            else:
+                tmp = dbDl303RH.find_one()['rh']
+                dbDl303RH.update_one({'rh': tmp}, {'$set': data})
 
-data = {"dp": "10", "date": datetime.datetime.now()}
-if (dbDl303DP.find_one() == None):
-    dbDl303DP.insert_one(data)
-else:
-    tmp = dbDl303DP.find_one()['dp']
-    dbDl303DP.update_one({'dp': tmp}, {'$set': data})
+        elif (module == 'co2'):
+            data = {"co2": "10", "date": datetime.datetime.now()}
+            if (dbDl303CO2.find_one() == None):
+                dbDl303CO2.insert_one(data)
+            else:
+                tmp = dbDl303CO2.find_one()['co2']
+                dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
+        elif (module == 'dp'):
+            data = {"dp": "10", "date": datetime.datetime.now()}
+            if (dbDl303DP.find_one() == None):
+                dbDl303DP.insert_one(data)
+            else:
+                tmp = dbDl303DP.find_one()['dp']
+                dbDl303DP.update_one({'dp': tmp}, {'$set': data})
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
