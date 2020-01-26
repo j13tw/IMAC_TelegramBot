@@ -86,7 +86,7 @@ def webhook_handler():
 
 def getDl303(info):
     data = ""
-    if (info == all): data += "DL303 設備狀態回報:\n"
+    if (info == "all"): data += "DL303 設備狀態回報:\n"
     if (info == "tc" or info == "all"):
         tc = dbDl303TC.find_one()
         data += "現在溫度: " + str(tc['tc']) + "度\n最後更新時間: " + str(tc['date']).split('.')[0] + "\n"
