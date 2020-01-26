@@ -78,18 +78,18 @@ def webhook_handler():
 
 def getDl303(info):
     data = "DL303 狀態回報:\n"
-    if (info == "temp" or info == "all"):
+    if (info == "tc" or info == "all"):
         tc = dbDl303TC.find_one()
-        data += "現在溫度: " + str(tc) + "度\n"
-    if (info == "humi" or info == "all"):
+        data += "現在溫度: " + str(tc['tc']) + "度，更新時間: " + str(tc['date']) + "\n"
+    if (info == "rh" or info == "all"):
         rh = dbDl303RH.find_one()
-        data += "現在濕度: " + str(rh) + "%\n"
+        data += "現在濕度: " + str(rh['rh']) + "%，更新時間: " + str(rh['date']) + "\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
-        data += "CO2 濃度: " + str(co2) + "ppm\n"
+        data += "CO2 濃度: " + str(co2['co2']) + "ppm，更新時間: " + str(co2['date']) + "\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
-        data += "露點溫度: " + str(dp) + "度\n"
+        data += "露點溫度: " + str(dp['dp']) + "度，更新時間: " + str(dp['date']) + "\n"
     return data
 
 def getEt7044(info):
