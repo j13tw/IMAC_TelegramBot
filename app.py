@@ -6,6 +6,8 @@ from flask import Flask, request
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler, CommandHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 import json
+from pymongo import MongoClient
+import datetime
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
@@ -22,6 +24,43 @@ app = Flask(__name__)
 # Initial bot by Telegram access token
 bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 
+# Setup Mongodb info
+myMongoClient = MongoClient("mongodb://172.17.0.6:27017/")
+myMongoDb = myMongoClient["smart-data-center"]
+myMongoDb.authenticate('imac', 'imacuser')
+dbDl303TC = myMongoDb["dl303/tc"]
+dbDl303RH = myMongoDb["dl303/rh"]
+dbDl303CO2 = myMongoDb["dl303/co2"]
+dbDl303DP = myMongoDb["dl303/dp"]
+dbEt7044 = myMongoDb["et7044"]
+dbUpsA = myMongoDb["ups_a"]
+dbUpsB = myMongoDb["ups_b"]
+dbAirCondictionA = myMongoDb["air_condiction_a"]
+dbAirCondictionB = myMongoDb["air_condiction_b"]
+
+data = {"tc": "10", "date": datetime.datetime.now()}
+if (dbDl303TC.find_one() == 0):
+    dbDl303TC.insert_one(data)
+else:
+    dbDl303TC.update_one(data)
+
+data = {"rh": "10", "date": datetime.datetime.now()}
+if (dbDl303RH.find_one() == 0):
+    dbDl303RH.insert_one(data)
+else:
+    dbDl303RH.update_one(data)
+
+data = {"co2": "10", "date": datetime.datetime.now()}
+if (dbDl303CO2.find_one() == 0):
+    dbDl303CO2.insert_one(data)
+else:
+    dbDl303CO2.update_one(data)
+
+data = {"dp": "10", "date": datetime.datetime.now()}
+if (dbDl303DP.find_one() == 0):
+    dbDl303DP.insert_one(data)
+else:
+    dbDl303DP.update_one(data)
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
@@ -34,18 +73,20 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    if (info == "all"):
-        return "dl303 = get_all"
-    elif (info == "humi"):
-        return "dl303 = get_humi"
-    elif (info == "temp"):
-        return "dl303 = get_temp"
-    elif (info == "co2"):
-        return "dl303 = get_c02"
-    elif (info == "dp"):
-        return "dl303 = get_dp"
-    else:
-        return "dl303 = fail"
+    data = "DL303 狀態回報:\n"
+    if (info == "temp" or info == "all"):
+        tc = dbDl303TC.find_one()
+        data += "現在溫度: " + str(tc) + "度\n"
+    if (info == "humi" or info == "all"):
+        rh = dbDl303RH.find_one()
+        data += "現在濕度: " + str(rh) + "%\n"
+    if (info == "co2" or info == "all"):
+        co2 = dbDl303CO2.find_one()
+        data += "CO2 濃度: " + str(co2) + "ppm"
+    if (info == "dp" or info == "all"):
+        dp = dbDl303DP.find_one()
+        data += "露點溫度: " + str(dp) + "度\n"
+    return data
 
 def getEt7044(info):
     if (info == "all"):
@@ -90,7 +131,7 @@ def reply_handler(bot, update):
     """Reply message."""
     print(dir(update.message))
     device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
-    for s in device_list: print(s)
+    # for s in device_list: print(s)
     text = update.message.text
     if (text == '資訊列表'): 
         text = '請選擇所需設備資訊～'
@@ -99,7 +140,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[2:4]],
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
-        return 0
+        return
     if (text == '溫濕度'): text = '現在溫度: 25.8 度\n現在濕度: 50 %'
     if (text == '溫度'): text = '現在溫度: 25.8 度'
     if (text == '濕度'): text = '現在濕度: 50 %'
