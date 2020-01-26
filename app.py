@@ -11,6 +11,8 @@ import json
 config = configparser.ConfigParser()
 config.read('config.ini')
 
+Test_A, Test_B = range(2)
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -149,7 +151,8 @@ dispatcher = Dispatcher(bot, None)
 conv_handler = ConversationHandler(
     entry_points=[MessageHandler(Filters.text, reply_handler)],
     states={
-        Test_A: CallbackQueryHandler(device_test_a)
+        Test_A: [CallbackQueryHandler(device_test_a)],
+        Test_B: [CallbackQueryHandler(device_test_b)]
     },
     fallbacks=[CommandHandler('start', start)]
 )
