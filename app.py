@@ -145,9 +145,9 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
         return
-    if (text == '溫度'): text = getDl303(tc)
-    if (text == '濕度'): text = getDl303(rh)
-    if (text == 'CO2'): text = getDl303(co2)
+    if (text == '溫度'): text = getDl303("tc")
+    if (text == '濕度'): text = getDl303("rh")
+    if (text == 'CO2'): text = getDl303("co2")
     if (text == '電流'): text = '現在電流狀態:\n冷氣_A: 15 A\n 冷氣_B: 0A\nUPS_A(牆壁): 10.5 A\nUPS_B(窗戶): 12.5A'
     if (text == 'UPS_A 狀態'): text = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
     if (text == 'UPS_B 狀態'): text = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
