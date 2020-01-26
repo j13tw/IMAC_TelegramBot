@@ -99,7 +99,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[2:4]],
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
-    return 0
+        return 0
     if (text == '溫濕度'): text = '現在溫度: 25.8 度\n現在濕度: 50 %'
     if (text == '溫度'): text = '現在溫度: 25.8 度'
     if (text == '濕度'): text = '現在濕度: 50 %'
