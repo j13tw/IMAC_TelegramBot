@@ -3,7 +3,7 @@ import logging
 
 import telegram
 from flask import Flask, request
-from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
+from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler, CommandHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 import json
 
