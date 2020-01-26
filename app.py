@@ -142,6 +142,17 @@ def device_test_b(bot, update):
     )
     return
 
+def start(bot, update):
+    keyboard = [
+        [InlineKeyboardButton(u"Next", callback_data=str(FIRST))]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(
+        u"Start handler, Press next",
+        reply_markup=reply_markup
+    )
+    return FIRST
+
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
 
