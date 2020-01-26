@@ -39,32 +39,32 @@ dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
 data = {"tc": "10", "date": datetime.datetime.now()}
-if (dbDl303TC.find_one() == 0):
+if (dbDl303TC.find_one() == None):
     dbDl303TC.insert_one(data)
 else:
-    pass
-    #dbDl303TC.update_one(data)
+    tmp = dbDl303TC.find_one()['tc']
+    dbDl303TC.update_one({'tc': tmp}, {'$set': data})
 
 data = {"rh": "10", "date": datetime.datetime.now()}
-if (dbDl303RH.find_one() == 0):
+if (dbDl303RH.find_one() == None):
     dbDl303RH.insert_one(data)
 else:
-    pass
-    #dbDl303RH.update_one(data)
+    tmp = dbDl303RH.find_one()['rh']
+    dbDl303RH.update_one({'rh': tmp}, {'$set': data})
 
 data = {"co2": "10", "date": datetime.datetime.now()}
-if (dbDl303CO2.find_one() == 0):
+if (dbDl303CO2.find_one() == None):
     dbDl303CO2.insert_one(data)
 else:
-    pass
-    #dbDl303CO2.update_one(data)
+    tmp = dbDl303CO2.find_one()['co2']
+    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
 
 data = {"dp": "10", "date": datetime.datetime.now()}
-if (dbDl303DP.find_one() == 0):
+if (dbDl303DP.find_one() == None):
     dbDl303DP.insert_one(data)
 else:
-    pass
-    #dbDl303DP.update_one(data)
+    tmp = dbDl303DP.find_one()['dp']
+    dbDl303DP.update_one({'dp': tmp}, {'$set': data})
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
@@ -86,7 +86,7 @@ def getDl303(info):
         data += "現在濕度: " + str(rh) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
-        data += "CO2 濃度: " + str(co2) + "ppm"
+        data += "CO2 濃度: " + str(co2) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         data += "露點溫度: " + str(dp) + "度\n"
@@ -137,7 +137,7 @@ def reply_handler(bot, update):
     device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
     # for s in device_list: print(s)
     text = update.message.text
-    if (text == '資訊列表'): 
+    if (text == '監控設備列表'): 
         text = '請選擇所需設備資訊～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[0:2]],
