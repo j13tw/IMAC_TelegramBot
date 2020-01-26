@@ -42,25 +42,29 @@ data = {"tc": "10", "date": datetime.datetime.now()}
 if (dbDl303TC.find_one() == 0):
     dbDl303TC.insert_one(data)
 else:
-    dbDl303TC.update_one(data)
+    pass
+    #dbDl303TC.update_one(data)
 
 data = {"rh": "10", "date": datetime.datetime.now()}
 if (dbDl303RH.find_one() == 0):
     dbDl303RH.insert_one(data)
 else:
-    dbDl303RH.update_one(data)
+    pass
+    #dbDl303RH.update_one(data)
 
 data = {"co2": "10", "date": datetime.datetime.now()}
 if (dbDl303CO2.find_one() == 0):
     dbDl303CO2.insert_one(data)
 else:
-    dbDl303CO2.update_one(data)
+    pass
+    #dbDl303CO2.update_one(data)
 
 data = {"dp": "10", "date": datetime.datetime.now()}
 if (dbDl303DP.find_one() == 0):
     dbDl303DP.insert_one(data)
 else:
-    dbDl303DP.update_one(data)
+    pass
+    #dbDl303DP.update_one(data)
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
