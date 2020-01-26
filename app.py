@@ -52,7 +52,7 @@ def dl303_update(module):
                 dbDl303TC.update_one({'tc': tmp}, {'$set': data})
 
         elif (module == 'rh'):
-            data = {"rh": "10", "date": datetime.datetime.now()}
+            data = {"rh": data['rh'], "date": datetime.datetime.now()}
             if (dbDl303RH.find_one() == None):
                 dbDl303RH.insert_one(data)
             else:
@@ -60,14 +60,14 @@ def dl303_update(module):
                 dbDl303RH.update_one({'rh': tmp}, {'$set': data})
 
         elif (module == 'co2'):
-            data = {"co2": "10", "date": datetime.datetime.now()}
+            data = {"co2": data['co2'], "date": datetime.datetime.now()}
             if (dbDl303CO2.find_one() == None):
                 dbDl303CO2.insert_one(data)
             else:
                 tmp = dbDl303CO2.find_one()['co2']
                 dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
         elif (module == 'dp'):
-            data = {"dp": "10", "date": datetime.datetime.now()}
+            data = {"dp": data['dp'], "date": datetime.datetime.now()}
             if (dbDl303DP.find_one() == None):
                 dbDl303DP.insert_one(data)
             else:
