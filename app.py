@@ -11,8 +11,6 @@ import json
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-Test_A, Test_B = range(2)
-
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -124,53 +122,14 @@ def device_select(bot, update):
     print(device ,text)
     update.callback_query.edit_message_text(text)
 
-def device_test_a(bot, update):
-    query = update.callback_query
-    bot.edit_message_text(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        text=u"First CallbackQueryHandler"
-    )
-    return
-
-def device_test_b(bot, update):
-    query = update.callback_query
-    bot.edit_message_text(
-        chat_id=query.message.chat_id,
-        message_id=query.message.message_id,
-        text=u"Second CallbackQueryHandler"
-    )
-    return
-
-def start(bot, update):
-    keyboard = [
-        [InlineKeyboardButton(u"Next", callback_data=str(FIRST))]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text(
-        u"Start handler, Press next",
-        reply_markup=reply_markup
-    )
-    return FIRST
-
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
 
 # Add handler for handling message, there are many kinds of message. For this handler, it particular handle text
 # message.
 
-conv_handler = ConversationHandler(
-    entry_points=[MessageHandler(Filters.text, reply_handler)],
-    states={
-        Test_A: [CallbackQueryHandler(device_test_a)],
-        Test_B: [CallbackQueryHandler(device_test_b)]
-    },
-    fallbacks=[CommandHandler('start', start)]
-)
-
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 dispatcher.add_handler(CallbackQueryHandler(device_select))
-dispatcher.add_handler(conv_handler)
 
 if __name__ == "__main__":
     # Running server
