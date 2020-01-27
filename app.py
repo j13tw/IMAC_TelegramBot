@@ -227,7 +227,7 @@ def getAirCondiction(device_id, info):
     if (info == "all"): data += "[冷氣監控狀態回報]\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})
     print(envoriment)
-    current = dbAirCondictionCurrent.find({"sequence": device_id}})
+    current = dbAirCondictionCurrent.find({"sequence": device_id})
     print(current)
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
