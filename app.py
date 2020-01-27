@@ -56,8 +56,9 @@ def dl303_update(module):
                 else:
                     tmp = dbDl303TC.find_one()['tc']
                     dbDl303TC.update_one({'tc': tmp}, {'$set': data})
+                return {"dl303": "tc_data_ok"}, HTTP_200_OK
             except:
-                return {"dl303_tc": "data_info_fail"}, HTTP_401_UNAUTHORIZED
+                return {"dl303": "tc_data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'rh'):
             try:
                 data['rh']
@@ -67,8 +68,9 @@ def dl303_update(module):
                 else:
                     tmp = dbDl303RH.find_one()['rh']
                     dbDl303RH.update_one({'rh': tmp}, {'$set': data})
+                return {"dl303": "rh_data_ok"}, HTTP_200_OK
             except:
-                return {"dl303_tc": "data_info_fail"}, HTTP_401_UNAUTHORIZED
+                return {"dl303": "rh_data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'co2'):
             try:
                 data['co2']
@@ -77,9 +79,10 @@ def dl303_update(module):
                     dbDl303CO2.insert_one(data)
                 else:
                     tmp = dbDl303CO2.find_one()['co2']
-                    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})`
+                    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
+                return {"dl303": "co2_data_ok"}, HTTP_200_OK
             except:
-                return {"dl303_co2": "data_info_fail"}, HTTP_401_UNAUTHORIZED
+                return {"dl303": "co2_data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'dp'):
             try:
                 data['dp']
@@ -89,8 +92,9 @@ def dl303_update(module):
                 else:
                     tmp = dbDl303DP.find_one()['dp']
                     dbDl303DP.update_one({'dp': tmp}, {'$set': data})
+                return {"dl303": "dp_data_ok"}, HTTP_200_OK
             except:
-                return {"dl303_dp": "data_info_fail"}, HTTP_401_UNAUTHORIZED
+                return {"dl303": "dp_data_info_fail"}, HTTP_401_UNAUTHORIZED
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
