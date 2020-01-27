@@ -50,8 +50,8 @@ def ups_update(seqence):
             data = json.loads(str(request.json).replace("'", '"'))
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
-        if (seqence == "A") dbUps = dbUpsA
-        elif (seqence == "B") dbUps = dbUpsB
+        if (seqence == "A"): dbUps = dbUpsA
+        elif (seqence == "B"): dbUps = dbUpsB
         data["date"] = datetime.datetime.now()
         if (dbUps.find_one() == None):
             dbUps.insert_one(data)
