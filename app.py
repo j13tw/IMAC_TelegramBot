@@ -161,15 +161,15 @@ def getEt7044(info):
     if (info == "sw1" or info == "all"):
         if (dbEt7044.find_one()['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
-        data += "開關 1 狀態: " + sw1 + "\n" 
+        data += "加濕器狀態: " + sw1 + "\n" 
     if (info == "sw2" or info == "all"):
         if (dbEt7044.find_one()['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
-        data += "開關 2 狀態: " + sw2 + "\n" 
+        data += "進風扇狀態: " + sw2 + "\n" 
     if (info == "sw3" or info == "all"):
         if (dbEt7044.find_one()['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
-        data += "開關 3 狀態: " + sw3 + "\n" 
+        data += "排風扇狀態: " + sw3 + "\n" 
     if (info == "sw4" or info == "all"):
         if (dbEt7044.find_one()['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
@@ -186,7 +186,7 @@ def getEt7044(info):
         if (dbEt7044.find_one()['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
         data += "開關 7 狀態: " + sw7 + "\n"
-    data += "最後更新時間" + str(dbEt7044.find_one()['date']).split('.')[0]
+    data += "最後更新時間: " + str(dbEt7044.find_one()['date']).split('.')[0]
     return data
 
 def getUps(device_id, info):
@@ -227,6 +227,10 @@ def reply_handler(bot, update):
     if (text == '濕度'): text = getDl303("rh")
     if (text == '露點溫度'): text = getDl303("dp")
     if (text == 'CO2'): text = getDl303("co2")
+    if (text == 'ET7044'): text = getEt7044("all")
+    if (text == '加濕器狀態'): text = getEt7044("sw1")
+    if (text == '進風扇狀態'): text = getEt7044("sw2")
+    if (text == '排風扇狀態'): text = getEt7044("sw3")
     if (text == '電流'): text = '現在電流狀態:\n冷氣_A: 15 A\n 冷氣_B: 0A\nUPS_A(牆壁): 10.5 A\nUPS_B(窗戶): 12.5A'
     if (text == 'UPS_A 狀態'): text = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
     if (text == 'UPS_B 狀態'): text = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
