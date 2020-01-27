@@ -46,8 +46,9 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
+        print(module, sequence)
         if (not (module == "envoriment" or module == "current")): return {"air-condiction": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED 
-        if (not (sequence == "A" or sequence == "B")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (sequence == "a" or sequence == "b")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
             if (module == "envoriment"): 
