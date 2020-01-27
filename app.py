@@ -58,7 +58,7 @@ def air_condiction_update(module, sequence):
                     return {"air-condiction-envoriment": "data_fail"}, status.HTTP_401_UNAUTHORIZED
             if (module == "current"):
                 try:
-                    date["current"]
+                    data["current"]
                 except:
                     return {"air-condiction-current": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         except:
