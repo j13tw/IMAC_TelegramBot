@@ -47,13 +47,8 @@ def et7044_update():
     if request.method == 'POST':
         try:
             data = json.loads(str(request.json).replace("'", '"'))
-            data['sw1']
-            data['sw2']
-            data['sw3']
-            data['sw4']
-            data['sw5']
-            data['sw6']
-            data['sw7']
+            if (not (data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
+                return {"et7044": "data_info_fail"}, HTTP_401_UNAUTHORIZED
             data = {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
             if (dbEt7044.find_one() == None):
                 dbEt7044.insert_one(data)
@@ -62,7 +57,7 @@ def et7044_update():
                 dbEt7044.update_one({'sw1': tmp}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
         except:
-            return {"et7044": "data_fail"}, HTTP_401_UNAUTHORIZED
+            return {"et7044": "data_fail"}, status.HTTP_401_UNAUTHORIZED
     else:
         data = dbEt7044.find_one()
         return {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
@@ -73,7 +68,7 @@ def dl303_update(module):
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
-            return {"dl303": "data_fail"}, HTTP_401_UNAUTHORIZED
+            return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
             try:
                 data['tc']
