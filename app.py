@@ -241,7 +241,7 @@ def getAirCondiction(device_id, info):
     if (info == "current" or info == "all"): 
         data += "冷氣功耗電流: " + str(current['current']) + " A\n"
     date = sorted([current['date'], envoriment["date"]])[0]
-    data += "最後更新時間: " + str(date).split('.')[0] + "\n"
+    data += "最後更新時間: " + str(date).split('.')[0]
     return data  
 
 def reply_handler(bot, update):
