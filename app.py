@@ -161,11 +161,10 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    data = ""
+    data = "[DL303"
     dateList = []
-    data += "[DL303"
     if (info == "all"): data += "設備狀態回報]\n"
-    else: data += " 工業監測器]"
+    else: data += " 工業監測器]\n"
     if (info == "tc" or info == "all" or "temp/humi"):
         tc = dbDl303TC.find_one()
         dateList.append(tc['date'])
@@ -261,8 +260,8 @@ def reply_handler(bot, update):
         ]))
         return
     if (text == 'DL303'): text = getDl303("all")
-    if (text == '溫度'): text = getDl303("tc")
-    if (text == '濕度'): text = getDl303("rh")
+    if (text == '溫度'): text = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp")
+    if (text == '濕度'): text = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     if (text == '溫濕度'): text = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
     if (text == '露點溫度'): text = getDl303("dp")
     if (text == 'CO2'): text = getDl303("co2")
