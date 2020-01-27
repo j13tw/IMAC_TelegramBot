@@ -187,8 +187,7 @@ def getEt7044(info):
         else: sw7 = "關閉"
         data += "開關 7 狀態: " + sw7 + "\n"
     data += "最後更新時間" + str(dbEt7044.find_one()['date']).split('.')[0]
-    else:
-        return "et7044 = fail" 
+    return data
 
 def getUps(device_id, info):
     if (info == "all"):
