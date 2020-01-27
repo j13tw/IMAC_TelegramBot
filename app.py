@@ -39,8 +39,25 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
-data = {"sw1": True, "sw2": True, "sw3": True, "sw4": True, "sw5": True, "sw6": True, "sw7": True, "date": datetime.datetime.now()}
-dbEt7044.insert_one(data)
+data = {"temp": 23.5, "humi": 95, "current": 30}
+dbAirCondictionA.insert_one(data)
+dbAirCondictionB.insert_one(data)
+
+@app.route('/air_condiction/<seqence>', methods=['POST'])
+def air_condiction_update(seqence):
+    if request.method == 'POST':
+        if (not (seqence == "A" or seqence == "B")): return {"air-condiction": "url_seqence_fail"}, status.HTTP_401_UNAUTHORIZED
+        try:
+            data = json.loads(str(request.json).replace("'", '"'))
+        except:
+            return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (seqence == "A"): dbAirCondiction = dbAirCondictionA
+        elif (seqence == "B"): dbAirCondiction = dbAirCondictionB
+        data["date"] = datetime.datetime.now()
+        if (dbAirCondiction.find_one() == None): dbAirCondiction.insert_one(data)
+        else: dbAirCondiction.update_one({'humi': dbAirCondiction.find_one()['humi']},{'$set':data})
+        return {"ait-condiction": "data_ok"}, status.HTTP_200_OK
+
 
 @app.route('/ups/<seqence>', methods=['POST'])
 def ups_update(seqence):
@@ -53,8 +70,9 @@ def ups_update(seqence):
         if (seqence == "A"): dbUps = dbUpsA
         elif (seqence == "B"): dbUps = dbUpsB
         data["date"] = datetime.datetime.now()
-        if (dbUps.find_one() == None):
-            dbUps.insert_one(data)
+        if (dbUps.find_one() == None): dbUps.insert_one(data)
+        else: dbUps.update_one({'inputAmp': dbUps.find_one()['inputAmp']},{'$set':data})
+        return {"ups": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/et7044', methods=['POST', 'GET'])
 def et7044_update():
@@ -64,11 +82,8 @@ def et7044_update():
             if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
             data["date"] = datetime.datetime.now()
-            if (dbEt7044.find_one() == None):
-                dbEt7044.insert_one(data)
-            else:
-                tmp = dbEt7044.find_one()['sw1']
-                dbEt7044.update_one({'sw1': tmp}, {'$set': data})
+            if (dbEt7044.find_one() == None): dbEt7044.insert_one(data)
+            else: dbEt7044.update_one({'sw1': dbEt7044.find_one()['sw1']}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
         except:
             return {"et7044": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -80,19 +95,14 @@ def et7044_update():
 def dl303_update(module):
     if request.method == 'POST':
         if (not (module == "tc" or module == "rh" or module == "co2" or module == "dp")): return {"dl303": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED
-        try:
-            data = json.loads(str(request.json).replace("'", '"'))
-        except:
-            return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+        try: data = json.loads(str(request.json).replace("'", '"'))
+        except: return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
             try:
                 data['tc']
                 data["date"] = datetime.datetime.now()
-                if (dbDl303TC.find_one() == None):
-                    dbDl303TC.insert_one(data)
-                else:
-                    tmp = dbDl303TC.find_one()['tc']
-                    dbDl303TC.update_one({'tc': tmp}, {'$set': data})
+                if (dbDl303TC.find_one() == None): dbDl303TC.insert_one(data)
+                else: dbDl303TC.update_one({'tc': dbDl303TC.find_one()['tc']}, {'$set': data})
                 return {"dl303": "tc_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "tc_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -100,11 +110,8 @@ def dl303_update(module):
             try:
                 data['rh']
                 data["date"] = datetime.datetime.now()
-                if (dbDl303RH.find_one() == None):
-                    dbDl303RH.insert_one(data)
-                else:
-                    tmp = dbDl303RH.find_one()['rh']
-                    dbDl303RH.update_one({'rh': tmp}, {'$set': data})
+                if (dbDl303RH.find_one() == None): dbDl303RH.insert_one(data)
+                else: dbDl303RH.update_one({'rh': dbDl303RH.find_one()['rh']}, {'$set': data})
                 return {"dl303": "rh_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "rh_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -112,11 +119,8 @@ def dl303_update(module):
             try:
                 data['co2']
                 data["date"] = datetime.datetime.now()
-                if (dbDl303CO2.find_one() == None):
-                    dbDl303CO2.insert_one(data)
-                else:
-                    tmp = dbDl303CO2.find_one()['co2']
-                    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
+                if (dbDl303CO2.find_one() == None): dbDl303CO2.insert_one(data)
+                else: dbDl303CO2.update_one({'co2': dbDl303CO2.find_one()['co2']}, {'$set': data})
                 return {"dl303": "co2_data_ok"}, HTTP_200_OK
             except:
                 return {"dl303": "co2_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -124,11 +128,8 @@ def dl303_update(module):
             try:
                 data['dp']
                 data["date"] = datetime.datetime.now()
-                if (dbDl303DP.find_one() == None):
-                    dbDl303DP.insert_one(data)
-                else:
-                    tmp = dbDl303DP.find_one()['dp']
-                    dbDl303DP.update_one({'dp': tmp}, {'$set': data})
+                if (dbDl303DP.find_one() == None): dbDl303DP.insert_one(data)
+                else: dbDl303DP.update_one({'dp': dbDl303DP.find_one()['dp']}, {'$set': data})
                 return {"dl303": "dp_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "dp_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -163,35 +164,36 @@ def getDl303(info):
 def getEt7044(info):
     data = ""
     if (info == "all"): data += "[ET7044 設備狀態回報]\n"
+    tmp = dbEt7044.find_one()
     if (info == "sw1" or info == "all"):
-        if (dbEt7044.find_one()['sw1'] == True): sw1 = "開啟"
+        if (tmp['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
         data += "加濕器狀態: " + sw1 + "\n" 
     if (info == "sw2" or info == "all"):
-        if (dbEt7044.find_one()['sw2'] == True): sw2 = "開啟"
+        if (tmp['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
         data += "進風扇狀態: " + sw2 + "\n" 
     if (info == "sw3" or info == "all"):
-        if (dbEt7044.find_one()['sw3'] == True): sw3 = "開啟"
+        if (tmp['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
         data += "排風扇狀態: " + sw3 + "\n" 
     if (info == "sw4" or info == "all"):
-        if (dbEt7044.find_one()['sw4'] == True): sw4 = "開啟"
+        if (tmp['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
         data += "開關 4 狀態: " + sw4 + "\n" 
     if (info == "sw5" or info == "all"):
-        if (dbEt7044.find_one()['sw5'] == True): sw5 = "開啟"
+        if (tmp['sw5'] == True): sw5 = "開啟"
         else: sw5 = "關閉"
         data += "開關 5 狀態: " + sw5 + "\n" 
     if (info == "sw6" or info == "all"):
-        if (dbEt7044.find_one()['sw6'] == True): sw6 = "開啟"
+        if (tmp['sw6'] == True): sw6 = "開啟"
         else: sw6 = "關閉"
         data += "開關 6 狀態: " + sw6 + "\n" 
     if (info == "sw7" or info == "all"):
-        if (dbEt7044.find_one()['sw7'] == True): sw7 = "開啟"
+        if (tmp['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
         data += "開關 7 狀態: " + sw7 + "\n"
-    data += "最後更新時間: " + str(dbEt7044.find_one()['date']).split('.')[0]
+    data += "最後更新時間: " + str(tmp['date']).split('.')[0]
     return data
 
 def getUps(device_id, info):
@@ -203,15 +205,19 @@ def getUps(device_id, info):
         return "ups_id = " + device_id + ",ups = loading"
 
 def getAitCondiction(device_id, info):
-    if (info == "all"):
-        return "air_condiction_id = " + device_id +",air_condiction = all"
-    elif (info == "temp"):
-        return "air_condiction_id = " + device_id +",air_condiction = temp"
-    elif (info == "humi"):
-        return "air_condiction_id = " + device_id +",air_condiction = humi"
-    elif (info == "current"):
-        return "air_condiction_id = " + device_id +",air_condiction = current"
-
+    data = ""
+    if (info == "all"): data += "[冷氣監控狀態回報]"
+    if (device_id == "A"): dbAirCondiction = dbAirCondictionA
+    else: dbAirCondiction = dbAirCondictionB
+    tmp = dbAirCondiction.find_one()['']
+    if (info == "temp" or info == "all"):
+        data += "冷氣出風口溫度: " + tmp['temp'] + "度\n"
+    if (info == "humi" or info == "all"):
+        data += "冷氣出風口濕度: " + tmp['humi'] + "%\n"
+    if (info == "current" or info == "all"): 
+        data += "冷氣功耗電流: " + tmp['current'] + " A\n"
+    data += "最後更新時間: " + str(tmp['date']).split('.')[0]
+    return data  
 
 def reply_handler(bot, update):
     """Reply message."""
@@ -252,8 +258,6 @@ def device_select(bot, update):
     if (device == "UPS_B"): text = getUps("B", "all")
     if (device == "冷氣_A"): text = getAitCondiction("A", "all")
     if (device == "冷氣_B"): text = getAitCondiction("B", "all")
-    print(device ,text)
-    print(dir(update.callback_query))
     update.callback_query.message.reply_text(text)
 
 # New a dispatcher for bot
