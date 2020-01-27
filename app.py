@@ -99,7 +99,7 @@ def dl303_update(module):
         elif (module == 'rh'):
             try:
                 data['rh']
-                data["date"] = datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()
                 if (dbDl303RH.find_one() == None):
                     dbDl303RH.insert_one(data)
                 else:
@@ -111,7 +111,7 @@ def dl303_update(module):
         elif (module == 'co2'):
             try:
                 data['co2']
-                data["date"] = datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()
                 if (dbDl303CO2.find_one() == None):
                     dbDl303CO2.insert_one(data)
                 else:
@@ -123,7 +123,7 @@ def dl303_update(module):
         elif (module == 'dp'):
             try:
                 data['dp']
-                data["date"] = datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()
                 if (dbDl303DP.find_one() == None):
                     dbDl303DP.insert_one(data)
                 else:
