@@ -63,7 +63,7 @@ def et7044_update():
             data = json.loads(str(request.json).replace("'", '"'))
             if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
-            data["date"] = datetime.datetime.now()}
+            data["date"] = datetime.datetime.now()
             if (dbEt7044.find_one() == None):
                 dbEt7044.insert_one(data)
             else:
