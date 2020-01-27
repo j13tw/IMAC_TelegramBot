@@ -225,16 +225,16 @@ def getUps(device_id, info):
 def getAitCondiction(device_id, info):
     data = ""
     if (info == "all"): data += "[冷氣監控狀態回報]\n"
-    if (device_id == "A"): dbAirCondiction = dbAirCondictionA
-    else: dbAirCondiction = dbAirCondictionB
-    tmp = dbAirCondiction.find_one()
+    envoriment = dbAirCondiction.find_one({"sequence": device_id})
+    current = dbAirCondictionCurrent.find_one({"sequence": device_id})
     if (info == "temp" or info == "all"):
-        data += "冷氣出風口溫度: " + str(tmp['temp']) + "度\n"
+        data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
     if (info == "humi" or info == "all"):
-        data += "冷氣出風口濕度: " + str(tmp['humi']) + "%\n"
+        data += "冷氣出風口濕度: " + str(envoriment['humi']) + "%\n"
     if (info == "current" or info == "all"): 
-        data += "冷氣功耗電流: " + str(tmp['current']) + " A\n"
-    data += "最後更新時間: " + str(tmp['date']).split('.')[0]
+        data += "冷氣功耗電流: " + str(current['current']) + " A\n"
+    date = sorted([current['date'], envoriment["date"]])[0]
+    data += "最後更新時間: " + str(date).split('.')[0]
     return data  
 
 def reply_handler(bot, update):
