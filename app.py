@@ -39,9 +39,9 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
-data = {"temp": 23.5, "humi": 95, "current": 30}
-dbAirCondictionA.insert_one(data)
-dbAirCondictionB.insert_one(data)
+# data = {"temp": 23.5, "humi": 95, "current": 30}
+# dbAirCondictionA.insert_one(data)
+# dbAirCondictionB.insert_one(data)
 
 @app.route('/air_condiction/<seqence>', methods=['POST'])
 def air_condiction_update(seqence):
@@ -209,7 +209,7 @@ def getAitCondiction(device_id, info):
     if (info == "all"): data += "[冷氣監控狀態回報]"
     if (device_id == "A"): dbAirCondiction = dbAirCondictionA
     else: dbAirCondiction = dbAirCondictionB
-    tmp = dbAirCondiction.find_one()['']
+    tmp = dbAirCondiction.find_one()
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + tmp['temp'] + "度\n"
     if (info == "humi" or info == "all"):
