@@ -168,19 +168,19 @@ def getDl303(info):
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         dateList.append(tc['date'])
-        data += "現在溫度: " + str(tc['tc']) + "度\n"
+        data += "現在環境溫度: " + str(tc['tc']) + "度\n"
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         dateList.append(rh['date'])
-        data += "現在濕度: " + str(rh['rh']) + "%\n"
+        data += "現在環境濕度: " + str(rh['rh']) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         dateList.append(co2['date'])
-        data += "CO2 濃度: " + str(co2['co2']) + "ppm\n"
+        data += "環境 CO2 濃度: " + str(co2['co2']) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         dateList.append(dp['date'])
-        data += "露點溫度: " + str(dp['dp']) + "度\n"
+        data += "環境露點溫度: " + str(dp['dp']) + "度\n"
     date = sorted(dateList)[0]
     data += "最後更新時間: " + str(date).split('.')[0]
     return data
@@ -272,7 +272,10 @@ def reply_handler(bot, update):
     if (text == '電流'): text = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current")
     if (text == 'UPS_A 狀態'): text = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
     if (text == 'UPS_B 狀態'): text = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
+    if (text == '冷氣A狀態'): text = getAirCondiction("a", "all")
+    if (text == '冷氣B狀態'): text = getAirCondiction("b", "all")
     if (text == '冷氣狀態'): text = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+
     update.message.reply_text(text)
 
 def device_select(bot, update):
