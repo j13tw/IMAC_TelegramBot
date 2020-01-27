@@ -225,6 +225,7 @@ def reply_handler(bot, update):
     if (text == 'DL303'): text = getDl303("all")
     if (text == '溫度'): text = getDl303("tc")
     if (text == '濕度'): text = getDl303("rh")
+    if (text == '溫濕度'): text = getDl303("tc") + getDl303("rh")
     if (text == '露點溫度'): text = getDl303("dp")
     if (text == 'CO2'): text = getDl303("co2")
     if (text == 'ET7044'): text = getEt7044("all")
