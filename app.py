@@ -224,7 +224,9 @@ def getUps(device_id, info):
 
 def getAirCondiction(device_id, info):
     data = ""
-    if (info == "all"): data += "[冷氣監控狀態回報]\n"
+    if (info == "all"): data += "[冷氣監控狀態回報-"
+    else: data += "["
+    data += "冷氣" + str(device_id).upper() + "]\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     print(envoriment)
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
