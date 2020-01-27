@@ -163,12 +163,14 @@ def webhook_handler():
 def getDl303(info):
     data = ""
     dateList = []
-    if (info == "all"): data += "[DL303 設備狀態回報]\n"
-    if (info == "tc" or info == "all"):
+    data += "[DL303"
+    if (info == "all"): data += "設備狀態回報]\n"
+    else data += " 工業監測器]"
+    if (info == "tc" or info == "all" or "temp/humi"):
         tc = dbDl303TC.find_one()
         dateList.append(tc['date'])
         data += "現在溫度: " + str(tc['tc']) + "度\n"
-    if (info == "rh" or info == "all"):
+    if (info == "rh" or info == "all" + "temp/humi"):
         rh = dbDl303RH.find_one()
         dateList.append(rh['date'])
         data += "現在濕度: " + str(rh['rh']) + "%\n"
@@ -234,9 +236,9 @@ def getAirCondiction(device_id, info):
     data += "冷氣" + str(device_id).upper() + "]\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
-    if (info == "temp" or info == "all"):
+    if (info == "temp" or info == "all" or "temp/humi"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
-    if (info == "humi" or info == "all"):
+    if (info == "humi" or info == "all" or "temp/humi"):
         data += "冷氣出風口濕度: " + str(envoriment['humi']) + "%\n"
     if (info == "current" or info == "all"): 
         data += "冷氣功耗電流: " + str(current['current']) + " A\n"
@@ -261,7 +263,7 @@ def reply_handler(bot, update):
     if (text == 'DL303'): text = getDl303("all")
     if (text == '溫度'): text = getDl303("tc")
     if (text == '濕度'): text = getDl303("rh")
-    if (text == '溫濕度'): text = getDl303("tc") + "\n" + getDl303("rh")
+    if (text == '溫濕度'): text = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
     if (text == '露點溫度'): text = getDl303("dp")
     if (text == 'CO2'): text = getDl303("co2")
     if (text == 'ET7044'): text = getEt7044("all")
