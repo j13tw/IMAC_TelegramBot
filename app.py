@@ -150,16 +150,16 @@ def getDl303(info):
     if (info == "all"): data += "[DL303 設備狀態回報]\n"
     if (info == "tc" or info == "all"):
         tc = dbDl303TC.find_one()
-        data += "現在溫度: " + str(tc['tc']) + "度\n
+        data += "現在溫度: " + str(tc['tc']) + "度\n"
     if (info == "rh" or info == "all"):
         rh = dbDl303RH.find_one()
-        data += "現在濕度: " + str(rh['rh']) + "%\n
+        data += "現在濕度: " + str(rh['rh']) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
-        data += "CO2 濃度: " + str(co2['co2']) + "ppm\n
+        data += "CO2 濃度: " + str(co2['co2']) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
-        data += "露點溫度: " + str(dp['dp']) + "度\n
+        data += "露點溫度: " + str(dp['dp']) + "度\n"
     date = sorted([tc['date'], rh["date"], co2["date"], dp["date"]])[0]
     data += "最後更新時間: " + str(date).split('.')[0]
     return data
