@@ -50,6 +50,17 @@ def air_condiction_update(module, sequence):
         if (not (sequence == "A" or sequence == "B")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
+            if (module == "envoriment"): 
+                try:
+                    data["humi"]
+                    data["temp"]
+                except:
+                    return
+            if (module == "current"):
+                try:
+                    date["current"]
+                except:
+                    return
         except:
             return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["sequence"] = sequence
