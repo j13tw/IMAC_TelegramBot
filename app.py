@@ -226,7 +226,9 @@ def getAitCondiction(device_id, info):
     data = ""
     if (info == "all"): data += "[冷氣監控狀態回報]\n"
     envoriment = dbAirCondiction.find_one({"sequence": device_id})
+    print(envoriment)
     current = dbAirCondictionCurrent.find_one({"sequence": device_id})
+    print(current)
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
     if (info == "humi" or info == "all"):
