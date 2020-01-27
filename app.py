@@ -165,7 +165,7 @@ def getDl303(info):
     dateList = []
     data += "[DL303"
     if (info == "all"): data += "設備狀態回報]\n"
-    else data += " 工業監測器]"
+    else: data += " 工業監測器]"
     if (info == "tc" or info == "all" or "temp/humi"):
         tc = dbDl303TC.find_one()
         dateList.append(tc['date'])
