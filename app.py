@@ -39,7 +39,7 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
-data = {"sw1": true, "sw2": true, "sw3": true, "sw4": true, "sw5": true, "sw6": true, "sw7": true, "date": datetime.datetime.now()}
+data = {"sw1": True, "sw2": True, "sw3": True, "sw4": True, "sw5": True, "sw6": True, "sw7": True, "date": datetime.datetime.now()}
 dbEt7044.insert_one(data)
 
 @app.route('/et7044', methods=['POST', 'GET'])
