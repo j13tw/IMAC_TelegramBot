@@ -3,6 +3,7 @@ import logging
 
 import telegram
 from flask import Flask, request
+from flask_api import status
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler, CommandHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 import json
@@ -42,37 +43,54 @@ dbAirCondictionB = myMongoDb["air_condiction_b"]
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
     if request.method == 'POST':
-        data = json.loads(str(request.json).replace("'", '"'))
+        try:
+            data = json.loads(str(request.json).replace("'", '"'))
+        except:
+            return {"dl303": "data_fail"}, HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
-            data = {"tc": data['tc'], "date": datetime.datetime.now()}
-            if (dbDl303TC.find_one() == None):
-                dbDl303TC.insert_one(data)
-            else:
-                tmp = dbDl303TC.find_one()['tc']
-                dbDl303TC.update_one({'tc': tmp}, {'$set': data})
-
+            try:
+                data['tc']
+                data = {"tc": data['tc'], "date": datetime.datetime.now()}
+                if (dbDl303TC.find_one() == None):
+                    dbDl303TC.insert_one(data)
+                else:
+                    tmp = dbDl303TC.find_one()['tc']
+                    dbDl303TC.update_one({'tc': tmp}, {'$set': data})
+            except:
+                return {"dl303_tc": "data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'rh'):
-            data = {"rh": data['rh'], "date": datetime.datetime.now()}
-            if (dbDl303RH.find_one() == None):
-                dbDl303RH.insert_one(data)
-            else:
-                tmp = dbDl303RH.find_one()['rh']
-                dbDl303RH.update_one({'rh': tmp}, {'$set': data})
-
+            try:
+                data['rh']
+                data = {"rh": data['rh'], "date": datetime.datetime.now()}
+                if (dbDl303RH.find_one() == None):
+                    dbDl303RH.insert_one(data)
+                else:
+                    tmp = dbDl303RH.find_one()['rh']
+                    dbDl303RH.update_one({'rh': tmp}, {'$set': data})
+            except:
+                return {"dl303_tc": "data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'co2'):
-            data = {"co2": data['co2'], "date": datetime.datetime.now()}
-            if (dbDl303CO2.find_one() == None):
-                dbDl303CO2.insert_one(data)
-            else:
-                tmp = dbDl303CO2.find_one()['co2']
-                dbDl303CO2.update_one({'co2': tmp}, {'$set': data})
+            try:
+                data['co2']
+                data = {"co2": data['co2'], "date": datetime.datetime.now()}
+                if (dbDl303CO2.find_one() == None):
+                    dbDl303CO2.insert_one(data)
+                else:
+                    tmp = dbDl303CO2.find_one()['co2']
+                    dbDl303CO2.update_one({'co2': tmp}, {'$set': data})`
+            except:
+                return {"dl303_co2": "data_info_fail"}, HTTP_401_UNAUTHORIZED
         elif (module == 'dp'):
-            data = {"dp": data['dp'], "date": datetime.datetime.now()}
-            if (dbDl303DP.find_one() == None):
-                dbDl303DP.insert_one(data)
-            else:
-                tmp = dbDl303DP.find_one()['dp']
-                dbDl303DP.update_one({'dp': tmp}, {'$set': data})
+            try:
+                data['dp']
+                data = {"dp": data['dp'], "date": datetime.datetime.now()}
+                if (dbDl303DP.find_one() == None):
+                    dbDl303DP.insert_one(data)
+                else:
+                    tmp = dbDl303DP.find_one()['dp']
+                    dbDl303DP.update_one({'dp': tmp}, {'$set': data})
+            except:
+                return {"dl303_dp": "data_info_fail"}, HTTP_401_UNAUTHORIZED
 
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
