@@ -225,9 +225,9 @@ def getUps(device_id, info):
 def getAirCondiction(device_id, info):
     data = ""
     if (info == "all"): data += "[冷氣監控狀態回報]\n"
-    envoriment = dbAirCondiction.find_one({}, {"sequence": device_id})
+    envoriment = dbAirCondiction.find_one({}, {"sequence": device_id, "temp": 1, "humi": 1, "date": 1})
     print(envoriment)
-    current = dbAirCondictionCurrent.find_one({}, {"sequence": device_id})
+    current = dbAirCondictionCurrent.find_one({}, {"sequence": device_id, "current": 1, "date": 1})
     print(current)
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
