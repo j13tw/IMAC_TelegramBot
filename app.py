@@ -162,20 +162,25 @@ def webhook_handler():
 
 def getDl303(info):
     data = ""
+    dateList = []
     if (info == "all"): data += "[DL303 設備狀態回報]\n"
     if (info == "tc" or info == "all"):
         tc = dbDl303TC.find_one()
+        dateList.append(tc['date'])
         data += "現在溫度: " + str(tc['tc']) + "度\n"
     if (info == "rh" or info == "all"):
         rh = dbDl303RH.find_one()
+        dateList.append(rh['date'])
         data += "現在濕度: " + str(rh['rh']) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
+        dateList.append(co2['date'])
         data += "CO2 濃度: " + str(co2['co2']) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
+        dateList.append(dp['date'])
         data += "露點溫度: " + str(dp['dp']) + "度\n"
-    date = sorted([tc['date'], rh["date"], co2["date"], dp["date"]])[0]
+    date = sorted(dateList)[0]
     data += "最後更新時間: " + str(date).split('.')[0]
     return data
 
@@ -228,9 +233,7 @@ def getAirCondiction(device_id, info):
     else: data += "["
     data += "冷氣" + str(device_id).upper() + "]\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
-    print(envoriment)
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
-    print(current)
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
     if (info == "humi" or info == "all"):
@@ -238,7 +241,7 @@ def getAirCondiction(device_id, info):
     if (info == "current" or info == "all"): 
         data += "冷氣功耗電流: " + str(current['current']) + " A\n"
     date = sorted([current['date'], envoriment["date"]])[0]
-    data += "最後更新時間: " + str(date).split('.')[0]
+    data += "最後更新時間: " + str(date).split('.')[0] + "\n"
     return data  
 
 def reply_handler(bot, update):
@@ -258,7 +261,7 @@ def reply_handler(bot, update):
     if (text == 'DL303'): text = getDl303("all")
     if (text == '溫度'): text = getDl303("tc")
     if (text == '濕度'): text = getDl303("rh")
-    if (text == '溫濕度'): text = getDl303("tc") + getDl303("rh")
+    if (text == '溫濕度'): text = getDl303("tc") + "\n" + getDl303("rh")
     if (text == '露點溫度'): text = getDl303("dp")
     if (text == 'CO2'): text = getDl303("co2")
     if (text == 'ET7044'): text = getEt7044("all")
@@ -268,8 +271,7 @@ def reply_handler(bot, update):
     if (text == '電流'): text = '現在電流狀態:\n冷氣_A: 15 A\n 冷氣_B: 0A\nUPS_A(牆壁): 10.5 A\nUPS_B(窗戶): 12.5A'
     if (text == 'UPS_A 狀態'): text = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
     if (text == 'UPS_B 狀態'): text = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
-    if (text == '冷氣_A 狀態'): text = '冷氣_A 空調狀態\n出風口溫度: 10度\n功耗電流: 20 A'
-    if (text == '冷氣_B 狀態'): text = '冷氣_B 空調狀態\n出風口溫度: 10度\n功耗電流: 20 A'
+    if (text == '冷氣狀態'): text = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
     update.message.reply_text(text)
 
 def device_select(bot, update):
