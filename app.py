@@ -254,7 +254,7 @@ def device_select(bot, update):
     if (device == "冷氣_B"): text = getAitCondiction("B", "all")
     print(device ,text)
     print(dir(update.callback_query))
-    update.message.reply_text(text)
+    update.callback_query.message.reply_text(text)
 
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
