@@ -63,7 +63,7 @@ def et7044_update():
             data = json.loads(str(request.json).replace("'", '"'))
             if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
-            data = {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
+            data["date"] = datetime.datetime.now()}
             if (dbEt7044.find_one() == None):
                 dbEt7044.insert_one(data)
             else:
@@ -99,7 +99,7 @@ def dl303_update(module):
         elif (module == 'rh'):
             try:
                 data['rh']
-                data = {"rh": data['rh'], "date": datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()}
                 if (dbDl303RH.find_one() == None):
                     dbDl303RH.insert_one(data)
                 else:
@@ -111,7 +111,7 @@ def dl303_update(module):
         elif (module == 'co2'):
             try:
                 data['co2']
-                data = {"co2": data['co2'], "date": datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()}
                 if (dbDl303CO2.find_one() == None):
                     dbDl303CO2.insert_one(data)
                 else:
@@ -123,7 +123,7 @@ def dl303_update(module):
         elif (module == 'dp'):
             try:
                 data['dp']
-                data = {"dp": data['dp'], "date": datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()}
                 if (dbDl303DP.find_one() == None):
                     dbDl303DP.insert_one(data)
                 else:
@@ -253,7 +253,7 @@ def device_select(bot, update):
     if (device == "冷氣_A"): text = getAitCondiction("A", "all")
     if (device == "冷氣_B"): text = getAitCondiction("B", "all")
     print(device ,text)
-    update.callback_query.edit_message_text(text)
+    update.callback_query.reply_text(text)
 
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
