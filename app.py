@@ -39,6 +39,33 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
+data = {"sw1": true, "sw2": true, "sw3": true, "sw4": true, "sw5": true, "sw6": true, "sw7": true, "date": datetime.datetime.now()}
+dbEt7044.insert_one(data)
+
+@app.route('/et7044', methods=['POST', 'GET'])
+def et7044_update():
+    if request.method == 'POST':
+        try:
+            data = json.loads(str(request.json).replace("'", '"'))
+            data['sw1']
+            data['sw2']
+            data['sw3']
+            data['sw4']
+            data['sw5']
+            data['sw6']
+            data['sw7']
+            data = {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
+            if (dbEt7044.find_one() == None):
+                dbEt7044.insert_one(data)
+            else:
+                tmp = dbEt7044.find_one()['sw1']
+                dbEt7044.update_one({'sw1': tmp}, {'$set': data})
+            return {"et7044": "data_ok"}, status.HTTP_200_OK
+        except:
+            return {"et7044": "data_fail"}, HTTP_401_UNAUTHORIZED
+    else:
+        data = dbEt7044.find_one()
+        return {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
 
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
