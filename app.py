@@ -276,8 +276,8 @@ def device_select(bot, update):
     if (device == "ET7044"): text = getEt7044("all")
     if (device == "UPS_A"): text = getUps("A", "all")
     if (device == "UPS_B"): text = getUps("B", "all")
-    if (device == "冷氣_A"): text = getAirCondiction("A", "all")
-    if (device == "冷氣_B"): text = getAirCondiction("B", "all")
+    if (device == "冷氣_A"): text = getAirCondiction("a", "all")
+    if (device == "冷氣_B"): text = getAirCondiction("b", "all")
     update.callback_query.message.reply_text(text)
 
 # New a dispatcher for bot
