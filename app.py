@@ -36,40 +36,44 @@ dbDl303DP = myMongoDb["dl303/dp"]
 dbEt7044 = myMongoDb["et7044"]
 dbUpsA = myMongoDb["ups_a"]
 dbUpsB = myMongoDb["ups_b"]
-dbAirCondictionA = myMongoDb["air_condiction_a"]
-dbAirCondictionB = myMongoDb["air_condiction_b"]
-
+dbAirCondiction = myMongoDb["air_condiction"]
+dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 
 # data = {"temp": 23.5, "humi": 95, "current": 30, "date": datetime.datetime.now()}
 # dbAirCondictionA.insert_one(data)
 # dbAirCondictionB.insert_one(data)
 
-@app.route('/air_condiction/<seqence>', methods=['POST'])
-def air_condiction_update(seqence):
+@app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
+def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        if (not (seqence == "A" or seqence == "B")): return {"air-condiction": "url_seqence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module == "envoriment" or module == "current")): return {"air-condiction": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED 
+        if (not (sequence == "A" or sequence == "B")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
             return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
-        if (seqence == "A"): dbAirCondiction = dbAirCondictionA
-        elif (seqence == "B"): dbAirCondiction = dbAirCondictionB
+        data["sequence"] = sequence
         data["date"] = datetime.datetime.now()
-        if (dbAirCondiction.find_one() == None): dbAirCondiction.insert_one(data)
-        else: dbAirCondiction.update_one({'humi': dbAirCondiction.find_one()['humi']},{'$set':data})
-        return {"ait-condiction": "data_ok"}, status.HTTP_200_OK
+        if (module == "envoriment"):
+            if (dbAirCondiction.find_one({"sequence": sequence}) == None): dbAirCondiction.insert_one(data)
+            else: dbAirCondiction.update_one({"sequence": sequence},{'$set':data})
+            return {"ait-condiction": "envoriment_data_ok"}, status.HTTP_200_OK
+        else:
+            if (dbAirCondictionCurrent.find_one({"sequence": sequence}) == None): dbAirCondictionCurrent.insert_one(data)
+            else: dbAirCondictionCurrent.update_one({"sequence": sequence},{'$set':data})
+            return {"ait-condiction": "current_data_ok"}, status.HTTP_200_OK
 
 
-@app.route('/ups/<seqence>', methods=['POST'])
-def ups_update(seqence):
+@app.route('/ups/<sequence>', methods=['POST'])
+def ups_update(sequence):
     if request.method == 'POST':
-        if (not (seqence == "A" or seqence == "B")): return {"ups": "url_seqence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (sequence == "A" or sequence == "B")): return {"ups": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
-        if (seqence == "A"): dbUps = dbUpsA
-        elif (seqence == "B"): dbUps = dbUpsB
+        if (sequence == "A"): dbUps = dbUpsA
+        elif (sequence == "B"): dbUps = dbUpsB
         data["date"] = datetime.datetime.now()
         if (dbUps.find_one() == None): dbUps.insert_one(data)
         else: dbUps.update_one({'inputAmp': dbUps.find_one()['inputAmp']},{'$set':data})
