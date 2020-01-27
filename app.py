@@ -42,23 +42,22 @@ dbAirCondictionB = myMongoDb["air_condiction_b"]
 data = {"sw1": True, "sw2": True, "sw3": True, "sw4": True, "sw5": True, "sw6": True, "sw7": True, "date": datetime.datetime.now()}
 dbEt7044.insert_one(data)
 
+@app.route('/ups/<seqence>', methods=['POST'])
+def ups_update(seqence):
+    if request.method == 'POST':
+        if (not (seqence == "A" or seqence == "B")): return {"ups": "url_seqence_fail"}, status.HTTP_401_UNAUTHORIZED
+        try:
+            data = json.loads(str(request.json).replace("'", '"'))
+        except:
+            return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+
 @app.route('/et7044', methods=['POST', 'GET'])
 def et7044_update():
     if request.method == 'POST':
         try:
             data = json.loads(str(request.json).replace("'", '"'))
-            print(not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False)))
-            print(data['sw1'] == True or data['sw1'] == False) 
-            print(data['sw2'] == True or data['sw2'] == False) 
-            print(data['sw3'] == True or data['sw3'] == False) 
-            print(data['sw4'] == True or data['sw4'] == False) 
-            print(data['sw5'] == True or data['sw5'] == False) 
-            print(data['sw6'] == True or data['sw6'] == False) 
-            print(data['sw7'] == True or data['sw7'] == False)
             if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
-                print("XXOO")
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
-            print("OOXX")
             data = {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
             if (dbEt7044.find_one() == None):
                 dbEt7044.insert_one(data)
@@ -75,6 +74,7 @@ def et7044_update():
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
     if request.method == 'POST':
+        if (not (module == "tc" or module == "rh" or module == "co2" or module == "dp")): return {"dl303": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
@@ -156,22 +156,37 @@ def getDl303(info):
     return data
 
 def getEt7044(info):
-    if (info == "all"):
-        return "et7044 = get_all"
-    elif (info == "sw1"):
-        return "et7044 = get_sw1"
-    elif (info == "sw2"):
-        return "et7044 = get_sw2"
-    elif (info == "sw3"):
-        return "et7044 = get_sw3"
-    elif (info == "sw4"):
-        return "et7044 = get_sw4"
-    elif (info == "sw5"):
-        return "et7044 = get_sw5"
-    elif (info == "sw6"):
-        return "et7044 = get_sw6"
-    elif (info == "sw7"):
-        return "et7044 = get_sw7"
+    data = ""
+    if (info == "all"): data += "ET7044 設備狀態回報:\n"
+    if (info == "sw1" or info == "all"):
+        if (dbEt7044.find_one()['sw1'] == True): sw1 = "開啟"
+        else: sw1 = "關閉"
+        data += "開關 1 狀態: " + sw1 + "\n" 
+    if (info == "sw2" or info == "all"):
+        if (dbEt7044.find_one()['sw2'] == True): sw2 = "開啟"
+        else: sw2 = "關閉"
+        data += "開關 2 狀態: " + sw2 + "\n" 
+    if (info == "sw3" or info == "all"):
+        if (dbEt7044.find_one()['sw3'] == True): sw3 = "開啟"
+        else: sw3 = "關閉"
+        data += "開關 3 狀態: " + sw3 + "\n" 
+    if (info == "sw4" or info == "all"):
+        if (dbEt7044.find_one()['sw4'] == True): sw4 = "開啟"
+        else: sw4 = "關閉"
+        data += "開關 4 狀態: " + sw4 + "\n" 
+    if (info == "sw5" or info == "all"):
+        if (dbEt7044.find_one()['sw5'] == True): sw5 = "開啟"
+        else: sw5 = "關閉"
+        data += "開關 5 狀態: " + sw5 + "\n" 
+    if (info == "sw6" or info == "all"):
+        if (dbEt7044.find_one()['sw6'] == True): sw6 = "開啟"
+        else: sw6 = "關閉"
+        data += "開關 6 狀態: " + sw6 + "\n" 
+    if (info == "sw7" or info == "all"):
+        if (dbEt7044.find_one()['sw7'] == True): sw7 = "開啟"
+        else: sw7 = "關閉"
+        data += "開關 7 狀態: " + sw7 + "\n"
+    data += "最後更新時間" + str(dbEt7044.find_one()['date']).split('.')[0]
     else:
         return "et7044 = fail" 
 
