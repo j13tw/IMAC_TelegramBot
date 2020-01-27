@@ -50,6 +50,11 @@ def ups_update(seqence):
             data = json.loads(str(request.json).replace("'", '"'))
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (seqence == "A") dbUps = dbUpsA
+        elif (seqence == "B") dbUps = dbUpsB
+        data["date"] = datetime.datetime.now()
+        if (dbUps.find_one() == None):
+            dbUps.insert_one(data)
 
 @app.route('/et7044', methods=['POST', 'GET'])
 def et7044_update():
@@ -82,7 +87,7 @@ def dl303_update(module):
         if (module == 'tc'):
             try:
                 data['tc']
-                data = {"tc": data['tc'], "date": datetime.datetime.now()}
+                data["date"] = datetime.datetime.now()
                 if (dbDl303TC.find_one() == None):
                     dbDl303TC.insert_one(data)
                 else:
@@ -140,7 +145,7 @@ def webhook_handler():
 
 def getDl303(info):
     data = ""
-    if (info == "all"): data += "DL303 設備狀態回報:\n"
+    if (info == "all"): data += "[DL303 設備狀態回報]\n"
     if (info == "tc" or info == "all"):
         tc = dbDl303TC.find_one()
         data += "現在溫度: " + str(tc['tc']) + "度\n最後更新時間: " + str(tc['date']).split('.')[0] + "\n"
@@ -157,7 +162,7 @@ def getDl303(info):
 
 def getEt7044(info):
     data = ""
-    if (info == "all"): data += "ET7044 設備狀態回報:\n"
+    if (info == "all"): data += "[ET7044 設備狀態回報]\n"
     if (info == "sw1" or info == "all"):
         if (dbEt7044.find_one()['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
@@ -241,7 +246,6 @@ def reply_handler(bot, update):
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
-    print(device)
     if (device == "DL303"): text = getDl303("all")
     if (device == "ET7044"): text = getEt7044("all")
     if (device == "UPS_A"): text = getUps("A", "all")
