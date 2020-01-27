@@ -222,12 +222,12 @@ def getUps(device_id, info):
     elif (info == "loading"):
         return "ups_id = " + device_id + ",ups = loading"
 
-def getAitCondiction(device_id, info):
+def getAirCondiction(device_id, info):
     data = ""
     if (info == "all"): data += "[冷氣監控狀態回報]\n"
-    envoriment = dbAirCondiction.find_one({"sequence": device_id})
+    envoriment = dbAirCondiction.find_one({}, {"sequence": device_id})
     print(envoriment)
-    current = dbAirCondictionCurrent.find_one({"sequence": device_id})
+    current = dbAirCondictionCurrent.find_one({}, {"sequence": device_id})
     print(current)
     if (info == "temp" or info == "all"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
@@ -276,8 +276,8 @@ def device_select(bot, update):
     if (device == "ET7044"): text = getEt7044("all")
     if (device == "UPS_A"): text = getUps("A", "all")
     if (device == "UPS_B"): text = getUps("B", "all")
-    if (device == "冷氣_A"): text = getAitCondiction("A", "all")
-    if (device == "冷氣_B"): text = getAitCondiction("B", "all")
+    if (device == "冷氣_A"): text = getAirCondiction("A", "all")
+    if (device == "冷氣_B"): text = getAirCondiction("B", "all")
     update.callback_query.message.reply_text(text)
 
 # New a dispatcher for bot
