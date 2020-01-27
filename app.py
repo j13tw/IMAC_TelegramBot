@@ -46,7 +46,6 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        print(module, sequence)
         if (not (module == "envoriment" or module == "current")): return {"air-condiction": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED 
         if (not (sequence == "a" or sequence == "b")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
@@ -56,12 +55,12 @@ def air_condiction_update(module, sequence):
                     data["humi"]
                     data["temp"]
                 except:
-                    return
+                    return {"air-condiction-envoriment": "data_fail"}, status.HTTP_401_UNAUTHORIZED
             if (module == "current"):
                 try:
                     date["current"]
                 except:
-                    return
+                    return {"air-condiction-current": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         except:
             return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["sequence"] = sequence
@@ -69,11 +68,11 @@ def air_condiction_update(module, sequence):
         if (module == "envoriment"):
             if (dbAirCondiction.find_one({"sequence": sequence}) == None): dbAirCondiction.insert_one(data)
             else: dbAirCondiction.update_one({"sequence": sequence},{'$set':data})
-            return {"ait-condiction": "envoriment_data_ok"}, status.HTTP_200_OK
+            return {"ait-condiction-envoriment": "data_ok"}, status.HTTP_200_OK
         else:
             if (dbAirCondictionCurrent.find_one({"sequence": sequence}) == None): dbAirCondictionCurrent.insert_one(data)
             else: dbAirCondictionCurrent.update_one({"sequence": sequence},{'$set':data})
-            return {"ait-condiction": "current_data_ok"}, status.HTTP_200_OK
+            return {"ait-condiction-current": "data_ok"}, status.HTTP_200_OK
 
 
 @app.route('/ups/<sequence>', methods=['POST'])
