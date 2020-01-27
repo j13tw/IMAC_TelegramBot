@@ -211,11 +211,11 @@ def getAitCondiction(device_id, info):
     else: dbAirCondiction = dbAirCondictionB
     tmp = dbAirCondiction.find_one()
     if (info == "temp" or info == "all"):
-        data += "冷氣出風口溫度: " + tmp['temp'] + "度\n"
+        data += "冷氣出風口溫度: " + str(tmp['temp']) + "度\n"
     if (info == "humi" or info == "all"):
-        data += "冷氣出風口濕度: " + tmp['humi'] + "%\n"
+        data += "冷氣出風口濕度: " + str(tmp['humi']) + "%\n"
     if (info == "current" or info == "all"): 
-        data += "冷氣功耗電流: " + tmp['current'] + " A\n"
+        data += "冷氣功耗電流: " + str(tmp['current']) + " A\n"
     data += "最後更新時間: " + str(tmp['date']).split('.')[0]
     return data  
 
