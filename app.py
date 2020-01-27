@@ -39,9 +39,12 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondictionA = myMongoDb["air_condiction_a"]
 dbAirCondictionB = myMongoDb["air_condiction_b"]
 
-# data = {"temp": 23.5, "humi": 95, "current": 30}
-# dbAirCondictionA.insert_one(data)
-# dbAirCondictionB.insert_one(data)
+
+dbAirCondictionA.delete_one({"temp": 23.5})
+dbAirCondictionB.delete_one({"temp": 23.5})
+data = {"temp": 23.5, "humi": 95, "current": 30, "date": datetime.datetime.now()}
+dbAirCondictionA.insert_one(data)
+dbAirCondictionB.insert_one(data)
 
 @app.route('/air_condiction/<seqence>', methods=['POST'])
 def air_condiction_update(seqence):
