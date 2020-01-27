@@ -47,6 +47,14 @@ def et7044_update():
     if request.method == 'POST':
         try:
             data = json.loads(str(request.json).replace("'", '"'))
+            print(not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False)))
+            print(data['sw1'] == True or data['sw1'] == False) 
+            print(data['sw2'] == True or data['sw2'] == False) 
+            print(data['sw3'] == True or data['sw3'] == False) 
+            print(data['sw4'] == True or data['sw4'] == False) 
+            print(data['sw5'] == True or data['sw5'] == False) 
+            print(data['sw6'] == True or data['sw6'] == False) 
+            print(data['sw7'] == True or data['sw7'] == False)
             if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
                 return {"et7044": "data_info_fail"}, HTTP_401_UNAUTHORIZED
             data = {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
