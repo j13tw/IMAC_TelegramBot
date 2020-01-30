@@ -27,7 +27,7 @@ bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 group_id = config['TELEGRAM']['GROUP_ID']
 
 # Setup Mongodb info
-myMongoClient = MongoClient("mongodb://" config['MONGODB']['SERVER'] + "/")
+myMongoClient = MongoClient("mongodb://" + config['MONGODB']['SERVER'] + "/")
 myMongoDb = myMongoClient["smart-data-center"]
 myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
 dbDl303TC = myMongoDb["dl303/tc"]
