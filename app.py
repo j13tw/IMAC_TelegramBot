@@ -25,6 +25,7 @@ app = Flask(__name__)
 # Initial bot by Telegram access token
 bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 group_id = config['TELEGRAM']['GROUP_ID']
+devUser_id = config['TELEGRAM']['DEV_USER_ID']
 
 # Setup Mongodb info
 myMongoClient = MongoClient("mongodb://" + config['MONGODB']['SERVER'] + "/")
@@ -40,20 +41,31 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 
+@app.route('/test/<mode>', methods=['GET'])
+def test(mode):
+    if (mode == 'message'): bot.send_message(chat_id=devUser_id, text="telegramBot 服務測試訊息")
+    if (mode == 'localPhoto'): bot.sendPhoto(chat_id=devUser_id, photo=open('./test.png', 'rb'))
+    if (mode == 'onlinePhoto'): bot.sendPhoto(chat_id=devUser_id, photo='https://i.imgur.com/ajMBl1b.jpg')
+    if (mode == 'localAudio'): bot.sendAudio(chat_id=devUser_id, audio=open('./test.mp3', 'rb'))
+    if (mode == 'onlineAudio'): bot.sendPhoto(chat_id=devUser_id, audio='http://s80.youtaker.com/other/2015/10-6/mp31614001370a913212b795478095673a25cebc651a080.mp3')
+    if (mode == 'onlineGif'): bot.sendAnimation(chat_id=1070358833, animation='http://d21p91le50s4xn.cloudfront.net/wp-content/uploads/2015/08/giphy.gif')
+    if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
+
 
 @app.route('/alert/<model>', methods=['POST'])
 def alert(model):
-    if (not (model == 'ups' or model == 'icinga' or model == 'librenms')): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
-    if (model == 'librenms'): model = "LibreNMS"
-    if (model == "icinga"): model = "IcingaWeb2"
-    if (model == "ups"): model = "UPS"
-    try:
-        respText = "[" + model + " 監控服務異常告警]\n"
-        respText += json.loads(str(request.json).replace("'", '"'))["message"]
-        bot.send_message(chat_id=group_id, text=respText)
-        return {"alert": "data_ok"}, status.HTTP_200_OK
-    except:
-        return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+    if request.method == 'POST':
+        if (not (model == 'ups' or model == 'icinga' or model == 'librenms')): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (model == 'librenms'): model = "LibreNMS"
+        if (model == "icinga"): model = "IcingaWeb2"
+        if (model == "ups"): model = "UPS"
+        try:
+            respText = "[" + model + " 監控服務異常告警]\n"
+            respText += json.loads(str(request.json).replace("'", '"'))["message"]
+            bot.send_message(chat_id=group_id, text=respText)
+            return {"alert": "data_ok"}, status.HTTP_200_OK
+        except:
+            return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
