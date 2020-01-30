@@ -247,10 +247,12 @@ def getAirCondiction(device_id, info):
 
 def reply_handler(bot, update):
     """Reply message."""
+    print(dir(bot))
     print(dir(update.message))
     device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
     # for s in device_list: print(s)
     text = update.message.text
+    respText = ""
     if (text == '監控設備列表'): 
         text = '請選擇所需設備資訊～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
@@ -259,34 +261,34 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
         return
-    if (text == 'DL303'): text = getDl303("all")
-    if (text == '溫度'): text = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp")
-    if (text == '濕度'): text = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
-    if (text == '溫濕度'): text = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
-    if (text == '露點溫度'): text = getDl303("dp")
-    if (text == 'CO2'): text = getDl303("co2")
-    if (text == 'ET7044'): text = getEt7044("all")
-    if (text == '加濕器狀態'): text = getEt7044("sw1")
-    if (text == '進風扇狀態'): text = getEt7044("sw2")
-    if (text == '排風扇狀態'): text = getEt7044("sw3")
-    if (text == '電流'): text = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current")
-    if (text == 'UPS_A 狀態'): text = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
-    if (text == 'UPS_B 狀態'): text = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
-    if (text == '冷氣A狀態'): text = getAirCondiction("a", "all")
-    if (text == '冷氣B狀態'): text = getAirCondiction("b", "all")
-    if (text == '冷氣狀態'): text = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+    if (text == 'DL303'): respText = getDl303("all")
+    if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp")
+    if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
+    if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
+    if (text == '露點溫度'): respText = getDl303("dp")
+    if (text == 'CO2'): respText = getDl303("co2")
+    if (text == 'ET7044'): respText = getEt7044("all")
+    if (text == '加濕器狀態'): respText = getEt7044("sw1")
+    if (text == '進風扇狀態'): respText = getEt7044("sw2")
+    if (text == '排風扇狀態'): respText = getEt7044("sw3")
+    if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current")
+    if (text == 'UPS_A 狀態'): respText = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
+    if (text == 'UPS_B 狀態'): respText = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
+    if (text == '冷氣A狀態'): respText = getAirCondiction("a", "all")
+    if (text == '冷氣B狀態'): respText = getAirCondiction("b", "all")
+    if (text == '冷氣狀態'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
 
-    update.message.reply_text(text)
+    if (respText != ""): update.message.reply_text(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
-    if (device == "DL303"): text = getDl303("all")
-    if (device == "ET7044"): text = getEt7044("all")
-    if (device == "UPS_A"): text = getUps("A", "all")
-    if (device == "UPS_B"): text = getUps("B", "all")
-    if (device == "冷氣_A"): text = getAirCondiction("a", "all")
-    if (device == "冷氣_B"): text = getAirCondiction("b", "all")
-    update.callback_query.message.reply_text(text)
+    if (device == "DL303"): respText = getDl303("all")
+    if (device == "ET7044"): respText = getEt7044("all")
+    if (device == "UPS_A"): respText = getUps("A", "all")
+    if (device == "UPS_B"): respText = getUps("B", "all")
+    if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
+    if (device == "冷氣_B"): respText = getAirCondiction("b", "all")
+    update.callback_query.message.reply_text(respText)
 
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
