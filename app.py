@@ -24,6 +24,7 @@ app = Flask(__name__)
 
 # Initial bot by Telegram access token
 bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
+group_id = config['TELEGRAM']['GROUP_ID']
 
 # Setup Mongodb info
 myMongoClient = MongoClient("mongodb://172.17.0.6:27017/")
@@ -39,15 +40,20 @@ dbUpsB = myMongoDb["ups_b"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 
-# data = {"temp": 23.5, "humi": 95, "current": 30, "date": datetime.datetime.now()}
-# dbAirCondictionA.insert_one(data)
-# dbAirCondictionB.insert_one(data)
+
+@app.route('/alert/<model>', methods=['POST'])
+def alert(model):
+    if (not (model == 'ups' or model == 'icinga' or model == 'librenms'): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
+    try:
+        bot.send_message(chat_id=group_id, text=json.loads(update.callback_query.data)["message"])
+    except:
+        return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        if (not (module == "envoriment" or module == "current")): return {"air-condiction": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED 
-        if (not (sequence == "a" or sequence == "b")): return {"air-condiction": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module == "envoriment" or module == "current")): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
+        if (not (sequence == "a" or sequence == "b")): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
             if (module == "envoriment"): 
@@ -78,7 +84,7 @@ def air_condiction_update(module, sequence):
 @app.route('/ups/<sequence>', methods=['POST'])
 def ups_update(sequence):
     if request.method == 'POST':
-        if (not (sequence == "A" or sequence == "B")): return {"ups": "url_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (sequence == "A" or sequence == "B")): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
@@ -110,7 +116,7 @@ def et7044_update():
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
     if request.method == 'POST':
-        if (not (module == "tc" or module == "rh" or module == "co2" or module == "dp")): return {"dl303": "url_module_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module == "tc" or module == "rh" or module == "co2" or module == "dp")): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
         try: data = json.loads(str(request.json).replace("'", '"'))
         except: return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
