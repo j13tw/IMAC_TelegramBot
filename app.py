@@ -27,9 +27,9 @@ bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 group_id = config['TELEGRAM']['GROUP_ID']
 
 # Setup Mongodb info
-myMongoClient = MongoClient("mongodb://172.17.0.6:27017/")
+myMongoClient = MongoClient("mongodb://" config['MONGODB']['SERVER'] + "/")
 myMongoDb = myMongoClient["smart-data-center"]
-myMongoDb.authenticate('imac', 'imacuser')
+myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
 dbDl303TC = myMongoDb["dl303/tc"]
 dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
@@ -51,6 +51,7 @@ def alert(model):
         respText = "[" + model + " 監控服務異常告警]\n"
         respText += json.loads(str(request.json).replace("'", '"'))["message"]
         bot.send_message(chat_id=group_id, text=respText)
+        return {"alert": "data_ok"}, status.HTTP_200_OK
     except:
         return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
