@@ -182,7 +182,7 @@ def getDl303(info):
         dateList.append(dp['date'])
         data += "環境露點溫度: " + str(dp['dp']) + "度\n"
     date = sorted(dateList)[0]
-    data += "最後更新時間: " + str(date).split('.')[0]
+    data += "最後更新時間: \n" + str(date).split('.')[0]
     return data
 
 def getEt7044(info):
@@ -217,7 +217,7 @@ def getEt7044(info):
         if (tmp['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
         data += "開關 7 狀態: " + sw7 + "\n"
-    data += "最後更新時間: " + str(tmp['date']).split('.')[0]
+    data += "最後更新時間: \n" + str(tmp['date']).split('.')[0]
     return data
 
 def getUps(device_id, info):
@@ -242,7 +242,7 @@ def getAirCondiction(device_id, info):
     if (info == "current" or info == "all"): 
         data += "冷氣功耗電流: " + str(current['current']) + " A\n"
     date = sorted([current['date'], envoriment["date"]])[0]
-    data += "最後更新時間: " + str(date).split('.')[0]
+    data += "最後更新時間: \n" + str(date).split('.')[0]
     return data  
 
 def reply_handler(bot, update):
