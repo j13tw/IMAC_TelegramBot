@@ -44,9 +44,9 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 @app.route('/alert/<model>', methods=['POST'])
 def alert(model):
     if (not (model == 'ups' or model == 'icinga' or model == 'librenms')): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
-    if (model == 'librenms') model = "LibreNMS"
-    if (model == "icinga") model = "IcingaWeb2"
-    if (model == "ups") model = "UPS"
+    if (model == 'librenms'): model = "LibreNMS"
+    if (model == "icinga"): model = "IcingaWeb2"
+    if (model == "ups"): model = "UPS"
     try:
         respText = "[" + model + " 監控服務異常告警]\n"
         respText += json.loads(str(request.json).replace("'", '"'))["message"]
