@@ -43,7 +43,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 
 @app.route('/alert/<model>', methods=['POST'])
 def alert(model):
-    if (not (model == 'ups' or model == 'icinga' or model == 'librenms'): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
+    if (not (model == 'ups' or model == 'icinga' or model == 'librenms')): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
     try:
         bot.send_message(chat_id=group_id, text=json.loads(update.callback_query.data)["message"])
     except:
