@@ -45,8 +45,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 def alert(model):
     if (not (model == 'ups' or model == 'icinga' or model == 'librenms')): return {"alert": "api_model_fail"}, status.HTTP_401_UNAUTHORIZED
     try:
-        print(json.loads(str(request.json))["message"])
-        bot.send_message(chat_id=group_id, text=json.loads(str(request.json))["message"])
+        bot.send_message(chat_id=group_id, text=json.loads(str(request.json).replace("'", '"'))["message"])
     except:
         return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
