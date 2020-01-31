@@ -248,12 +248,33 @@ def getUps(device_id, info):
     else: data += "["
     data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    if (info == "all"):
-        return str(upsInfo)
-    if (info == "status"):
-        return str(upsInfo)
-    if (info == "loading"):
-        return str(upsInfo)
+    data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
+    if (info == "input" or info == "all"):
+        data += "輸入狀態: \n"
+        data += "頻率: " + str(upsInfo['inputFreq']) + "HZ\n"
+        data += "電壓: " + str(upsInfo['inputVolt']) + "V\n"
+    if (info == "output" or info == "all"):
+        data += "輸出狀態: \n"
+        data += "頻率: " + str(upsInfo['outputFreq']) + "HZ\n"
+        data += "電壓: " + str(upsInfo['outputVolt']) + "V\n"
+    if (info == "output" or info == "current" or info == "all"):
+        data += "電流: " + str(upsInfo['outputAmp']) + "A\n"
+    if (info == "output" or info == "all"):
+        data += "瓦數: " + str(upsInfo['outputWatt']) + "kw\n"
+        data += "負載比: " + str(upsInfo['outputPersent']) + "kw\n"
+    if (info == 'battery' or info == "all"):
+        data += "電池狀態: \n"
+        data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
+        data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode"'] + "\n"
+        data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
+        data += "現在電量比: " + str(upsInfo['battery']['status']['batteryRemain_Percent']) + "\n"
+        data += "電池健康度: " + upsInfo['battery']['status']['batteryHealth'] + "\n"
+        data += "上次更換時間: " + str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) 
+        data += "下次更換時間: " + str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day'])
+    if (info == 'temp' or info == "all")
+        data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
+    data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
+    return data
 
 def getAirCondiction(device_id, info):
     data = ""
@@ -291,7 +312,7 @@ def reply_handler(bot, update):
         ]))
         return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
-    if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp")
+    if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
     if (text == '露點溫度'): respText = getDl303("dp")
@@ -300,9 +321,10 @@ def reply_handler(bot, update):
     if (text == '加濕器狀態'): respText = getEt7044("sw1")
     if (text == '進風扇狀態'): respText = getEt7044("sw2")
     if (text == '排風扇狀態'): respText = getEt7044("sw3")
-    if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current")
-    if (text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = 'UPS_A 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
-    if (text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = 'UPS_B 不斷電系統狀態\n輸入電壓:\n輸入電流:\n輸出電壓:\n輸出電流:\n輸出瓦數\n負載比例\n'
+    if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
+    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups'): respText = getUps("a", "all") + '\n' + getUps("b", "all")
+    if (text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = getUps("a", "all")
+    if (text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = getUps("b", "all")
     if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
