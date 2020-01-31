@@ -248,7 +248,7 @@ def getUps(device_id, info):
     else: data += "["
     data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
+    if (info != 'temp'): data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
     if (info == "input" or info == "all"):
         data += "輸入狀態: \n"
         data += "頻率: " + str(upsInfo['inputFreq']) + "HZ\n"
@@ -257,8 +257,7 @@ def getUps(device_id, info):
         data += "輸出狀態: \n"
         data += "頻率: " + str(upsInfo['outputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['outputVolt']) + "V\n"
-    if (info == "output" or info == "current" or info == "all"):
-        data += "電流: " + str(upsInfo['outputAmp']) + "A\n"
+    if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['outputAmp']) + "A\n"
     if (info == "output" or info == "all"):
         data += "瓦數: " + str(upsInfo['outputWatt']) + "kw\n"
         data += "負載比: " + str(upsInfo['outputPersent']) + "kw\n"
@@ -271,8 +270,7 @@ def getUps(device_id, info):
         data += "電池健康度: " + upsInfo['battery']['status']['batteryHealth'] + "\n"
         data += "上次更換時間: " + str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) 
         data += "下次更換時間: " + str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day'])
-    if (info == 'temp' or info == "all"):
-        data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
+    if (info == 'temp' or info == "all"): data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
     data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
     return data
 
