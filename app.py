@@ -186,8 +186,8 @@ def getDl303(info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     failList = []
     data = "[DL303"
-    if (info == "all"): data += "設備狀態回報]"
-    else: data += " 工業監測器]"
+    if (info == "all"): data += "設備狀態回報]\n"
+    else: data += " 工業監測器]\n"
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         if (tc['date'] > brokenTime): failList.append('tc')
