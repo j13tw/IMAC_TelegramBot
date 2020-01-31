@@ -183,7 +183,7 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    brokenTime = datetime.timedelta(minutes=-1)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-1)
     failList = []
     data = "[DL303"
     dateList = []
