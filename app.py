@@ -247,14 +247,15 @@ def getUps(device_id, info):
     if (info == "all"): data += "[不斷電系統狀態回報-"
     else: data += "["
     data += "UPS_" + str(device_id).upper() + "]\n"
+    data += "---------------------"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (info != 'temp'): data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
     if (info == "input" or info == "all"):
-        data += "輸入狀態: \n"
+        data += "[輸入狀態] \n"
         data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['input']['inputVolt']) + "V\n"
     if (info == "output" or info == "all"):
-        data += "輸出狀態: \n"
+        data += "[輸出狀態] \n"
         data += "頻率: " + str(upsInfo['output']['outputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['output']['outputVolt']) + "V\n"
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
@@ -262,14 +263,14 @@ def getUps(device_id, info):
         data += "瓦數: " + str(upsInfo['output']['outputWatt']) + "kw\n"
         data += "負載比: " + str(upsInfo['output']['outputPercent']) + "kw\n"
     if (info == 'battery' or info == "all"):
-        data += "電池狀態: \n"
+        data += "[電池狀態] \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
         data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode'] + "\n"
         data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
         data += "現在電量比: " + str(upsInfo['battery']['status']['batteryRemain_Percent']) + "\n"
         data += "電池健康度: " + upsInfo['battery']['status']['batteryHealth'] + "\n"
-        data += "上次更換時間: " + str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) 
-        data += "下次更換時間: " + str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day'])
+        data += "上次更換時間: " + str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) + "\n"
+        data += "下次更換時間: " + str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']) + "\n"
     if (info == 'temp' or info == "all"): data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
     data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
     return data
