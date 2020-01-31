@@ -36,8 +36,7 @@ dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
 dbDl303DP = myMongoDb["dl303/dp"]
 dbEt7044 = myMongoDb["et7044"]
-dbUpsA = myMongoDb["ups_a"]
-dbUpsB = myMongoDb["ups_b"]
+dbUps = myMongoDb["ups"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 
@@ -107,11 +106,10 @@ def ups_update(sequence):
             data = json.loads(str(request.json).replace("'", '"'))
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
-        if (sequence == "A"): dbUps = dbUpsA
-        elif (sequence == "B"): dbUps = dbUpsB
         data["date"] = datetime.datetime.now()
+        data["sequence"] = sequence
         if (dbUps.find_one() == None): dbUps.insert_one(data)
-        else: dbUps.update_one({'inputAmp': dbUps.find_one()['inputAmp']},{'$set':data})
+        else: dbUps.update_one({'sequence': sequence},{'$set':data})
         return {"ups": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/et7044', methods=['POST', 'GET'])
@@ -245,12 +243,17 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
+    data = ""
+    if (info == "all"): data += "[不斷電系統狀態回報-"
+    else: data += "["
+    data += "UPS-" + str(device_id).upper() + "]\n"
+    upsInfo = dbUps.find({"sequence": device_id})[0]
     if (info == "all"):
-        return "ups_id = " + device_id + ", ups = all"
-    elif (info == "status"):
-        return "ups_id = " + device_id + ",ups = status"
-    elif (info == "loading"):
-        return "ups_id = " + device_id + ",ups = loading"
+        return upsInfo
+    if (info == "status"):
+        return upsInfo
+    if (info == "loading"):
+        return upsInfo
 
 def getAirCondiction(device_id, info):
     data = ""
