@@ -183,10 +183,9 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-1)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     failList = []
     data = "[DL303"
-    dateList = []
     if (info == "all"): data += "設備狀態回報]"
     else: data += " 工業監測器]"
     if (info == "tc" or info == "all" or info == "temp/humi"):
@@ -205,7 +204,6 @@ def getDl303(info):
         dp = dbDl303DP.find_one()
         if (dp['date'] > brokenTime): failList.append('dp')
         data += "環境露點溫度: " + str(dp['dp']) + "度\n"
-    date = sorted(dateList)[0]
     if (len(failList) > 0): 
         data += "設備資料超時!\n"
         data += "模組: " + str(failList) + "\n"
