@@ -249,11 +249,11 @@ def getUps(device_id, info):
     data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (info == "all"):
-        return upsInfo
+        return str(upsInfo)
     if (info == "status"):
-        return upsInfo
+        return str(upsInfo)
     if (info == "loading"):
-        return upsInfo
+        return str(upsInfo)
 
 def getAirCondiction(device_id, info):
     data = ""
