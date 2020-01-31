@@ -264,7 +264,7 @@ def getUps(device_id, info):
     if (info == 'battery' or info == "all"):
         data += "電池狀態: \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
-        data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode"'] + "\n"
+        data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode'] + "\n"
         data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
         data += "現在電量比: " + str(upsInfo['battery']['status']['batteryRemain_Percent']) + "\n"
         data += "電池健康度: " + upsInfo['battery']['status']['batteryHealth'] + "\n"
