@@ -247,6 +247,7 @@ def getUps(device_id, info):
     if (info == "all"): data += "[不斷電系統狀態回報-"
     else: data += "["
     data += "UPS-" + str(device_id).upper() + "]\n"
+    print(data)
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (info == "all"):
         return upsInfo
