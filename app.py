@@ -183,28 +183,32 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
+    brokenTime = datetime.timedelta(minutes=-1)
+    failList = []
     data = "[DL303"
     dateList = []
-    if (info == "all"): data += "設備狀態回報]\n"
-    else: data += " 工業監測器]\n"
+    if (info == "all"): data += "設備狀態回報]"
+    else: data += " 工業監測器]"
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
-        dateList.append(tc['date'])
+        if (tc['date'] > brokenTime): failList.append('tc')
         data += "現在環境溫度: " + str(tc['tc']) + "度\n"
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
-        dateList.append(rh['date'])
+        if (rh['date'] > brokenTime): failList.append('rh')
         data += "現在環境濕度: " + str(rh['rh']) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
-        dateList.append(co2['date'])
+        if (co2['date'] > brokenTime): failList.append('co2')
         data += "環境 CO2 濃度: " + str(co2['co2']) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
-        dateList.append(dp['date'])
+        if (dp['date'] > brokenTime): failList.append('dp')
         data += "環境露點溫度: " + str(dp['dp']) + "度\n"
     date = sorted(dateList)[0]
-    data += "最後更新時間: \n" + str(date).split('.')[0]
+    if (len(failList) > 0): 
+        data += "設備資料超時!\n"
+        data += "模組: " + str(failList) + "\n"
     return data
 
 def getEt7044(info):
@@ -248,7 +252,7 @@ def getUps(device_id, info):
     else: data += "["
     data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    if (info != 'temp'): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
+    if (not (info == 'temp' or info == 'current')): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
     if (info == "all"): data += "---------------------------\n"
     if (info == "input" or info == "all"):
         data += "[輸入狀態] \n"
@@ -321,7 +325,7 @@ def reply_handler(bot, update):
     if (text == '進風扇狀態'): respText = getEt7044("sw2")
     if (text == '排風扇狀態'): respText = getEt7044("sw3")
     if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
-    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n' + getUps("b", "all")
+    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n\n' + getUps("b", "all")
     if (text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = getUps("a", "all")
     if (text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = getUps("b", "all")
     if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
