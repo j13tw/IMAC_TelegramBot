@@ -271,7 +271,7 @@ def getUps(device_id, info):
         data += "電池健康度: " + upsInfo['battery']['status']['batteryHealth'] + "\n"
         data += "上次更換時間: " + str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) 
         data += "下次更換時間: " + str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day'])
-    if (info == 'temp' or info == "all")
+    if (info == 'temp' or info == "all"):
         data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
     data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
     return data
