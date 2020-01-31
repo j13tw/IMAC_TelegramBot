@@ -247,9 +247,9 @@ def getUps(device_id, info):
     if (info == "all"): data += "[不斷電系統狀態回報-"
     else: data += "["
     data += "UPS_" + str(device_id).upper() + "]\n"
-    data += "---------------------------\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    if (info != 'temp'): data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
+    if (info != 'temp'): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
+    if (info == "all"): data += "---------------------------\n"
     if (info == "input" or info == "all"):
         data += "[輸入狀態] \n"
         data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
@@ -321,7 +321,7 @@ def reply_handler(bot, update):
     if (text == '進風扇狀態'): respText = getEt7044("sw2")
     if (text == '排風扇狀態'): respText = getEt7044("sw3")
     if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
-    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups'): respText = getUps("a", "all") + '\n' + getUps("b", "all")
+    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n' + getUps("b", "all")
     if (text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = getUps("a", "all")
     if (text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = getUps("b", "all")
     if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
