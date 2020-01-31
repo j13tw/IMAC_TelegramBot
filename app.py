@@ -205,6 +205,7 @@ def getDl303(info):
         if (dp['date'] < brokenTime): failList.append('dp')
         data += "環境露點溫度: " + str(dp['dp']) + "度\n"
     if (len(failList) > 0): 
+        data += "---------------------------\n"
         data += "設備資料超時!\n"
         data += "模組: " + str(failList) + "\n"
     return data
