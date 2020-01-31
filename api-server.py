@@ -5,6 +5,10 @@ from pymongo import MongoClient
 import datetime
 import configparser
 
+# Load data from config.ini file
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 # Initial Flask app
 app = Flask(__name__)
 
