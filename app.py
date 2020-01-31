@@ -260,7 +260,7 @@ def getUps(device_id, info):
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
     if (info == "output" or info == "all"):
         data += "瓦數: " + str(upsInfo['output']['outputWatt']) + "kw\n"
-        data += "負載比: " + str(upsInfo['output']['outputPersent']) + "kw\n"
+        data += "負載比: " + str(upsInfo['output']['outputPercent']) + "kw\n"
     if (info == 'battery' or info == "all"):
         data += "電池狀態: \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
