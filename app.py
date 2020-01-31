@@ -251,16 +251,16 @@ def getUps(device_id, info):
     if (info != 'temp'): data += "UPS 狀態:" + upsInfo['ups_Life'] + "\n"
     if (info == "input" or info == "all"):
         data += "輸入狀態: \n"
-        data += "頻率: " + str(upsInfo['inputFreq']) + "HZ\n"
-        data += "電壓: " + str(upsInfo['inputVolt']) + "V\n"
+        data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
+        data += "電壓: " + str(upsInfo['input']['inputVolt']) + "V\n"
     if (info == "output" or info == "all"):
         data += "輸出狀態: \n"
-        data += "頻率: " + str(upsInfo['outputFreq']) + "HZ\n"
-        data += "電壓: " + str(upsInfo['outputVolt']) + "V\n"
-    if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['outputAmp']) + "A\n"
+        data += "頻率: " + str(upsInfo['output']['outputFreq']) + "HZ\n"
+        data += "電壓: " + str(upsInfo['output']['outputVolt']) + "V\n"
+    if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
     if (info == "output" or info == "all"):
-        data += "瓦數: " + str(upsInfo['outputWatt']) + "kw\n"
-        data += "負載比: " + str(upsInfo['outputPersent']) + "kw\n"
+        data += "瓦數: " + str(upsInfo['output']['outputWatt']) + "kw\n"
+        data += "負載比: " + str(upsInfo['output']['outputPersent']) + "kw\n"
     if (info == 'battery' or info == "all"):
         data += "電池狀態: \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
