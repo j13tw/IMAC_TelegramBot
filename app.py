@@ -246,8 +246,7 @@ def getUps(device_id, info):
     data = ""
     if (info == "all"): data += "[不斷電系統狀態回報-"
     else: data += "["
-    data += "UPS-" + str(device_id).upper() + "]\n"
-    print(data)
+    data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (info == "all"):
         return upsInfo
@@ -314,8 +313,8 @@ def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
     if (device == "DL303"): respText = getDl303("all")
     if (device == "ET7044"): respText = getEt7044("all")
-    if (device == "UPS_A"): respText = getUps("A", "all")
-    if (device == "UPS_B"): respText = getUps("B", "all")
+    if (device == "UPS_A"): respText = getUps("a", "all")
+    if (device == "UPS_B"): respText = getUps("b", "all")
     if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     if (device == "冷氣_B"): respText = getAirCondiction("b", "all")
     update.callback_query.message.reply_text(respText)
