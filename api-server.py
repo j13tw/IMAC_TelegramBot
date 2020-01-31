@@ -130,3 +130,7 @@ def dl303_update(module):
                 return {"dl303": "dp_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "dp_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
+
+if __name__ == "__main__":
+    # Running server
+    app.run(debug=True)
