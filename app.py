@@ -257,6 +257,7 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     data = "*["
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
