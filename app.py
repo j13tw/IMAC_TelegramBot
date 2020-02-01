@@ -297,13 +297,13 @@ def getAirCondiction(device_id, info):
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
     if (info == "temp" or info == "all" or info == "temp/humi"):
-        data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
+        data += "`出風口溫度: %3.1f 度`\n" % float(envoriment['temp'])
     if (info == "humi" or info == "all" or info == "temp/humi"):
-        data += "冷氣出風口濕度: " + str(envoriment['humi']) + "%\n"
+        data += "`出風口濕度: %3.1f %%`\n" % float(envoriment['humi'])
     if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
         if (envoriment['date'] < brokenTime): failList.append('temp/humi')
     if (info == "current" or info == "all"): 
-        data += "冷氣功耗電流: " + str(current['current']) + " A\n"
+        data += "`冷氣功耗電流: %3.1f A`\n" % current['current']
         if (current['date'] < brokenTime): failList.append('current')
     if (len(failList) > 0): 
         data += "-------------------------------------\n"
