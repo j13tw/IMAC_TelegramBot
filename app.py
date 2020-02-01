@@ -185,28 +185,29 @@ def webhook_handler():
 def getDl303(info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     failList = []
-    data = "[DL303"
-    if (info == "all"): data += "設備狀態回報]\n"
-    else: data += " 工業監測器]\n"
+    data = "**[DL303"
+    if (info == "all"): data += "設備狀態回報]"
+    else: data += " 工業監測器]"
+    data += "**\n"
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         if (tc['date'] < brokenTime): failList.append('tc')
-        data += "現在環境溫度: " + str(tc['tc']) + "度\n"
+        data += "- 現在環境溫度: " + str(tc['tc']) + "度\n"
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         if (rh['date'] < brokenTime): failList.append('rh')
-        data += "現在環境濕度: " + str(rh['rh']) + "%\n"
+        data += "- 現在環境濕度: " + str(rh['rh']) + "%\n"
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         if (co2['date'] < brokenTime): failList.append('co2')
-        data += "環境 CO2 濃度: " + str(co2['co2']) + "ppm\n"
+        data += "- 環境 CO2 濃度: " + str(co2['co2']) + "ppm\n"
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         if (dp['date'] < brokenTime): failList.append('dp')
-        data += "環境露點溫度: " + str(dp['dp']) + "度\n"
+        data += "- 環境露點溫度: " + str(dp['dp']) + "度\n"
     if (len(failList) > 0): 
         data += "---------------------------\n"
-        data += "設備資料超時!\n"
+        data += "**設備資料超時!**\n"
         data += "模組: " + str(failList) + "\n"
         data += "@" + devUser_id + " 請維修～\n"
     return data
