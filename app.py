@@ -210,7 +210,7 @@ def getDl303(info):
         if (dp['date'] < brokenTime): failList.append('dp')
         data += "`環境露點溫度: %3.1f 度`\n" % float(dp['dp'])
     if (len(failList) > 0): 
-        data += "---------------------------\n"
+        data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
@@ -250,7 +250,7 @@ def getEt7044(info):
         else: sw7 = "關閉"
         data += "`開關 7 狀態:\t" + sw7 + "`\n"
     if (tmp['date'] < brokenTime):
-        data += "---------------------------\n"
+        data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
     return data
@@ -262,7 +262,7 @@ def getUps(device_id, info):
     data += "UPS_" + str(device_id).upper() + "]\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (not (info == 'temp' or info == 'current')): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
-    if (info == "all"): data += "---------------------------\n"
+    if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
         data += "[輸入狀態] \n"
         data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
