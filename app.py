@@ -263,19 +263,19 @@ def getUps(device_id, info):
     if (not (info == 'temp' or info == 'current')): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
     if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
-        data += "_[輸入狀態]_ \n"
-        data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
-        data += "電壓: " + str(upsInfo['input']['inputVolt']) + "V\n"
+        data += "[輸入狀態] \n"
+        data += "`頻率: %3.1f HZ\n`" % float(upsInfo['input']['inputFreq'])
+        data += "`電壓: %3.1f V\n`" % float(upsInfo['input']['inputVolt'])
     if (info == "output" or info == "all"):
-        data += "*__[輸出狀態]__* \n"
-        data += "頻率: " + str(upsInfo['output']['outputFreq']) + "HZ\n"
-        data += "電壓: " + str(upsInfo['output']['outputVolt']) + "V\n"
+        data += "[輸出狀態] \n"
+        data += "`頻率: %3.1f HZ\n`" % float(upsInfo['output']['inputFreq'])
+        data += "`電壓: %3.1f V\n`" % float(upsInfo['output']['inputVolt'])
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
     if (info == "output" or info == "all"):
-        data += "瓦數: " + str(upsInfo['output']['outputWatt']) + "kw\n"
-        data += "負載比: " + str(upsInfo['output']['outputPercent']) + "kw\n"
+        data += "`瓦數: %1.3f kw\n`" % float(upsInfo['output']['outputWatt'])
+        data += "`負載比: %3d %% \n`" % int(upsInfo['output']['outputPercent'])
     if (info == 'battery' or info == "all"):
-        data += "\~[電池狀態]\~ \n"
+        data += "[電池狀態] \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
         data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode'] + "\n"
         data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
