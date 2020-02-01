@@ -213,42 +213,46 @@ def getDl303(info):
         data += "---------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
-        data += "*異常模組:* _" + str(failList) + "_\n"
+        data += "*異常模組:* " + str(failList) + "\n"
     return data
 
 def getEt7044(info):
     data = ""
-    if (info == "all"): data += "[ET7044 設備狀態回報]\n"
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
     tmp = dbEt7044.find_one()
     if (info == "sw1" or info == "all"):
         if (tmp['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
-        data += "加濕器狀態: " + sw1 + "\n" 
+        data += "加濕器狀態:\t" + sw1 + "\n" 
     if (info == "sw2" or info == "all"):
         if (tmp['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
-        data += "進風扇狀態: " + sw2 + "\n" 
+        data += "進風扇狀態:\t" + sw2 + "\n" 
     if (info == "sw3" or info == "all"):
         if (tmp['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
-        data += "排風扇狀態: " + sw3 + "\n" 
+        data += "排風扇狀態:\t" + sw3 + "\n" 
     if (info == "sw4" or info == "all"):
         if (tmp['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
-        data += "開關 4 狀態: " + sw4 + "\n" 
+        data += "開關 4 狀態:\t" + sw4 + "\n" 
     if (info == "sw5" or info == "all"):
         if (tmp['sw5'] == True): sw5 = "開啟"
         else: sw5 = "關閉"
-        data += "開關 5 狀態: " + sw5 + "\n" 
+        data += "開關 5 狀態:\t" + sw5 + "\n" 
     if (info == "sw6" or info == "all"):
         if (tmp['sw6'] == True): sw6 = "開啟"
         else: sw6 = "關閉"
-        data += "開關 6 狀態: " + sw6 + "\n" 
+        data += "開關 6 狀態:\t" + sw6 + "\n" 
     if (info == "sw7" or info == "all"):
         if (tmp['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
-        data += "開關 7 狀態: " + sw7 + "\n"
-    data += "最後更新時間: \n" + str(tmp['date']).split('.')[0]
+        data += "開關 7 狀態:\t" + sw7 + "\n"
+    if (tmp['date'] < brokenTime):
+        data += "---------------------------\n"
+        data += "*[設備資料超時!]*\t"
+        data += "[維護人員](tg://user?id="+ str('et7044_owner) + ")\n"
     return data
 
 def getUps(device_id, info):
