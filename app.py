@@ -213,7 +213,7 @@ def getDl303(info):
         data += "---------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
-        data += "*異常模組:* " + str(failList) + "\n"
+        data += "*異常模組:* _" + str(failList) + "_\n"
     return data
 
 def getEt7044(info):
@@ -252,7 +252,7 @@ def getEt7044(info):
     if (tmp['date'] < brokenTime):
         data += "---------------------------\n"
         data += "*[設備資料超時!]*\t"
-        data += "[維護人員](tg://user?id="+ str('et7044_owner') + ")\n"
+        data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
     return data
 
 def getUps(device_id, info):
@@ -342,7 +342,7 @@ def reply_handler(bot, update):
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
     print(dir(update.message))
     if (respText != ""): 
-        update.message.reply_text(respText)
+    #    update.message.reply_text(respText)
         update.message.reply_markdown(respText)
 
 def device_select(bot, update):
