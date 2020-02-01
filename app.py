@@ -289,20 +289,27 @@ def getUps(device_id, info):
     return data
 
 def getAirCondiction(device_id, info):
-    data = ""
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    failList = []
+    data = "*["
     if (info == "all"): data += "[冷氣監控狀態回報-"
-    else: data += "["
-    data += "冷氣" + str(device_id).upper() + "]\n"
+    data += "冷氣" + str(device_id).upper() + "]*\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
     if (info == "temp" or info == "all" or info == "temp/humi"):
         data += "冷氣出風口溫度: " + str(envoriment['temp']) + "度\n"
     if (info == "humi" or info == "all" or info == "temp/humi"):
         data += "冷氣出風口濕度: " + str(envoriment['humi']) + "%\n"
+    if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
+        if (envoriment['date'] < brokenTime): failList.append('temp/humi')
     if (info == "current" or info == "all"): 
         data += "冷氣功耗電流: " + str(current['current']) + " A\n"
-    date = sorted([current['date'], envoriment["date"]])[0]
-    data += "最後更新時間: \n" + str(date).split('.')[0]
+        if (current['date'] < brokenTime): failList.append('current')
+    if (len(failList) > 0): 
+        data += "-------------------------------------\n"
+        data += "*[設備資料超時!]*\t"
+        data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
+        data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
 
 def reply_handler(bot, update):
