@@ -261,6 +261,7 @@ def getUps(device_id, info):
     data += "UPS_" + str(device_id).upper() + "]*\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (not (info == 'temp' or info == 'current')): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
+    if (info == 'temp' or info == "all"): data += "機箱內部溫度: {0:>3d}".format(int(upsInfo['battery']['status']['batteryTemp']))
     if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
         data += "[[輸入狀態]] \n"
@@ -278,12 +279,11 @@ def getUps(device_id, info):
         data += "[[電池狀態]] \n"
         data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryStatus']).split('(')[1].split(')')[0])
         data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryCharge_Mode']).split('(')[1].split(')')[0])
-        data += "`電池電壓: {0:>4d}`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
-        data += "`剩餘比例: {0:>4d}`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
-        data += "`電池健康度: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
+        data += "`電池電壓: {0:>3d}`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
+        data += "`剩餘比例: {0:>3d}`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
+        data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
         data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
         data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
-    if (info == 'temp' or info == "all"): data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
     data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
     return data
 
