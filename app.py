@@ -299,6 +299,7 @@ def getAirCondiction(device_id, info):
 def reply_handler(bot, update):
     """Reply message."""
     print(dir(bot))
+    print(dir(update))
     print(dir(update.message))
     print(update.message.chat)
     print(update.message.chat_id)
