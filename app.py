@@ -281,8 +281,8 @@ def getUps(device_id, info):
         data += "電池電壓: {0:>4d}\n".format(int(upsInfo['battery']['status']['batteryVolt']))
         data += "現在電量比: {0:>4d}\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
         data += "電池健康度: {0:>8s}\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
-        data += "上次更換時間: {0:>14s}\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']) + "\n"
-        data += "下次更換時間: {0:>14s}\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']) + "\n"
+        data += "上次更換時間: {0:>14s}\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
+        data += "下次更換時間: {0:>14s}\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
     if (info == 'temp' or info == "all"): data += "機箱內部溫度: " + str(upsInfo['battery']['status']['batteryTemp']) + "\n"
     data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
     return data
