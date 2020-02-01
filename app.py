@@ -267,7 +267,7 @@ def getUps(device_id, info):
         data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['input']['inputVolt']) + "V\n"
     if (info == "output" or info == "all"):
-        data += "\__[輸出狀態]\__ \n"
+        data += "*__[輸出狀態]__* \n"
         data += "頻率: " + str(upsInfo['output']['outputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['output']['outputVolt']) + "V\n"
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
