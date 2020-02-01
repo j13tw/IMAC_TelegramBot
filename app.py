@@ -192,19 +192,19 @@ def getDl303(info):
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         if (tc['date'] < brokenTime): failList.append('tc')
-        data += "`現在環境溫度:\t" + str(tc['tc']) + " 度`\n"
+        data += "`即時環境溫度: %3.1f 度`\n" % float(tc['tc']）
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         if (rh['date'] < brokenTime): failList.append('rh')
-        data += "`現在環境濕度:\t" + str(rh['rh']) + " %`\n"
+        data += "`即時環境濕度: %3.1f %`\n" % float(rh['rh']）
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         if (co2['date'] < brokenTime): failList.append('co2')
-        data += "`環境 CO2濃度:\t" + str(co2['co2']) + " ppm`\n"
+        data += "`二氧化碳濃度: %4d ppm`\n" % int(co2['co2'])
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         if (dp['date'] < brokenTime): failList.append('dp')
-        data += "`環境露點溫度:\t" + str(dp['dp']) + " 度`\n"
+        data += "`環境露點溫度: %3.1f 度`\n" % float(dp['dp'])
     if (len(failList) > 0): 
         data += "---------------------------\n"
         data += "*[設備資料超時!]*\n"
@@ -332,9 +332,10 @@ def reply_handler(bot, update):
     if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+    print(dir(update.message))
     if (respText != ""): 
         update.message.reply_text(respText)
-        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id=" + str(devUser_id) + ")")
+        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id="+ str(devUser_id) + ")")
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
