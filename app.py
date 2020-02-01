@@ -256,19 +256,18 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
-    data = ""
-    if (info == "all"): data += "[不斷電系統狀態回報-"
-    else: data += "["
-    data += "UPS_" + str(device_id).upper() + "]\n"
+    data = "*["
+    if (info == "all"): data += "不斷電系統狀態回報-"
+    data += "UPS_" + str(device_id).upper() + "]*\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (not (info == 'temp' or info == 'current')): data += "UPS 狀態: " + upsInfo['ups_Life'] + "\n"
     if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
-        data += "[輸入狀態] \n"
+        data += "__[輸入狀態]__ \n"
         data += "頻率: " + str(upsInfo['input']['inputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['input']['inputVolt']) + "V\n"
     if (info == "output" or info == "all"):
-        data += "[輸出狀態] \n"
+        data += "__[輸出狀態]__ \n"
         data += "頻率: " + str(upsInfo['output']['outputFreq']) + "HZ\n"
         data += "電壓: " + str(upsInfo['output']['outputVolt']) + "V\n"
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
@@ -276,7 +275,7 @@ def getUps(device_id, info):
         data += "瓦數: " + str(upsInfo['output']['outputWatt']) + "kw\n"
         data += "負載比: " + str(upsInfo['output']['outputPercent']) + "kw\n"
     if (info == 'battery' or info == "all"):
-        data += "[電池狀態] \n"
+        data += "__[電池狀態]__ \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
         data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode'] + "\n"
         data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
@@ -303,7 +302,7 @@ def getAirCondiction(device_id, info):
     if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
         if (envoriment['date'] < brokenTime): failList.append('temp/humi')
     if (info == "current" or info == "all"): 
-        data += "`冷氣功耗電流: %3.1f A`\n" % current['current']
+        data += "`冷氣耗電流: %3.1f A`\n" % current['current']
         if (current['date'] < brokenTime): failList.append('current')
     if (len(failList) > 0): 
         data += "-------------------------------------\n"
@@ -360,7 +359,7 @@ def device_select(bot, update):
     if (device == "UPS_B"): respText = getUps("b", "all")
     if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     if (device == "冷氣_B"): respText = getAirCondiction("b", "all")
-    update.callback_query.message.reply_text(respText)
+    update.callback_query.message.reply_markdown(respText)
 
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
