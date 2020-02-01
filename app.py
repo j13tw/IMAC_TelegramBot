@@ -30,6 +30,7 @@ devUser_id = config['TELEGRAM']['DEV_USER_ID']
 dl303_owner = config['DEVICE']['DL303_OWNER']
 et7044_owner = config['DEVICE']['ET7044_OWNER']
 ups_owner = config['DEVICE']['UPS_OWNER']
+air_condiction_owner = config['DEVICE']['AIR_CONDICTION_OWNER']
 
 # Setup Mongodb info
 myMongoClient = MongoClient("mongodb://" + config['MONGODB']['SERVER'] + "/")
@@ -284,7 +285,10 @@ def getUps(device_id, info):
         data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
         data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
         data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
-    data += "最後更新時間: \n" + str(upsInfo['date']).split('.')[0]
+    if (upsInfo['date'] < brokenTime):
+        data += "-------------------------------------\n"
+        data += "*[設備資料超時!]*\t"
+        data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     return data
 
 def getAirCondiction(device_id, info):
@@ -307,7 +311,7 @@ def getAirCondiction(device_id, info):
     if (len(failList) > 0): 
         data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
-        data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
+        data += "[維護人員](tg://user?id="+ str(air_condiction_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
 
