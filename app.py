@@ -264,12 +264,12 @@ def getUps(device_id, info):
     if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
         data += "[輸入狀態] \n"
-        data += "`頻率: %3.1f HZ\n`" % float(upsInfo['input']['inputFreq'])
-        data += "`電壓: %3.1f V\n`" % float(upsInfo['input']['inputVolt'])
+        data += "`頻率: %4.1f HZ\n`" % float(upsInfo['input']['inputFreq'])
+        data += "`電壓: %4.1f V\n`" % float(upsInfo['input']['inputVolt'])
     if (info == "output" or info == "all"):
         data += "[輸出狀態] \n"
-        data += "`頻率: %3.1f HZ\n`" % float(upsInfo['output']['outputFreq'])
-        data += "`電壓: %3.1f V\n`" % float(upsInfo['output']['outputVolt'])
+        data += "`頻率: %4.1f HZ\n`" % float(upsInfo['output']['outputFreq'])
+        data += "`電壓: %4.1f V\n`" % float(upsInfo['output']['outputVolt'])
     if (info == "output" or info == "current" or info == "all"): data += "電流: " + str(upsInfo['output']['outputAmp']) + "A\n"
     if (info == "output" or info == "all"):
         data += "`瓦數: %1.3f kw\n`" % float(upsInfo['output']['outputWatt'])
