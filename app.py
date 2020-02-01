@@ -27,6 +27,10 @@ bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 group_id = config['TELEGRAM']['GROUP_ID']
 devUser_id = config['TELEGRAM']['DEV_USER_ID']
 
+dl303_owner = config['DEVICE']['DL303_OWNER']
+et7044_owner = config['DEVICE']['ET7044_OWNER']
+ups_owner = config['DEVICE']['UPS_OWNER']
+
 # Setup Mongodb info
 myMongoClient = MongoClient("mongodb://" + config['MONGODB']['SERVER'] + "/")
 myMongoDb = myMongoClient["smart-data-center"]
@@ -207,9 +211,9 @@ def getDl303(info):
         data += "`環境露點溫度: %3.1f 度`\n" % float(dp['dp'])
     if (len(failList) > 0): 
         data += "---------------------------\n"
-        data += "*[設備資料超時!]*\n"
+        data += "*[設備資料超時!]*"
+        data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")"
         data += "模組: " + str(failList) + "\n"
-        data += "@" + devUser_id + " 請維修～\n"
     return data
 
 def getEt7044(info):
@@ -335,7 +339,7 @@ def reply_handler(bot, update):
     print(dir(update.message))
     if (respText != ""): 
         update.message.reply_text(respText)
-        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id="+ str(devUser_id) + ")")
+        update.message.reply_markdown(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
