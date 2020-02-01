@@ -185,7 +185,7 @@ def webhook_handler():
 def getDl303(info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     failList = []
-    data = "##[DL303"
+    data = "## [DL303"
     if (info == "all"): data += "設備狀態回報]"
     else: data += " 工業監測器]"
     data += "\n"
