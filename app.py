@@ -252,7 +252,7 @@ def getEt7044(info):
     if (tmp['date'] < brokenTime):
         data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
-        data += "[[[維護人員](tg://user?id="+ str(et7044_owner) + ")]]\n"
+        data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
     return data
 
 def getUps(device_id, info):
@@ -276,7 +276,7 @@ def getUps(device_id, info):
         data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['outputPercent']))
     if (info == 'battery' or info == "all"):
         data += "[[電池狀態]] \n"
-        data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
+        data += "電池狀態: {0:>4s}".format(str(upsInfo['battery']['status']['batteryStatus']).split('(')[1].split(')')[0]) + "\n"
         data += "充電模式: " + upsInfo['battery']['status']['batteryCharge_Mode'] + "\n"
         data += "電池電壓: " + str(upsInfo['battery']['status']['batteryVolt']) + "\n"
         data += "現在電量比: " + str(upsInfo['battery']['status']['batteryRemain_Percent']) + "\n"
