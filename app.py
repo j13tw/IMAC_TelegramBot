@@ -300,7 +300,7 @@ def reply_handler(bot, update):
     """Reply message."""
     print(dir(bot))
     print(dir(update))
-    print(dir(update.message))
+    print(dir(update.message.from_user))
     print(update.message.chat)
     print(update.message.chat_id)
     device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
