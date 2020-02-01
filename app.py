@@ -335,7 +335,8 @@ def reply_handler(bot, update):
     print(dir(update.message))
     if (respText != ""): 
         update.message.reply_text(respText)
-        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id="+ str(devUser_id) + ")")
+        update.message.reply_markdown(respText)
+        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id=" + str(devUser_id) + ")")
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
