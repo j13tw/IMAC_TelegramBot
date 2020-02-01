@@ -270,7 +270,7 @@ def getUps(device_id, info):
         data += "[輸出狀態] \n"
         data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['output']['outputFreq']))
         data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['output']['outputVolt']))
-    if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.3f} A`\n".format(float(upsInfo['output']['outputAmp']))
+    if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.2f} A`\n".format(float(upsInfo['output']['outputAmp']))
     if (info == "output" or info == "all"):
         data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['outputWatt']))
         data += "`負載比例: {0:>3d} %\n`".format(int(upsInfo['output']['outputPercent']))
