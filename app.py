@@ -211,7 +211,7 @@ def getDl303(info):
         if (dp['date'] < brokenTime): failList.append('dp')
         data += "`環境露點溫度: {0:>4.1f} 度`\n".format(float(dp['dp']))
     if (len(failList) > 0): 
-        data += "-------------------------------------\n"
+        data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
@@ -251,7 +251,7 @@ def getEt7044(info):
         else: sw7 = "關閉"
         data += "`開關 7 狀態:\t" + sw7 + "`\n"
     if (tmp['date'] < brokenTime):
-        data += "-------------------------------------\n"
+        data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
     return data
@@ -264,7 +264,7 @@ def getUps(device_id, info):
     upsInfo = dbUps.find({"sequence": device_id})[0]
     if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
     if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
-    if (info == "all"): data += "-------------------------------------\n"
+    if (info == "all"): data += "----------------------------------\n"
     if (info == "input" or info == "all"):
         data += "[[輸入狀態]] \n"
         data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['input']['inputFreq']))
@@ -287,7 +287,7 @@ def getUps(device_id, info):
         data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
         data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
     if (upsInfo['date'] < brokenTime):
-        data += "-------------------------------------\n"
+        data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     return data
@@ -310,7 +310,7 @@ def getAirCondiction(device_id, info):
         data += "`冷氣耗電流: {0:>4.1f} A`\n".format(float(current['current']))
         if (current['date'] < brokenTime): failList.append('current')
     if (len(failList) > 0): 
-        data += "-------------------------------------\n"
+        data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(air_condiction_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
