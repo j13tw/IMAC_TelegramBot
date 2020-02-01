@@ -300,8 +300,6 @@ def reply_handler(bot, update):
     """Reply message."""
     print(dir(bot))
     print(dir(update))
-    print(dir(update.message.from_user))
-    print(update.message.from_user.id)
     print(update.message.chat)
     print(update.message.chat_id)
     device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
@@ -333,7 +331,7 @@ def reply_handler(bot, update):
     if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
-
+    print(dir(update.message))
     if (respText != ""): update.message.reply_text(respText)
 
 def device_select(bot, update):
