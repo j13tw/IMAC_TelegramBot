@@ -214,7 +214,7 @@ def getDl303(info):
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "*異常模組: _" + str(failList) + "_*\n"
-        data += "*粗體文字 _粗斜體文字 ~粗斜體刪除線文字~ __粗斜底線文字___ 粗體文字*\n"
+        data += "*__粗斜底線文字___*\n"
     return data
 
 def getEt7044(info):
