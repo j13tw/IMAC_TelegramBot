@@ -211,7 +211,7 @@ def getDl303(info):
         data += "`環境露點溫度: %3.1f 度`\n" % float(dp['dp'])
     if (len(failList) > 0): 
         data += "---------------------------\n"
-        data += "*[設備資料超時!]*"
+        data += "*[設備資料超時!]* "
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "異常模組: " + str(failList) + "\n"
     return data
