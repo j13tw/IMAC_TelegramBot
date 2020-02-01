@@ -208,6 +208,7 @@ def getDl303(info):
         data += "---------------------------\n"
         data += "設備資料超時!\n"
         data += "模組: " + str(failList) + "\n"
+        data += "@" + devUser_id + " 請維修～\n"
     return data
 
 def getEt7044(info):
