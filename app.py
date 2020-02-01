@@ -292,7 +292,7 @@ def getAirCondiction(device_id, info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     failList = []
     data = "*["
-    if (info == "all"): data += "[冷氣監控狀態回報-"
+    if (info == "all"): data += "冷氣監控狀態回報-"
     data += "冷氣" + str(device_id).upper() + "]*\n"
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
