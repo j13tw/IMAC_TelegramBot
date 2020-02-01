@@ -196,19 +196,19 @@ def getDl303(info):
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         if (tc['date'] < brokenTime): failList.append('tc')
-        data += "`即時環境溫度: %3.1f 度`\n" % float(tc['tc'])
+        data += "`即時環境溫度: {0:>4.1f} 度`\n".format(float(tc['tc']))
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         if (rh['date'] < brokenTime): failList.append('rh')
-        data += "`即時環境濕度: %3.1f %%`\n" % float(rh['rh'])
+        data += "`即時環境濕度: {0:>4.1f} %`\n".format(float(rh['rh']))
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         if (co2['date'] < brokenTime): failList.append('co2')
-        data += "`二氧化碳濃度: %4d ppm`\n" % int(co2['co2'])
+        data += "`二氧化碳濃度: {0:>4d} ppm`\n".format(int(co2['co2']))
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         if (dp['date'] < brokenTime): failList.append('dp')
-        data += "`環境露點溫度: %3.1f 度`\n" % float(dp['dp'])
+        data += "`環境露點溫度: {0:>4.1f} 度`\n".format(float(dp['dp']))
     if (len(failList) > 0): 
         data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
@@ -273,7 +273,7 @@ def getUps(device_id, info):
     if (info == "output" or info == "current" or info == "all"): data += "電流: {0:>5.3f} A\n".format(float(upsInfo['output']['outputAmp']))
     if (info == "output" or info == "all"):
         data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['outputWatt']))
-        data += "`負載比: {0:>4d} %% \n`".format(int(upsInfo['output']['outputPercent']))
+        data += "`負載比例: {0:>3d} %\n`".format(int(upsInfo['output']['outputPercent']))
     if (info == 'battery' or info == "all"):
         data += "[電池狀態] \n"
         data += "電池狀態: " + upsInfo['battery']['status']['batteryStatus'] + "\n"
@@ -296,13 +296,13 @@ def getAirCondiction(device_id, info):
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
     if (info == "temp" or info == "all" or info == "temp/humi"):
-        data += "`出風口溫度: %3.1f 度`\n" % float(envoriment['temp'])
+        data += "`出風口溫度: {0:>4.1f} 度`\n".format(float(envoriment['temp']))
     if (info == "humi" or info == "all" or info == "temp/humi"):
-        data += "`出風口濕度: %3.1f %%`\n" % float(envoriment['humi'])
+        data += "`出風口濕度: {0:>4.1f} %`\n".format(float(envoriment['humi']))
     if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
         if (envoriment['date'] < brokenTime): failList.append('temp/humi')
     if (info == "current" or info == "all"): 
-        data += "`冷氣耗電流: %3.1f A`\n" % current['current']
+        data += "`冷氣耗電流: {0:>4.1f} A`\n".format(float(current['current']))
         if (current['date'] < brokenTime): failList.append('current')
     if (len(failList) > 0): 
         data += "-------------------------------------\n"
