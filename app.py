@@ -197,19 +197,19 @@ def getDl303(info):
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
         if (tc['date'] < brokenTime): failList.append('tc')
-        data += "`即時環境溫度: {0:>4.1f} 度`\n".format(float(tc['tc']))
+        data += "`即時環境溫度: {0:>5.1f} 度`\n".format(float(tc['tc']))
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         if (rh['date'] < brokenTime): failList.append('rh')
-        data += "`即時環境濕度: {0:>4.1f} %`\n".format(float(rh['rh']))
+        data += "`即時環境濕度: {0:>5.1f} %`\n".format(float(rh['rh']))
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         if (co2['date'] < brokenTime): failList.append('co2')
-        data += "`二氧化碳濃度: {0:>4d} ppm`\n".format(int(co2['co2']))
+        data += "`二氧化碳濃度: {0:>5d} ppm`\n".format(int(co2['co2']))
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
         if (dp['date'] < brokenTime): failList.append('dp')
-        data += "`環境露點溫度: {0:>4.1f} 度`\n".format(float(dp['dp']))
+        data += "`環境露點溫度: {0:>5.1f} 度`\n".format(float(dp['dp']))
     if (len(failList) > 0): 
         data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
