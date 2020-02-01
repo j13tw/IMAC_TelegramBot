@@ -332,7 +332,9 @@ def reply_handler(bot, update):
     if (text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
     print(dir(update.message))
-    if (respText != ""): update.message.reply_text(respText)
+    if (respText != ""): 
+        update.message.reply_text(respText)
+        update.message.reply_markdown(respText + "[dl303_owner](tg://user?id="+ str(devUser_id) + ")")
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
