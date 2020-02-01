@@ -260,7 +260,7 @@ def getUps(device_id, info):
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life'])
+    if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
     if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>3d}`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
     if (info == "all"): data += "-------------------------------------\n"
     if (info == "input" or info == "all"):
