@@ -196,7 +196,7 @@ def getDl303(info):
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
         if (rh['date'] < brokenTime): failList.append('rh')
-        data += "`即時環境濕度: %3.1f %`\n" % float(rh['rh'])
+        data += "`即時環境濕度: %3.1f \%`\n" % float(rh['rh'])
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
         if (co2['date'] < brokenTime): failList.append('co2')
