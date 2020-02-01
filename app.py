@@ -225,15 +225,15 @@ def getEt7044(info):
     if (info == "sw1" or info == "all"):
         if (tmp['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
-        data += "`加濕器狀態:\t" + sw1 + "`\n" 
+        data += "`加濕器 狀態:\t" + sw1 + "`\n" 
     if (info == "sw2" or info == "all"):
         if (tmp['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
-        data += "`進風扇狀態:\t" + sw2 + "`\n" 
+        data += "`進風扇 狀態:\t" + sw2 + "`\n" 
     if (info == "sw3" or info == "all"):
         if (tmp['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
-        data += "`排風扇狀態:\t" + sw3 + "`\n" 
+        data += "`排風扇 狀態:\t" + sw3 + "`\n" 
     if (info == "sw4" or info == "all"):
         if (tmp['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
@@ -301,13 +301,13 @@ def getAirCondiction(device_id, info):
     envoriment = dbAirCondiction.find({"sequence": device_id})[0]
     current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
     if (info == "temp" or info == "all" or info == "temp/humi"):
-        data += "`出風口溫度: {0:>4.1f} 度`\n".format(float(envoriment['temp']))
+        data += "`出風口溫度: {0:>5.1f} 度`\n".format(float(envoriment['temp']))
     if (info == "humi" or info == "all" or info == "temp/humi"):
-        data += "`出風口濕度: {0:>4.1f} %`\n".format(float(envoriment['humi']))
+        data += "`出風口濕度: {0:>5.1f} %`\n".format(float(envoriment['humi']))
     if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
         if (envoriment['date'] < brokenTime): failList.append('temp/humi')
     if (info == "current" or info == "all"): 
-        data += "`冷氣耗電流: {0:>4.1f} A`\n".format(float(current['current']))
+        data += "`冷氣耗電流: {0:>5.1f} A`\n".format(float(current['current']))
         if (current['date'] < brokenTime): failList.append('current')
     if (len(failList) > 0): 
         data += "----------------------------------\n"
@@ -337,7 +337,7 @@ def reply_handler(bot, update):
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
-    if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi")
+    if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     if (text == '露點溫度'): respText = getDl303("dp")
     if (text == 'CO2'): respText = getDl303("co2")
     if (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
