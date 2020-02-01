@@ -252,7 +252,7 @@ def getEt7044(info):
     if (tmp['date'] < brokenTime):
         data += "-------------------------------------\n"
         data += "*[設備資料超時!]*\t"
-        data += "[[維護人員]](tg://user?id="+ str(et7044_owner) + ")\n"
+        data += "[[[維護人員](tg://user?id="+ str(et7044_owner) + ")]]\n"
     return data
 
 def getUps(device_id, info):
