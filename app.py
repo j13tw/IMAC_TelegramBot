@@ -428,7 +428,7 @@ def reply_handler(bot, update):
     elif (text == '冷氣_A' or text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     elif (text == '冷氣_B' or text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     elif (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
-    else: respText == "指令配對失敗，輸入：*\"輔助鍵盤\"*，即可快速查看看監控狀態。"
+    else: respText = "指令配對失敗，輸入：*\"輔助鍵盤\"*，即可快速查看看監控狀態。"
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
