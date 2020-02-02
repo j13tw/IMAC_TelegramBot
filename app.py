@@ -33,9 +33,9 @@ ups_owner = config['DEVICE']['UPS_OWNER']
 air_condiction_owner = config['DEVICE']['AIR_CONDICTION_OWNER']
 
 # Setup Mongodb info
-myMongoClient = MongoClient("mongodb://" + config['MONGODB']['SERVER'] + "/")
+myMongoClient = MongoClient(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
 myMongoDb = myMongoClient["smart-data-center"]
-myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
+# myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
 dbDl303TC = myMongoDb["dl303/tc"]
 dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
