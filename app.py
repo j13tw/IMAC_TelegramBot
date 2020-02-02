@@ -356,17 +356,28 @@ def getAirCondiction(device_id, info):
     data = "*["
     if (info == "all"): data += "冷氣監控狀態回報-"
     data += "冷氣" + str(device_id).upper() + "]*\n"
-    envoriment = dbAirCondiction.find({"sequence": device_id})[0]
-    current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
+    if (dbAirCondiction.find({"sequence": device_id}).count() != 0): envoriment = dbAirCondiction.find({"sequence": device_id})[0]
+    else: envoriment = None
+    if (dbAirCondictionCurrent.find({"sequence": device_id}).count() != 0): current = dbAirCondictionCurrent.find({"sequence": device_id})[0]
+    else: current = None
     if (info == "temp" or info == "all" or info == "temp/humi"):
-        data += "`出風口溫度: {0:>5.1f} 度`\n".format(float(envoriment['temp']))
+        if (envoriment != None): data += "`出風口溫度: {0:>5.1f} 度`\n".format(float(envoriment['temp']))
+        else: data += "`出風口溫度: None 度`\n"
     if (info == "humi" or info == "all" or info == "temp/humi"):
-        data += "`出風口濕度: {0:>5.1f} %`\n".format(float(envoriment['humi']))
+        if (envoriment != None): data += "`出風口濕度: {0:>5.1f} %`\n".format(float(envoriment['humi']))
+        else: data += "`出風口濕度: None %`\n"
     if (info == "humi" or info == "temp" or info == "all" or info == "temp/humi"):
-        if (envoriment['date'] < brokenTime): failList.append('temp/humi')
+        if (envoriment != None):
+            if (envoriment['date'] < brokenTime): failList.append('temp/humi')
+        else: 
+            failList.append('temp/humi')
     if (info == "current" or info == "all"): 
-        data += "`冷氣耗電流: {0:>5.1f} A`\n".format(float(current['current']))
-        if (current['date'] < brokenTime): failList.append('current')
+        if (current != None): 
+            data += "`冷氣耗電流: {0:>5.1f} A`\n".format(float(current['current']))
+            if (current['date'] < brokenTime): failList.append('current')
+        else:
+            data += "`冷氣耗電流: None A`\n"
+            failList.append('current')
     if (len(failList) > 0): 
         data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
