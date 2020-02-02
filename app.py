@@ -332,6 +332,7 @@ def getUps(device_id, info):
             data += "`頻率: None HZ\n`"
             data += "`電壓: None V\n`"
         if (info == "output" or info == "current" or info == "all"): data += "`電流: None A`\n"
+        if (info == "output" or info == "all"):
             data += "`瓦數: None kw\n`"
             data += "`負載比例: None %\n`"
         if (info == 'battery' or info == "all"):
