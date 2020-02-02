@@ -278,7 +278,7 @@ def getEt7044(info):
         if (et7044['date'] < brokenTime): tagOwner = 1
     else: 
         tagOwner = 1
-    if (tagOwner == 1)
+    if (tagOwner == 1):
         data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
