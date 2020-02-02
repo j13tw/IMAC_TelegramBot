@@ -391,7 +391,7 @@ def reply_handler(bot, update):
     print(dir(update))
     print(update.message.chat)
     print(update.message.chat_id)
-    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '輪值', '天氣']
+    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '天氣', '輪值']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -403,7 +403,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
         return
-    if (text == '鍵盤按鈕'): 
+    elif (text == '輔助鍵盤'): 
         text = '請選擇所需設備資訊～'
         update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
@@ -411,27 +411,27 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[8:12]]
         ], resize_keyboard=True))
         return
-    if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
-    if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
-    if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
-    if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
-    if (text == '露點溫度'): respText = getDl303("dp")
-    if (text == 'CO2'): respText = getDl303("co2")
-    if (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
-    if (text == '加濕器狀態'): respText = getEt7044("sw1")
-    if (text == '進風扇狀態'): respText = getEt7044("sw2")
-    if (text == '排風扇狀態'): respText = getEt7044("sw3")
-    if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
-    if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n\n' + getUps("b", "all")
-    if (text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = getUps("a", "all")
-    if (text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = getUps("b", "all")
-    if (text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
-    if (text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
-    if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
-    print(dir(update.message))
-    if (respText != ""): 
+    elif (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
+    elif (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
+    elif (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
+    elif (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
+    elif (text == '露點溫度'): respText = getDl303("dp")
+    elif (text == 'CO2'): respText = getDl303("co2")
+    elif (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
+    elif (text == '加濕器狀態'): respText = getEt7044("sw1")
+    elif (text == '進風扇狀態'): respText = getEt7044("sw2")
+    elif (text == '排風扇狀態'): respText = getEt7044("sw3")
+    elif (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
+    elif (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n\n' + getUps("b", "all")
+    elif (text == 'UPS_A' or text == 'UPSA狀態' or text == 'upsa狀態' or text == 'UPSA' or text == 'upsa' or text == 'UpsA' or text == 'Upsa'): respText = getUps("a", "all")
+    elif (text == 'UPS_B' or text == 'UPSB狀態' or text == 'upsb狀態' or text == 'UPSB' or text == 'upsb' or text == 'UpsB' or text == 'Upsb'): respText = getUps("b", "all")
+    elif (text == '冷氣_A' or text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
+    elif (text == '冷氣_B' or text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
+    elif (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+    else: respText == "指令配對失敗，輸入：*\"輔助鍵盤\"*，即可快速查看看監控狀態。"
+    #    print(dir(update.message))
     #    update.message.reply_text(respText)
-        update.message.reply_markdown(respText)
+    update.message.reply_markdown(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
