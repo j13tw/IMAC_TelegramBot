@@ -320,8 +320,8 @@ def getUps(device_id, info):
             data += "*[設備資料超時!]*\t"
             data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     else:
-        data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
-        data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
+        data += "`UPS 狀態: 未知`\n"
+        data += "`機箱內部溫度: None 度`\n"
         data += "----------------------------------\n"
         if (info == "input" or info == "all"):
             data += "[[輸入狀態]] \n"
@@ -337,13 +337,13 @@ def getUps(device_id, info):
             data += "`負載比例: None %\n`"
         if (info == 'battery' or info == "all"):
             data += "[[電池狀態]] \n"
-            data += "`電池狀態: None `\n"
-            data += "`充電模式: None `\n"
+            data += "`電池狀態: 未知 `\n"
+            data += "`充電模式: 未知 `\n"
             data += "`電池電壓: None V`\n"
             data += "`剩餘比例: None %`\n"
-            data += "`電池健康: None `\n"
-            data += "`上次更換時間: None `\n"
-            data += "`下次更換時間: None `\n"
+            data += "`電池健康: 未知 `\n"
+            data += "`上次更換時間: 未知 `\n"
+            data += "`下次更換時間: 未知 `\n"
             data += "----------------------------------\n"
             data += "*[設備資料超時!]*\t"
             data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
