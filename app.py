@@ -228,45 +228,57 @@ def getDl303(info):
             failList.append('dp')
     if (len(failList) > 0): 
         data += "----------------------------------\n"
-        data += "*[設備資料異常!]*\t"
+        data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data
 
 def getEt7044(info):
     data = ""
+    tagOwner = 0
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
     if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
-    tmp = dbEt7044.find_one()
+    et7044 = dbEt7044.find_one()
     if (info == "sw1" or info == "all"):
-        if (tmp['sw1'] == True): sw1 = "開啟"
+        if (et7044 == None) sw1 = "未知"
+        elif(et7044['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
         data += "`加濕器 狀態:\t" + sw1 + "`\n" 
     if (info == "sw2" or info == "all"):
-        if (tmp['sw2'] == True): sw2 = "開啟"
+        if (et7044 == None) sw2 = "未知"
+        elif(et7044['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
         data += "`進風扇 狀態:\t" + sw2 + "`\n" 
     if (info == "sw3" or info == "all"):
-        if (tmp['sw3'] == True): sw3 = "開啟"
+        if (et7044 == None) sw3 = "未知"
+        elif(et7044['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
         data += "`排風扇 狀態:\t" + sw3 + "`\n" 
     if (info == "sw4" or info == "all"):
-        if (tmp['sw4'] == True): sw4 = "開啟"
+        if (et7044 == None) sw4 = "未知"
+        elif(et7044['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
         data += "`開關 4 狀態:\t" + sw4 + "`\n" 
     if (info == "sw5" or info == "all"):
-        if (tmp['sw5'] == True): sw5 = "開啟"
+        if (et7044 == None) sw5 = "未知"
+        elif(et7044['sw5'] == True): sw5 = "開啟"
         else: sw5 = "關閉"
         data += "`開關 5 狀態:\t" + sw5 + "`\n" 
     if (info == "sw6" or info == "all"):
-        if (tmp['sw6'] == True): sw6 = "開啟"
+        if (et7044 == None) sw6 = "未知"
+        elif(et7044['sw6'] == True): sw6 = "開啟"
         else: sw6 = "關閉"
         data += "`開關 6 狀態:\t" + sw6 + "`\n" 
     if (info == "sw7" or info == "all"):
-        if (tmp['sw7'] == True): sw7 = "開啟"
+        if (et7044 == None) sw7 = "未知"
+        elif(et7044['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
         data += "`開關 7 狀態:\t" + sw7 + "`\n"
-    if (tmp['date'] < brokenTime):
+    if (et7044 != None):
+        if (et7044['date'] < brokenTime): tagOwner = 1
+    else: 
+        tagOwner = 1
+    if (tagOwner == 1)
         data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
         data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
@@ -278,34 +290,62 @@ def getUps(device_id, info):
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
     upsInfo = dbUps.find({"sequence": device_id})[0]
-    if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
-    if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
-    if (info == "all"): data += "----------------------------------\n"
-    if (info == "input" or info == "all"):
-        data += "[[輸入狀態]] \n"
-        data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['input']['inputFreq']))
-        data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['input']['inputVolt']))
-    if (info == "output" or info == "all"):
-        data += "[[輸出狀態]] \n"
-        data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['output']['outputFreq']))
-        data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['output']['outputVolt']))
-    if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.2f} A`\n".format(float(upsInfo['output']['outputAmp']))
-    if (info == "output" or info == "all"):
-        data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['outputWatt']))
-        data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['outputPercent']))
-    if (info == 'battery' or info == "all"):
-        data += "[[電池狀態]] \n"
-        data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryStatus']).split('(')[1].split(')')[0])
-        data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryCharge_Mode']).split('(')[1].split(')')[0])
-        data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
-        data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
-        data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
-        data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
-        data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
-    if (upsInfo['date'] < brokenTime):
+    if (upsInfo != None):
+        if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
+        if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
+        if (info == "all"): data += "----------------------------------\n"
+        if (info == "input" or info == "all"):
+            data += "[[輸入狀態]] \n"
+            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['input']['inputFreq']))
+            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['input']['inputVolt']))
+        if (info == "output" or info == "all"):
+            data += "[[輸出狀態]] \n"
+            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['output']['outputFreq']))
+            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['output']['outputVolt']))
+        if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.2f} A`\n".format(float(upsInfo['output']['outputAmp']))
+        if (info == "output" or info == "all"):
+            data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['outputWatt']))
+            data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['outputPercent']))
+        if (info == 'battery' or info == "all"):
+            data += "[[電池狀態]] \n"
+            data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryStatus']).split('(')[1].split(')')[0])
+            data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryCharge_Mode']).split('(')[1].split(')')[0])
+            data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
+            data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
+            data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
+            data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
+            data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
+        if (upsInfo['date'] < brokenTime):
+            data += "----------------------------------\n"
+            data += "*[設備資料超時!]*\t"
+            data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
+    else:
+        data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
+        data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
         data += "----------------------------------\n"
-        data += "*[設備資料超時!]*\t"
-        data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
+        if (info == "input" or info == "all"):
+            data += "[[輸入狀態]] \n"
+            data += "`頻率: None HZ\n`"
+            data += "`電壓: None V\n`"
+        if (info == "output" or info == "all"):
+            data += "[[輸出狀態]] \n"
+            data += "`頻率: None HZ\n`"
+            data += "`電壓: None V\n`"
+        if (info == "output" or info == "current" or info == "all"): data += "`電流: None A`\n"
+            data += "`瓦數: None kw\n`"
+            data += "`負載比例: None %\n`"
+        if (info == 'battery' or info == "all"):
+            data += "[[電池狀態]] \n"
+            data += "`電池狀態: None `\n"
+            data += "`充電模式: None `\n"
+            data += "`電池電壓: None V`\n"
+            data += "`剩餘比例: None %`\n"
+            data += "`電池健康: None `\n"
+            data += "`上次更換時間: None `\n"
+            data += "`下次更換時間: None `\n"
+            data += "----------------------------------\n"
+            data += "*[設備資料超時!]*\t"
+            data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     return data
 
 def getAirCondiction(device_id, info):
