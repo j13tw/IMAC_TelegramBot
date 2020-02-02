@@ -345,9 +345,9 @@ def getUps(device_id, info):
             data += "`電池健康: 未知 `\n"
             data += "`上次更換時間: 未知 `\n"
             data += "`下次更換時間: 未知 `\n"
-            data += "----------------------------------\n"
-            data += "*[設備資料超時!]*\t"
-            data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
+        data += "----------------------------------\n"
+        data += "*[設備資料超時!]*\t"
+        data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     return data
 
 def getAirCondiction(device_id, info):
