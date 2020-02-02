@@ -403,9 +403,8 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
         return
-    elif (text == '輔助鍵盤'): 
-        text = '請選擇所需設備資訊～'
-        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
+    elif (text == '輔助鍵盤'):
+        update.message.reply_text("", reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
