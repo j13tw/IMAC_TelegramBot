@@ -196,23 +196,39 @@ def getDl303(info):
     data += "*\n"
     if (info == "tc" or info == "all" or info == "temp/humi"):
         tc = dbDl303TC.find_one()
-        if (tc['date'] < brokenTime): failList.append('tc')
-        data += "`即時環境溫度: {0:>5.1f} 度`\n".format(float(tc['tc']))
+        if (tc != None):
+            if (tc['date'] < brokenTime): failList.append('tc')
+            data += "`即時環境溫度: {0:>5.1f} 度`\n".format(float(tc['tc']))
+        else:
+            data += "`即時環境溫度: None 度`\n"
+            failList.append('tc')
     if (info == "rh" or info == "all" or info == "temp/humi"):
         rh = dbDl303RH.find_one()
-        if (rh['date'] < brokenTime): failList.append('rh')
-        data += "`即時環境濕度: {0:>5.1f} %`\n".format(float(rh['rh']))
+        if (rh != None):
+            if (rh['date'] < brokenTime): failList.append('rh')
+            data += "`即時環境濕度: {0:>5.1f} %`\n".format(float(rh['rh']))
+        else:
+            data += "`即時環境濕度: None %`\n"
+            failList.append('rh')
     if (info == "co2" or info == "all"):
         co2 = dbDl303CO2.find_one()
-        if (co2['date'] < brokenTime): failList.append('co2')
-        data += "`二氧化碳濃度: {0:>5d} ppm`\n".format(int(co2['co2']))
+        if (co2 != None):
+            if (co2['date'] < brokenTime): failList.append('co2')
+            data += "`二氧化碳濃度: {0:>5d} ppm`\n".format(int(co2['co2']))
+        else:
+            data += "`二氧化碳濃度: None ppm`\n"
+            failList.append('co2')
     if (info == "dp" or info == "all"):
         dp = dbDl303DP.find_one()
-        if (dp['date'] < brokenTime): failList.append('dp')
-        data += "`環境露點溫度: {0:>5.1f} 度`\n".format(float(dp['dp']))
+        if (dp != None):
+            if (dp['date'] < brokenTime): failList.append('dp')
+            data += "`環境露點溫度: {0:>5.1f} 度`\n".format(float(dp['dp']))
+        else:
+            data += "`環境露點溫度: None 度`\n"
+            failList.append('dp')
     if (len(failList) > 0): 
         data += "----------------------------------\n"
-        data += "*[設備資料超時!]*\t"
+        data += "*[設備資料異常!]*\t"
         data += "[維護人員](tg://user?id="+ str(dl303_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data
