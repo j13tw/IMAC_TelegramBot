@@ -391,7 +391,7 @@ def reply_handler(bot, update):
     print(dir(update))
     print(update.message.chat)
     print(update.message.chat_id)
-    device_list = ['DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B']
+    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '輪值', '天氣']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -406,9 +406,9 @@ def reply_handler(bot, update):
     if (text == '鍵盤按鈕'): 
         text = '請選擇所需設備資訊～'
         update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
-            [str(s) for s in device_list[0:2]],
-            [str(s) for s in device_list[2:4]],
-            [str(s) for s in device_list[4:6]]
+            [str(s) for s in device_list[0:4]],
+            [str(s) for s in device_list[4:8]],
+            [str(s) for s in device_list[8:12]]
         ], resize_keyboard=True))
         return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
