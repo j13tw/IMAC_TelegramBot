@@ -323,7 +323,7 @@ def getUps(device_id, info):
     else:
         data += "`UPS 狀態: 未知`\n"
         data += "`機箱內部溫度: None 度`\n"
-        data += "----------------------------------\n"
+        if (info == "all"): data += "----------------------------------\n"
         if (info == "input" or info == "all"):
             data += "[[輸入狀態]] \n"
             data += "`頻率: None HZ\n`"
