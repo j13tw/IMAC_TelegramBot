@@ -403,6 +403,14 @@ def reply_handler(bot, update):
             [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
         ]))
         return
+    if (text == '鍵盤按鈕'): 
+        text = '請選擇所需設備資訊～'
+        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
+            [str(s) for s in device_list[0:2]],
+            [str(s) for s in device_list[2:4]],
+            [str(s) for s in device_list[4:6]]
+        ], resize_keyboard=True))
+        return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
