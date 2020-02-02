@@ -240,37 +240,37 @@ def getEt7044(info):
     if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
     et7044 = dbEt7044.find_one()
     if (info == "sw1" or info == "all"):
-        if (et7044 == None) sw1 = "未知"
+        if (et7044 == None): sw1 = "未知"
         elif(et7044['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
         data += "`加濕器 狀態:\t" + sw1 + "`\n" 
     if (info == "sw2" or info == "all"):
-        if (et7044 == None) sw2 = "未知"
+        if (et7044 == None): sw2 = "未知"
         elif(et7044['sw2'] == True): sw2 = "開啟"
         else: sw2 = "關閉"
         data += "`進風扇 狀態:\t" + sw2 + "`\n" 
     if (info == "sw3" or info == "all"):
-        if (et7044 == None) sw3 = "未知"
+        if (et7044 == None): sw3 = "未知"
         elif(et7044['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
         data += "`排風扇 狀態:\t" + sw3 + "`\n" 
     if (info == "sw4" or info == "all"):
-        if (et7044 == None) sw4 = "未知"
+        if (et7044 == None): sw4 = "未知"
         elif(et7044['sw4'] == True): sw4 = "開啟"
         else: sw4 = "關閉"
         data += "`開關 4 狀態:\t" + sw4 + "`\n" 
     if (info == "sw5" or info == "all"):
-        if (et7044 == None) sw5 = "未知"
+        if (et7044 == None): sw5 = "未知"
         elif(et7044['sw5'] == True): sw5 = "開啟"
         else: sw5 = "關閉"
         data += "`開關 5 狀態:\t" + sw5 + "`\n" 
     if (info == "sw6" or info == "all"):
-        if (et7044 == None) sw6 = "未知"
+        if (et7044 == None): sw6 = "未知"
         elif(et7044['sw6'] == True): sw6 = "開啟"
         else: sw6 = "關閉"
         data += "`開關 6 狀態:\t" + sw6 + "`\n" 
     if (info == "sw7" or info == "all"):
-        if (et7044 == None) sw7 = "未知"
+        if (et7044 == None): sw7 = "未知"
         elif(et7044['sw7'] == True): sw7 = "開啟"
         else: sw7 = "關閉"
         data += "`開關 7 狀態:\t" + sw7 + "`\n"
