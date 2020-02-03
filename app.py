@@ -398,9 +398,9 @@ def reply_handler(bot, update):
     if (text == '控制開關'): 
         text = '請選擇所需控制設備～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('加濕器', callback_data = "{\"device\":\"加濕器\"}")],
-            [InlineKeyboardButton('進風風扇', callback_data = "{\"device\":\"進風風扇\"}")],
-            [InlineKeyboardButton('排風風扇', callback_data = "{\"device\":\"排風風扇\"}")]
+            [InlineKeyboardButton('加濕器', callback_data = "加濕器")],
+            [InlineKeyboardButton('進風風扇', callback_data = "進風風扇")],
+            [InlineKeyboardButton('排風風扇', callback_data = "排風風扇")]
         ]))
         return
     if (text == '輔助鍵盤'): 
@@ -447,16 +447,12 @@ def et7044_select(bot, update):
     print(update.callback_query.data + "select")
     device = json.loads(update.callback_query.data)
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device["device"] + "控制]*"
-    text += getEt7044(device_map[device["device"]])
-    device_open = device
-    device_close = device
-    device_open['status'] = "open"
-    device_close['status'] = "close"
+    text = "*[" + device + "控制]*"
+    text += getEt7044(device_map[device])
     if (len(text.split('維護')) == 0):
         update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton(device + ":開啟", callback_data = str(device_open))],
-            [InlineKeyboardButton(device + ":開啟", callback_data = str(device_close))]
+            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":開啟")],
+            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":關閉")]
         ]))
     else:
         update.callback_query.message.reply_markdown(text)
@@ -482,8 +478,10 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
 test_list = ['加濕器', '進風風扇', '排風風扇']
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='{\"device\":\"*\"}'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='{\"device\":\"*\", \"status\":\"*\"}'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='加濕器'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='進風風扇'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='排風風扇'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=''))
 
 if __name__ == "__main__":
     # Running server
