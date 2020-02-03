@@ -397,20 +397,20 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
     if (text == '控制'): 
-        text = '請選擇所需控制設備～'
-        update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
+        respText = '請選擇所需控制設備～'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('加濕器', callback_data = "設備:" + "加濕器")],
             [InlineKeyboardButton('進風風扇', callback_data = "設備:" + "進風風扇")],
             [InlineKeyboardButton('排風風扇', callback_data = "設備:" + "排風風扇")]
-        ]))
+        ]), parse_mode="Markdown")
         return
     if (text == '輔助鍵盤'):
-        text = '輔助鍵盤已彈出～'
-        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
+        respText = '輔助鍵盤已彈出～'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
-        ], resize_keyboard=True))
+        ], resize_keyboard=True), , parse_mode="Markdown")
         return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
@@ -448,25 +448,25 @@ def device_select(bot, update):
 def et7044_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device + "狀態控制]*\n"
-    text += getEt7044(device_map[device])
+    respText = "*[" + device + "狀態控制]*\n"
+    respText += getEt7044(device_map[device])
     if (len(text.split('維護')) == 1):
-        update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton("開啟", callback_data = "控制:" + device + "_開啟"), 
             InlineKeyboardButton("關閉", callback_data = "控制:" + device + "_關閉")],
-        ]))
+        ]), parse_mode="Markdown")
     else:
-        update.callback_query.message.reply_markdown(text)
+        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
 def et7044_control(bot, update):
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     status = str(update.callback_query.data).split(':')[1].split('_')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device + " 狀態更新]*\n"
-    text += getEt7044(device_map[device])
-    text += "更新狀態" + status
-    update.callback_query.message.reply_markdown(text)
+    respText = "*[" + device + " 狀態更新]*\n"
+    respText += getEt7044(device_map[device])
+    respText += "更新狀態" + status
+    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
 # New a dispatcher for bot
