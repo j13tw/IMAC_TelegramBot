@@ -399,9 +399,9 @@ def reply_handler(bot, update):
     if (text == '控制'): 
         respText = '請選擇所需控制設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('加濕器', callback_data = "設備:" + "加濕器")],
-            [InlineKeyboardButton('進風風扇', callback_data = "設備:" + "進風風扇")],
-            [InlineKeyboardButton('排風風扇', callback_data = "設備:" + "排風風扇")]
+            [InlineKeyboardButton('加濕器', callback_data = "控制設備:" + "加濕器")],
+            [InlineKeyboardButton('進風風扇', callback_data = "控制設備:" + "進風風扇")],
+            [InlineKeyboardButton('排風風扇', callback_data = "控制設備:" + "排風風扇")]
         ]), parse_mode="Markdown")
         return
     if (text == '輔助鍵盤'):
@@ -453,8 +453,8 @@ def et7044_select(bot, update):
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton("開啟", callback_data = "控制:" + device + "_開啟"), 
-            InlineKeyboardButton("關閉", callback_data = "控制:" + device + "_關閉")],
+            [InlineKeyboardButton("開啟", callback_data = "控制狀態:" + device + "_開啟"), 
+            InlineKeyboardButton("關閉", callback_data = "控制狀態:" + device + "_關閉")],
         ]), parse_mode="Markdown")
     else:
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
@@ -477,8 +477,8 @@ dispatcher = Dispatcher(bot, None)
 # message.
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'設備:'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'控制:'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'控制設備'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'控制狀態'))
 
 if __name__ == "__main__":
     # Running server
