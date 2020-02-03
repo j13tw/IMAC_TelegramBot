@@ -432,7 +432,7 @@ def reply_handler(bot, update):
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
-        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode=markdown)
+        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         # update.message.reply_markdown(respText)
 
 def device_select(bot, update):
