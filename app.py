@@ -445,7 +445,7 @@ def device_select(bot, update):
     update.callback_query.message.reply_markdown(respText)
 
 def et7044_select(bot, update):
-    device = update.callback_query.data.split(':')
+    device = update.callback_query.data.split(':')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + "狀態控制]*\n"
     text += getEt7044(device_map[device])
