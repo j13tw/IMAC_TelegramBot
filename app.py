@@ -406,7 +406,7 @@ def reply_handler(bot, update):
         return
     if (text == '輔助鍵盤'):
         text = '輔助鍵盤已彈出～'
-        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
+        update.effective_message.reply_markup(ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
@@ -433,7 +433,7 @@ def reply_handler(bot, update):
     if (respText != ""): 
     #    update.message.reply_text(respText)
         # bot.send_message(chat_id=group_id, text=respText)
-        update.effective_message.reply_markdown(respText)
+        update.message.reply_markdown(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
