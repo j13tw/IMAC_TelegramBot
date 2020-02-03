@@ -444,6 +444,7 @@ def device_select(bot, update):
     update.callback_query.message.reply_markdown(respText)
 
 def et7044_select(bot, update):
+    print(update.callback_query.data + "select")
     device = json.loads(update.callback_query.data)
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device["device"] + "控制]*"
@@ -462,6 +463,7 @@ def et7044_select(bot, update):
     return
 
 def et7044_control(bot, update):
+    print(update.callback_query.data + "control")
     device = json.loads(update.callback_query.data)
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device["device"] + "控制]*"
