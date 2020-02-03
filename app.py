@@ -398,9 +398,9 @@ def reply_handler(bot, update):
     if (text == '控制'): 
         text = '請選擇所需控制設備～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('加濕器', callback_data = "加濕器")],
-            [InlineKeyboardButton('進風風扇', callback_data = "進風風扇")],
-            [InlineKeyboardButton('排風風扇', callback_data = "排風風扇")]
+            [InlineKeyboardButton('加濕器', callback_data = "設備:" + "加濕器")],
+            [InlineKeyboardButton('進風風扇', callback_data = "設備:" + "進風風扇")],
+            [InlineKeyboardButton('排風風扇', callback_data = "設備:" + "排風風扇")]
         ]))
         return
     if (text == '輔助鍵盤'): 
@@ -444,22 +444,22 @@ def device_select(bot, update):
     update.callback_query.message.reply_markdown(respText)
 
 def et7044_select(bot, update):
-    device = update.callback_query.data
+    device = update.callback_query.data.split(':')
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + "狀態控制]*\n"
     text += getEt7044(device_map[device])
     if (len(text.split('維護')) == 1):
         update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton("開啟", callback_data = device + ":開啟"), 
-            InlineKeyboardButton("關閉", callback_data = device + ":關閉")],
+            [InlineKeyboardButton("開啟", callback_data = "控制:" + device + "_開啟"), 
+            InlineKeyboardButton("關閉", callback_data = "控制:" + device + "_關閉")],
         ]))
     else:
         update.callback_query.message.reply_markdown(text)
     return
 
 def et7044_control(bot, update):
-    device = str(update.callback_query.data).split(':')[0]
-    status = str(update.callback_query.data).split(':')[1]
+    device = str(update.callback_query.data).split(':')[1].split('_')[0]
+    status = str(update.callback_query.data).split(':')[1].split('_')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + " 狀態更新]*\n"
     text += getEt7044(device_map[device])
@@ -475,13 +475,8 @@ dispatcher = Dispatcher(bot, None)
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器:'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='進風風扇:'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='排風風扇:'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='加濕器'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='進風風扇'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='排風風扇'))
-
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='設備:'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='控制:'))
 
 if __name__ == "__main__":
     # Running server
