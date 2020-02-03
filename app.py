@@ -398,9 +398,9 @@ def reply_handler(bot, update):
     if (text == '控制開關'): 
         text = '請選擇所需控制設備～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('加濕器', callback_data = '加濕器')],
-            [InlineKeyboardButton('進風風扇', callback_data = '進風風扇')],
-            [InlineKeyboardButton('排風風扇', callback_data = '排風風扇')]
+            [InlineKeyboardButton('加濕器', callback_data = "{\"device\":\"加濕器\"}")],
+            [InlineKeyboardButton('進風風扇', callback_data = "{\"device\":\"進風風扇\"}")],
+            [InlineKeyboardButton('排風風扇', callback_data = "{\"device\":\"排風風扇\"}")]
         ]))
         return
     if (text == '輔助鍵盤'): 
@@ -466,10 +466,7 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
 test_list = ['加濕器', '進風風扇', '排風風扇']
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=str(s) for s in test_list)))
-# dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器'))
-# dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='進風風扇'))
-# dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='排風風扇'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='{\"device\":\*'))
 if __name__ == "__main__":
     # Running server
     app.run(debug=True)
