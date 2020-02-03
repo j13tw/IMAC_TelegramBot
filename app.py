@@ -403,9 +403,8 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('排風風扇', callback_data = "設備:" + "排風風扇")]
         ]))
         return
-    if (text == '輔助鍵盤'): 
-        text = '請選擇所需設備資訊～'
-        update.message.reply_text("", reply_markup = ReplyKeyboardMarkup([
+    if (text == '輔助鍵盤'):
+        update.message.reply_text("123", reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
