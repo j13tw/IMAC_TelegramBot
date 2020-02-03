@@ -445,7 +445,7 @@ def device_select(bot, update):
 
 def et7044_select(bot, update):
     print(update.callback_query.data + "select")
-    device = json.loads(update.callback_query.data)
+    device = update.callback_query.data
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + "控制]*"
     text += getEt7044(device_map[device])
@@ -460,12 +460,12 @@ def et7044_select(bot, update):
 
 def et7044_control(bot, update):
     print(update.callback_query.data + "control")
-    device = json.loads(update.callback_query.data)
+    device = str(update.callback_query.data)split(':')[0]
+    status = str(update.callback_query.data)split(':')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device["device"] + "控制]*"
-    text += "設備: " + device["device"]
-    text += "更新狀態" + device["status"]
-    text += getEt7044(device_map[device["device"]])
+    text = "*[" + device + "控制]*"
+    text += getEt7044(device_map[device])
+    text += "更新狀態" + status
     update.callback_query.message.reply_markdown(text)
     return
 
@@ -481,7 +481,7 @@ test_list = ['加濕器', '進風風扇', '排風風扇']
 dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='加濕器'))
 dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='進風風扇'))
 dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='排風風扇'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=''))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器:*'))
 
 if __name__ == "__main__":
     # Running server
