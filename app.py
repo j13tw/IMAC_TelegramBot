@@ -449,11 +449,10 @@ def et7044_select(bot, update):
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + "狀態控制]*\n"
     text += getEt7044(device_map[device])
-    print(len(text.split('維護')))
     if (len(text.split('維護')) == 1):
         update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":開啟"), 
-            InlineKeyboardButton(device + ":開啟", callback_data = device + ":關閉")],
+            [InlineKeyboardButton("開啟", callback_data = device + ":開啟"), 
+            InlineKeyboardButton("關閉", callback_data = device + ":關閉")],
         ]))
     else:
         update.callback_query.message.reply_markdown(text)
