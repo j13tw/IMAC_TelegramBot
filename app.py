@@ -398,7 +398,7 @@ def reply_handler(bot, update):
     if (text == '控制開關'): 
         text = '請選擇所需控制設備～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('加濕器', callback_data = "加濕器")],
+            [InlineKeyboardButton('加濕器', callback_data = '{"device": "加濕器"}')],
             [InlineKeyboardButton('進風風扇', callback_data = "進風風扇")],
             [InlineKeyboardButton('排風風扇', callback_data = "排風風扇")]
         ]))
@@ -444,10 +444,10 @@ def device_select(bot, update):
     update.callback_query.message.reply_markdown(respText)
 
 def et7044_select(bot, update):
-    print(update.callback_query.data + "select")
-    device = update.callback_query.data
+    print(update.callback_query.data['device'] + "select")
+    device = update.callback_query.data['device']
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device + "狀態控制]*\n"
+    text = "*[" + device['device'] + "狀態控制]*\n"
     text += getEt7044(device_map[device])
     if (len(text.split('維護')) == 1):
         update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
@@ -477,11 +477,11 @@ dispatcher = Dispatcher(bot, None)
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
-test_list = ['加濕器', '進風風扇', '排風風扇']
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='加濕器'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='進風風扇'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='排風風扇'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器:*'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='{"device":'))
+# dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='加濕器'))
+# dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='進風風扇'))
+# dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='排風風扇'))
+# dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器:*'))
 
 if __name__ == "__main__":
     # Running server
