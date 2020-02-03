@@ -449,7 +449,7 @@ def device_select(bot, update):
 def et7044_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    respText = "*[" + device + "狀態控制]*\n"
+    respText = "*[" + device + " 狀態控制]*\n"
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
