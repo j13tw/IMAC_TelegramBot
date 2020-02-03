@@ -464,8 +464,8 @@ dispatcher = Dispatcher(bot, None)
 # message.
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
-dispatcher.add_handler(CallbackQueryHandler(device_select))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器'))
+# dispatcher.add_handler(CallbackQueryHandler(device_select))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=['加濕器', '進風風扇', '排風風扇']))
 
 if __name__ == "__main__":
     # Running server
