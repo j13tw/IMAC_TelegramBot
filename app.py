@@ -452,7 +452,7 @@ def et7044_select(bot, update):
     respText = "*[" + device + "狀態控制]*\n"
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
-        bot.send_message(chat_id=update.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton("開啟", callback_data = "控制:" + device + "_開啟"), 
             InlineKeyboardButton("關閉", callback_data = "控制:" + device + "_關閉")],
         ]), parse_mode="Markdown")
