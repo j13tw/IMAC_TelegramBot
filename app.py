@@ -443,18 +443,32 @@ def device_select(bot, update):
     if (device == "冷氣_B"): respText = getAirCondiction("b", "all")
     update.callback_query.message.reply_markdown(respText)
 
-def et7044_control(bot, update):
-    device = update.callback_query.data
+def et7044_select(bot, update):
+    device = json.loads(update.callback_query.data)
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
-    text = "*[" + device + "控制]*"
-    text += getEt7044(device_map[device])
+    text = "*[" + device["device"] + "控制]*"
+    text += getEt7044(device_map[device["device"]])
+    device_open = device
+    device_close = device
+    device_open['status'] = "open"
+    device_close['status'] = "close"
     if (len(text.split('維護')) == 0):
         update.callback_query.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":開啟")],
-            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":關閉")]
+            [InlineKeyboardButton(device + ":開啟", callback_data = str(device_open))],
+            [InlineKeyboardButton(device + ":開啟", callback_data = str(device_close))]
         ]))
     else:
         update.callback_query.message.reply_markdown(text)
+    return
+
+def et7044_control(bot, update):
+    device = json.loads(update.callback_query.data)
+    device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
+    text = "*[" + device["device"] + "控制]*"
+    text += "設備: " + device["device"]
+    text += "更新狀態" + device["status"]
+    text += getEt7044(device_map[device["device"]])
+    update.callback_query.message.reply_markdown(text)
     return
 
 # New a dispatcher for bot
@@ -466,7 +480,9 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
 test_list = ['加濕器', '進風風扇', '排風風扇']
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='{\"device\":\*'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='{\"device\":\*}'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='{\"device\":\*, \"status\":*}'))
+
 if __name__ == "__main__":
     # Running server
     app.run(debug=True)
