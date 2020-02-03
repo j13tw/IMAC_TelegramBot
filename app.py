@@ -406,7 +406,7 @@ def reply_handler(bot, update):
         return
     if (text == '輔助鍵盤'):
         text = '輔助鍵盤已彈出～'
-        update.message.reply_text( text,ReplyKeyboardMarkup([
+        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
