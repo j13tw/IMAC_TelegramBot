@@ -5,7 +5,7 @@ import telegram
 from flask import Flask, request
 from flask_api import status
 from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler, CommandHandler
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 import json
 from pymongo import MongoClient
 import datetime
@@ -405,10 +405,10 @@ def reply_handler(bot, update):
         ]))
         return
     if (text == '輔助鍵盤'):
-        update.message.reply_markup(reply_markup=ReplyKeyboardMarkup([
-            [str(s) for s in device_list[0:4]],
-            [str(s) for s in device_list[4:8]],
-            [str(s) for s in device_list[8:12]]
+        update.message.reply_markup(ReplyKeyboardMarkup([
+            [KeyboardButton(str(s) for s in device_list[0:4])],
+            [KeyboardButton(str(s) for s in device_list[4:8])],
+            [KeyboardButton(str(s) for s in device_list[8:12])]
         ], resize_keyboard=True))
         # update.message.reply_markup(ReplyKeyboardMarkup([
         #     [str(s) for s in device_list[0:4]],
