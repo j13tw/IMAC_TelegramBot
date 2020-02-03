@@ -466,7 +466,7 @@ def et7044_control(bot, update):
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     respText = "*[" + device + " 狀態更新]*\n"
     respText += getEt7044(device_map[device])
-    respText += "更新狀態" + status
+    if (len(respText.split('維護')) == 1): respText += "更新狀態" + status
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
