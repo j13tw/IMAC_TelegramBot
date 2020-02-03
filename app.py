@@ -388,8 +388,8 @@ def getAirCondiction(device_id, info):
 def reply_handler(bot, update):
     """Reply message."""
     # print(dir(bot))
-    print(dir(update))
-    print(dir(update.message))
+    # print(dir(update))
+    # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
     device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '控制', '輪值']
@@ -452,12 +452,12 @@ def et7044_select(bot, update):
     respText = "*[" + device + "狀態控制]*\n"
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
-        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+        bot.send_message(chat_id=update.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton("開啟", callback_data = "控制:" + device + "_開啟"), 
             InlineKeyboardButton("關閉", callback_data = "控制:" + device + "_關閉")],
         ]), parse_mode="Markdown")
     else:
-        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
 def et7044_control(bot, update):
@@ -467,7 +467,7 @@ def et7044_control(bot, update):
     respText = "*[" + device + " 狀態更新]*\n"
     respText += getEt7044(device_map[device])
     respText += "更新狀態" + status
-    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+    bot.send_message(chat_id=update.chat_id, text=respText, parse_mode="Markdown")
     return
 
 # New a dispatcher for bot
