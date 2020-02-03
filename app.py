@@ -410,7 +410,7 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
-        ], resize_keyboard=True), , parse_mode="Markdown")
+        ], resize_keyboard=True), parse_mode="Markdown")
         return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
