@@ -432,7 +432,8 @@ def reply_handler(bot, update):
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
-        update.message.reply_markdown(respText)
+        # bot.send_message(chat_id=group_id, text=respText)
+        update.effective_message.reply_markdown(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
