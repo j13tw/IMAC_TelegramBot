@@ -395,12 +395,12 @@ def reply_handler(bot, update):
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
-    if (text == '監控設備列表'): 
-        text = '請選擇所需設備資訊～'
+    if (text == '控制開關'): 
+        text = '請選擇所需控制設備～'
         update.message.reply_text(text, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[0:2]],
-            [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[2:4]],
-            [InlineKeyboardButton(str(s), callback_data = '{\"device\": \"' + s + '\"}') for s in device_list[4:6]]
+            [InlineKeyboardButton(str(s), callback_data = '加濕器')],
+            [InlineKeyboardButton(str(s), callback_data = '進風風扇')],
+            [InlineKeyboardButton(str(s), callback_data = '排風風扇')]
         ]))
         return
     elif (text == '輔助鍵盤'): 
@@ -444,6 +444,20 @@ def device_select(bot, update):
     if (device == "冷氣_B"): respText = getAirCondiction("b", "all")
     update.callback_query.message.reply_markdown(respText)
 
+def et7044_control(bot, update):
+    device = update.callback_query.data
+    device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
+    text = "*[" device + "控制]*"
+    text += getEt7044(device_map[device])
+    if (len(text.split('維護')) == 0):
+        update.message.reply_markdown(text, reply_markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":開啟")],
+            [InlineKeyboardButton(device + ":開啟", callback_data = device + ":關閉")]
+        ]))
+    else:
+        update.message.reply_markdown(text)
+    return
+
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
 
@@ -452,6 +466,7 @@ dispatcher = Dispatcher(bot, None)
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 dispatcher.add_handler(CallbackQueryHandler(device_select))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=['加濕器', '進風風扇', '排風風扇']))
 
 if __name__ == "__main__":
     # Running server
