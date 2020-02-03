@@ -460,8 +460,8 @@ def et7044_select(bot, update):
 
 def et7044_control(bot, update):
     print(update.callback_query.data + "control")
-    device = str(update.callback_query.data)split(':')[0]
-    status = str(update.callback_query.data)split(':')[1]
+    device = str(update.callback_query.data).split(':')[0]
+    status = str(update.callback_query.data).split(':')[1]
     device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
     text = "*[" + device + "控制]*"
     text += getEt7044(device_map[device])
