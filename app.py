@@ -387,11 +387,11 @@ def getAirCondiction(device_id, info):
 
 def reply_handler(bot, update):
     """Reply message."""
-    print(dir(bot))
-    print(dir(update))
-    print(dir(update.message))
-    print(update.message.chat)
-    print(update.message.chat_id)
+    # print(dir(bot))
+    # print(dir(update))
+    # print(dir(update.message))
+    # print(update.message.chat)
+    # print(update.message.chat_id)
     device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '控制', '輪值']
     # for s in device_list: print(s)
     text = update.message.text
@@ -406,7 +406,7 @@ def reply_handler(bot, update):
         return
     if (text == '輔助鍵盤'):
         text = '輔助鍵盤已彈出～'
-        update.effective_message.reply_markup(ReplyKeyboardMarkup([
+        update.message.reply_text(text, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
@@ -432,8 +432,8 @@ def reply_handler(bot, update):
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
-        # bot.send_message(chat_id=group_id, text=respText)
-        update.message.reply_markdown(respText)
+        bot.send_message(chat_id=update.message.chat_id, text=respText)
+        # update.message.reply_markdown(respText)
 
 def device_select(bot, update):
     device = json.loads(update.callback_query.data)["device"]
