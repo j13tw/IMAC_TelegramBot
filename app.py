@@ -466,7 +466,7 @@ dispatcher = Dispatcher(bot, None)
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 # dispatcher.add_handler(CallbackQueryHandler(device_select))
 test_list = ['加濕器', '進風風扇', '排風風扇']
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=for x in test_list))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=str(for x in test_list)))
 # dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='加濕器'))
 # dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='進風風扇'))
 # dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='排風風扇'))
