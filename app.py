@@ -390,7 +390,6 @@ def reply_handler(bot, update):
     print(dir(bot))
     print(dir(update))
     print(dir(update.message))
-    print(dir(update.message.reply_markup))
     print(update.message.chat)
     print(update.message.chat_id)
     device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS_A', 'UPS_B', '冷氣_A', '冷氣_B', '控制', '輪值']
@@ -410,7 +409,12 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]]
-        ], resize_keyboard=True))
+        ]))
+        # update.message.reply_markup(ReplyKeyboardMarkup([
+        #     [str(s) for s in device_list[0:4]],
+        #     [str(s) for s in device_list[4:8]],
+        #     [str(s) for s in device_list[8:12]]
+        # ], resize_keyboard=True))
         return
     if (text == 'DL303' or text == 'dl303'): respText = getDl303("all")
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
