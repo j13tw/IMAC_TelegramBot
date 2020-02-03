@@ -467,7 +467,7 @@ def et7044_control(bot, update):
     respText = "*[" + device + " 狀態更新]*\n"
     respText += getEt7044(device_map[device])
     respText += "更新狀態" + status
-    bot.send_message(chat_id=update.chat_id, text=respText, parse_mode="Markdown")
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
 # New a dispatcher for bot
