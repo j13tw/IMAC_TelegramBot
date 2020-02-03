@@ -477,8 +477,8 @@ dispatcher = Dispatcher(bot, None)
 # message.
 
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
-dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern='設備:'))
-dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern='控制:'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'設備:'))
+dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'控制:'))
 
 if __name__ == "__main__":
     # Running server
