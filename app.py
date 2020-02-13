@@ -164,7 +164,7 @@ def dl303_update(module):
                 data["date"] = datetime.datetime.now()
                 if (dbDl303CO2.find_one() == None): dbDl303CO2.insert_one(data)
                 else: dbDl303CO2.update_one({'co2': dbDl303CO2.find_one()['co2']}, {'$set': data})
-                return {"dl303": "co2_data_ok"}, HTTP_200_OK
+                return {"dl303": "co2_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "co2_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
         elif (module == 'dp'):

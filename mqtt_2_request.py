@@ -4,6 +4,7 @@ import requests
 broker_ip = "10.20.0.19"
 broker_port = 1883
 
+http_server_protocol = "http"
 http_server_ip = "10.20.0.74"
 http_server_port = 5000
 
@@ -14,7 +15,7 @@ def on_connect(client, userdata, flags, rc):
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    client.subscribe("DL303/CO")
+    client.subscribe("DL303/TC")
     client.subscribe("DL303/CO2")
     client.subscribe("DL303/RH")
     client.subscribe("DL303/DC")
@@ -23,18 +24,31 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     sendData = {}
     data = str(msg.payload.decode('utf-8'))
-    if (msg.topic == "DL303/CO"):
+    if (msg.topic == "DL303/TC"):
         sendData["tc"] = data
-        requests.post(http_server_ip + ":" + str(http_server_port), json=sendData)
+        try:
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/tc", json=sendData)
+        except:
+            pass
     if (msg.topic == "DL303/CO2"):
         sendData["co2"] = data
-        requests.post(http_server_ip + ":" + str(http_server_port), json=sendData)
+        print(sendData)
+        try:
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/co2", json=sendData)
+        except:
+            pass
     if (msg.topic == "DL303/RH"):
         sendData["rh"] = data
-        requests.post(http_server_ip + ":" + str(http_server_port), json=sendData)
+        try:
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/rh", json=sendData)
+        except:
+            pass
     if (msg.topic == "DL303/DC"):
         sendData["dp"] = data
-        requests.post(http_server_ip + ":" + str(http_server_port), json=sendData)
+        try:
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/dp", json=sendData)
+        except:
+            pass
     print(msg.topic+" "+ data)
 
 client = mqtt.Client()
