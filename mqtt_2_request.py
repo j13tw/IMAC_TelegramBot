@@ -7,7 +7,7 @@ broker_port = 1883
 
 http_server_protocol = "http"
 #http_server_ip = "10.20.0.74"
-http_server_ip = "127.0.0.1"
+http_server_ip = "10.20.0.74"
 http_server_port = 5000
 
 import paho.mqtt.client as mqtt
@@ -22,7 +22,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("DL303/CO2")
     client.subscribe("DL303/RH")
     client.subscribe("DL303/DC")
-    #client.subscribe("ET7044/DOstatus")
+    client.subscribe("ET7044/DOstatus")
 
 
 # The callback for when a PUBLISH message is received from the server.

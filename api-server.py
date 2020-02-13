@@ -80,8 +80,6 @@ def et7044_update():
             if (not ((data['sw0'] in [True, False]) and (data['sw1'] in [True, False]) and (data['sw2'] in [True, False]) and (data['sw3'] in [True, False]) and (data['sw4'] in [True, False]) and (data['sw5'] in [True, False]) and (data['sw6'] in [True, False]) and (data['sw7'] in [True, False]))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
             data["date"] = datetime.datetime.now()
-            print(data)
-            dbEt7044.insert_one(data)
             if (dbEt7044.find_one() == None): dbEt7044.insert_one(data)
             else: dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
@@ -95,7 +93,7 @@ def et7044_update():
 def dl303_update(module):
     if request.method == 'POST':
         if (not (module in ["tc", "rh", "co2", "dp"])): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
-        try: data = json.loads(str(request.json).replace("'", '"'))
+        try: data = request.json
         except: return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
             try:
