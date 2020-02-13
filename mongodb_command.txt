@@ -1,8 +1,0 @@
-[Mongodb Pre Setup Command]
-mongo
-use admin;
-db.createUser({user: "imac", pwd: "imacuser", roles: [{role: "userAdminAnyDatabase", db: "admin"}]});
-exit
-mongo -u imac -p --authenticationDatabase admin
-use smart-data-center
-db.createUser({user: "imac", pwd: "imacuser", roles: [{role: "dbOwner", db: "smart-data-center"}]});
