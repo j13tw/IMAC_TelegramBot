@@ -133,4 +133,4 @@ def dl303_update(module):
 
 if __name__ == "__main__":
     # Running server
-    app.run()
+    app.run(host="0.0.0.0")
