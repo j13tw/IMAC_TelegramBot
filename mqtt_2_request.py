@@ -66,14 +66,17 @@ def on_message(client, userdata, msg):
             pass
     if (msg.topic == "current"):
         data = json.loads(data)
-        data["current"] = data["currents"]
-        data["temp"] = data["Temperature"]
-        data["humi"] = data["Humidity"]
-        print(data)
+        air_condiction_a = {}
+        air_condiction_b = {}
+        power_box = {}
+        air_condiction_a['currents'] = data['currents_a']
+        air_condiction_b['currents'] = data['currents_b']
+        power_box["temp"] = data["Temperature"]
+        power_box["humi"] = data["Humidity"]
         try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/power_box", json=data)
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/a", json=data)
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=data)
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/power_box", json=power_box)
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/a", json=air_condiction_a)
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=air_condiction_b)
         except:
             pass
     print(msg.topic+" "+ data)
