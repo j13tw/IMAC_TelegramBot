@@ -76,17 +76,25 @@ def et7044_update():
     if request.method == 'POST':
         try:
             data = json.loads(str(request.json).replace("'", '"'))
-            if (not ((data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
+            print(data['sw0'])
+            print(data['sw1'])
+            print(data['sw2'])
+            print(data['sw3'])
+            print(data['sw4'])
+            print(data['sw5'])
+            print(data['sw6'])
+            print(data['sw7'])
+            if (not ((data['sw0'] == True or data['sw0'] == False) and (data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
             data["date"] = datetime.datetime.now()
             if (dbEt7044.find_one() == None): dbEt7044.insert_one(data)
-            else: dbEt7044.update_one({'sw1': dbEt7044.find_one()['sw1']}, {'$set': data})
+            else: dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
         except:
             return {"et7044": "data_fail"}, status.HTTP_401_UNAUTHORIZED
     else:
         data = dbEt7044.find_one()
-        return {"sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
+        return {"sw0": data['sw0'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw": data['sw'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
 
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
