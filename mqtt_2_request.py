@@ -65,8 +65,15 @@ def on_message(client, userdata, msg):
         except:
             pass
     if (msg.topic == "current"):
+        data = json.loads(data)
+        data["current"] = data["currents"]
+        data["temp"] = data["Temperature"]
+        data["humi"] = data["Humidity"]
+        print(data)
         try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/a", json=json.loads(data))
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/power_box", json=data)
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/a", json=data)
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=data)
         except:
             pass
     print(msg.topic+" "+ data)

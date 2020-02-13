@@ -22,15 +22,27 @@ dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
 dbDl303DP = myMongoDb["dl303/dp"]
 dbEt7044 = myMongoDb["et7044"]
-dbUpsA = myMongoDb["ups_a"]
-dbUpsB = myMongoDb["ups_b"]
+dbUps = myMongoDb["ups"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
+dbPowerBox = myMongoDb["power_box"]
+
+@app.route('/power_box', methods=['POST'])
+def power_box_update():
+    if request.method == 'POST':
+        data = request.json
+        try:
+            data["humi"]
+            data["temp"]
+        except:
+            return {"power_box": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (dbPowerBox.find_one() == None): dbPowerBox.insert_one(data)
+        else: dbPowerBox.update_one({'humi': dbPowerBox.find_one()['humi']},{'$set':data})
+        return {"power_box": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        print(module.lower(), sequence.lower(), request.json)
         if (not (module.lower() in ["envoriment", "current"])): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
         if (not (sequence.lower() in ["a", "b"])): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
@@ -53,16 +65,16 @@ def air_condiction_update(module, sequence):
         if (module == "envoriment"):
             if (dbAirCondiction.find_one({"sequence": sequence}) == None): dbAirCondiction.insert_one(data)
             else: dbAirCondiction.update_one({"sequence": sequence},{'$set':data})
-            return {"ait-condiction-envoriment": "data_ok"}, status.HTTP_200_OK
+            return {"air-condiction-envoriment": "data_ok"}, status.HTTP_200_OK
         else:
             if (dbAirCondictionCurrent.find_one({"sequence": sequence}) == None): dbAirCondictionCurrent.insert_one(data)
             else: dbAirCondictionCurrent.update_one({"sequence": sequence},{'$set':data})
-            return {"ait-condiction-current": "data_ok"}, status.HTTP_200_OK
+            return {"air-condiction-current": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/ups/<sequence>', methods=['POST'])
 def ups_update(sequence):
     if request.method == 'POST':
-        if (not (sequence in ["A", "B"])): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (sequence.lower() in ["a", "b"])): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
