@@ -13,6 +13,7 @@ config.read('config.ini')
 app = Flask(__name__)
 
 # Setup Mongodb info
+print(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
 myMongoClient = MongoClient(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
 myMongoDb = myMongoClient["smart-data-center"]
 #myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
@@ -29,8 +30,8 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        if (not (module == "envoriment" or module == "current")): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
-        if (not (sequence == "a" or sequence == "b")): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module in ["envoriment", "current"])): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
+        if (not (sequence in ["a", "b"])): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
             if (module == "envoriment"): 
@@ -60,7 +61,7 @@ def air_condiction_update(module, sequence):
 @app.route('/ups/<sequence>', methods=['POST'])
 def ups_update(sequence):
     if request.method == 'POST':
-        if (not (sequence == "A" or sequence == "B")): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (sequence in ["A", "B"])): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = json.loads(str(request.json).replace("'", '"'))
         except:
@@ -75,18 +76,12 @@ def ups_update(sequence):
 def et7044_update():
     if request.method == 'POST':
         try:
-            data = json.loads(str(request.json).replace("'", '"'))
-            print(data['sw0'])
-            print(data['sw1'])
-            print(data['sw2'])
-            print(data['sw3'])
-            print(data['sw4'])
-            print(data['sw5'])
-            print(data['sw6'])
-            print(data['sw7'])
-            if (not ((data['sw0'] == True or data['sw0'] == False) and (data['sw1'] == True or data['sw1'] == False) and (data['sw2'] == True or data['sw2'] == False) and (data['sw3'] == True or data['sw3'] == False) and (data['sw4'] == True or data['sw4'] == False) and (data['sw5'] == True or data['sw5'] == False) and (data['sw6'] == True or data['sw6'] == False) and (data['sw7'] == True or data['sw7'] == False))):
+            data = request.json
+            if (not ((data['sw0'] in [True, False]) and (data['sw1'] in [True, False]) and (data['sw2'] in [True, False]) and (data['sw3'] in [True, False]) and (data['sw4'] in [True, False]) and (data['sw5'] in [True, False]) and (data['sw6'] in [True, False]) and (data['sw7'] in [True, False]))):
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
             data["date"] = datetime.datetime.now()
+            print(data)
+            dbEt7044.insert_one(data)
             if (dbEt7044.find_one() == None): dbEt7044.insert_one(data)
             else: dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
@@ -99,7 +94,7 @@ def et7044_update():
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
     if request.method == 'POST':
-        if (not (module == "tc" or module == "rh" or module == "co2" or module == "dp")): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module in ["tc", "rh", "co2", "dp"])): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
         try: data = json.loads(str(request.json).replace("'", '"'))
         except: return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
