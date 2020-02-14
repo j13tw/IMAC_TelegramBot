@@ -192,24 +192,24 @@ def getUps(device_id, info):
     else: upsInfo = None
     if (upsInfo != None):
         if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(str(upsInfo['ups_Life']))
-        if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['batteryTemp']))
+        if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['battery']['status']['temp']))
         if (info == "all"): data += "----------------------------------\n"
         if (info == "input" or info == "all"):
             data += "[[輸入狀態]] \n"
-            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['input']['inputFreq']))
-            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['input']['inputVolt']))
+            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['input']['freq']))
+            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['input']['volt']))
         if (info == "output" or info == "all"):
             data += "[[輸出狀態]] \n"
-            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['output']['outputFreq']))
-            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['output']['outputVolt']))
-        if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.2f} A`\n".format(float(upsInfo['output']['outputAmp']))
+            data += "`頻率: {0:>5.1f} HZ\n`".format(float(upsInfo['output']['freq']))
+            data += "`電壓: {0:>5.1f} V\n`".format(float(upsInfo['output']['volt']))
+        if (info == "output" or info == "current" or info == "all"): data += "`電流: {0:>5.2f} A`\n".format(float(upsInfo['output']['amp']))
         if (info == "output" or info == "all"):
-            data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['outputWatt']))
-            data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['outputPercent']))
+            data += "`瓦數: {0:>5.3f} kw\n`".format(float(upsInfo['output']['watt']))
+            data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['percent']))
         if (info == 'battery' or info == "all"):
             data += "[[電池狀態]] \n"
-            data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryStatus']).split('(')[1].split(')')[0])
-            data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryCharge_Mode']).split('(')[1].split(')')[0])
+            data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['status']).split('(')[1].split(')')[0])
+            data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['chargeMode']).split('(')[1].split(')')[0])
             data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
             data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
             data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])

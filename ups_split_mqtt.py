@@ -33,8 +33,9 @@ def on_message(client, userdata, msg):
         ups_a_data["output"]["line"] = int(data["output_A"]["outputLine_A"])
         ups_a_data["output"]["freq"] = float(data["output_A"]["outputFreq_A"])
         ups_a_data["output"]["volt"] = float(data["output_A"]["outputVolt_A"])
-        ups_a_data["output"]["outputAmp"] = float(data["output_A"]["outputAmp_A"])
-        ups_a_data["output"]["outputPercent"] = int(data["output_A"]["outputPercent_A"])
+        ups_a_data["output"]["amp"] = float(data["output_A"]["outputAmp_A"])
+        ups_a_data["output"]["percent"] = int(data["output_A"]["outputPercent_A"])
+        ups_a_data["output"]["watt"] = float(data["output_A"]["outputWatt_A"])
         ups_a_data["battery"] = {}
         ups_a_data["battery"]["status"] = {}
         ups_a_data["battery"]["lastChange"] = {}
@@ -66,8 +67,9 @@ def on_message(client, userdata, msg):
         ups_b_data["output"]["line"] = int(data["output_B"]["outputLine_B"])
         ups_b_data["output"]["freq"] = float(data["output_B"]["outputFreq_B"])
         ups_b_data["output"]["volt"] = float(data["output_B"]["outputVolt_B"])
-        ups_b_data["output"]["outputAmp"] = float(data["output_B"]["outputAmp_B"])
-        ups_b_data["output"]["outputPercent"] = int(data["output_B"]["outputPercent_B"])
+        ups_b_data["output"]["amp"] = float(data["output_B"]["outputAmp_B"])
+        ups_b_data["output"]["percent"] = int(data["output_B"]["outputPercent_B"])
+        ups_a_data["output"]["watt"] = float(data["output_A"]["outputWatt_A"])
         ups_b_data["battery"] = {}
         ups_b_data["battery"]["status"] = {}
         ups_b_data["battery"]["lastChange"] = {}
