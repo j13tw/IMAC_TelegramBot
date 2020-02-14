@@ -19,40 +19,25 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     
-    client.subscribe("DL303/TC")
-    client.subscribe("DL303/CO2")
-    client.subscribe("DL303/RH")
-    client.subscribe("DL303/DC")
+    client.subscribe("DL303/#")
+    # client.subscribe("DL303/TC")
+    # client.subscribe("DL303/CO2")
+    # client.subscribe("DL303/RH")
+    # client.subscribe("DL303/DC")
     client.subscribe("ET7044/DOstatus")
     client.subscribe("current")
+    # client.subscribe("UPS_Monitor/#")
+    client.subscribe("UPS_Monitor")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     sendData = {}
     data = str(msg.payload.decode('utf-8'))
-    if (msg.topic == "DL303/TC"):
-        sendData["tc"] = data
+    if (msg.topic in ["DL303/TC", "DL303/CO2", "DL303/RH", "DL303/DC"]):
+        moduleName = msg.topic.lower().split("/")[1]
         try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/tc", json=sendData)
-        except:
-            pass
-    if (msg.topic == "DL303/CO2"):
-        sendData["co2"] = data
-        print(sendData)
-        try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/co2", json=sendData)
-        except:
-            pass
-    if (msg.topic == "DL303/RH"):
-        sendData["rh"] = data
-        try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/rh", json=sendData)
-        except:
-            pass
-    if (msg.topic == "DL303/DC"):
-        sendData["dp"] = data
-        try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/dp", json=sendData)
+            sendData[moduleName] = data
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/dl303/" + moduleName, json=sendData)
         except:
             pass
     if (msg.topic == "ET7044/DOstatus"):
@@ -65,12 +50,13 @@ def on_message(client, userdata, msg):
         except:
             pass
     if (msg.topic == "current"):
+        print(data)
         data = json.loads(data)
         air_condiction_a = {}
         air_condiction_b = {}
         power_box = {}
-        air_condiction_a['currents'] = data['currents_a']
-        air_condiction_b['currents'] = data['currents_b']
+        air_condiction_a['current'] = data['current_a']
+        air_condiction_b['current'] = data['currents_b']
         power_box["temp"] = data["Temperature"]
         power_box["humi"] = data["Humidity"]
         try:
@@ -79,6 +65,8 @@ def on_message(client, userdata, msg):
             requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=air_condiction_b)
         except:
             pass
+    if (msg.topic == "UPS_Monitor"):
+        print(data)
     print(msg.topic+" "+ data)
 
 client = mqtt.Client()

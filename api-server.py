@@ -20,7 +20,7 @@ myMongoDb = myMongoClient["smart-data-center"]
 dbDl303TC = myMongoDb["dl303/tc"]
 dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
-dbDl303DP = myMongoDb["dl303/dp"]
+dbDl303DC = myMongoDb["dl303/dc"]
 dbEt7044 = myMongoDb["et7044"]
 dbUps = myMongoDb["ups"]
 dbAirCondiction = myMongoDb["air_condiction"]
@@ -105,7 +105,7 @@ def et7044_update():
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
     if request.method == 'POST':
-        if (not (module in ["tc", "rh", "co2", "dp"])): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
+        if (not (module in ["tc", "rh", "co2", "dc"])): return {"dl303": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED
         try: data = request.json
         except: return {"dl303": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         if (module == 'tc'):
@@ -135,15 +135,15 @@ def dl303_update(module):
                 return {"dl303": "co2_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "co2_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
-        elif (module == 'dp'):
+        elif (module == 'dc'):
             try:
-                data['dp']
+                data['dc']
                 data["date"] = datetime.datetime.now()
-                if (dbDl303DP.find_one() == None): dbDl303DP.insert_one(data)
-                else: dbDl303DP.update_one({'dp': dbDl303DP.find_one()['dp']}, {'$set': data})
-                return {"dl303": "dp_data_ok"}, status.HTTP_200_OK
+                if (dbDl303DC.find_one() == None): dbDl303DC.insert_one(data)
+                else: dbDl303DC.update_one({'dc': dbDl303DC.find_one()['dc']}, {'$set': data})
+                return {"dl303": "dc_data_ok"}, status.HTTP_200_OK
             except:
-                return {"dl303": "dp_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
+                return {"dl303": "dc_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
 
 if __name__ == "__main__":
     # Running server
