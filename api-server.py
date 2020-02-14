@@ -63,11 +63,11 @@ def air_condiction_update(module, sequence):
         data["sequence"] = sequence
         data["date"] = datetime.datetime.now()
         if (module == "envoriment"):
-            if (dbAirCondiction.find_one({"sequence": sequence}) == None): dbAirCondiction.insert_one(data)
+            if (dbAirCondiction.find({"sequence": sequence}).count() == 0): dbAirCondiction.insert_one(data)
             else: dbAirCondiction.update_one({"sequence": sequence},{'$set':data})
             return {"air-condiction-envoriment": "data_ok"}, status.HTTP_200_OK
         else:
-            if (dbAirCondictionCurrent.find_one({"sequence": sequence}) == None): dbAirCondictionCurrent.insert_one(data)
+            if (dbAirCondictionCurrent.find({"sequence": sequence}).count() == 0): dbAirCondictionCurrent.insert_one(data)
             else: dbAirCondictionCurrent.update_one({"sequence": sequence},{'$set':data})
             return {"air-condiction-current": "data_ok"}, status.HTTP_200_OK
 
@@ -110,8 +110,7 @@ def ups_update(sequence):
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["date"] = datetime.datetime.now()
         data["sequence"] = sequence
-        print(dbUps.find_one({"sequence": sequence}).count(), sequence)
-        if (dbUps.find_one({"sequence": sequence}).count() == None): dbUps.insert_one(data)
+        if (dbUps.find({"sequence": sequence}).count() == 0): dbUps.insert_one(data)
         else: dbUps.update_one({'sequence': sequence},{'$set':data})
         return {"ups": "data_ok"}, status.HTTP_200_OK
 

@@ -19,13 +19,13 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     
-    client.subscribe("DL303/#")
+    # client.subscribe("DL303/#")
     # client.subscribe("DL303/TC")
     # client.subscribe("DL303/CO2")
     # client.subscribe("DL303/RH")
     # client.subscribe("DL303/DC")
-    client.subscribe("ET7044/DOstatus")
-    client.subscribe("current")
+    # client.subscribe("ET7044/DOstatus")
+    # client.subscribe("current")
     client.subscribe("UPS_Monitor/#")
     # client.subscribe("UPS_Monitor")
 
