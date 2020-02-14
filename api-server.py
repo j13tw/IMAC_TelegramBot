@@ -77,6 +77,7 @@ def ups_update(sequence):
         if (not (sequence.lower() in ["a", "b"])): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = request.json
+            print("test-1")
             data["connect"]    
             data["upsLife"]
             data["input"]["line"]
@@ -89,6 +90,7 @@ def ups_update(sequence):
             data["output"]["amp"]
             data["output"]["percent"]
             data["output"]["watt"]
+            print("test-2")
             data["battery"]["status"]["health"]
             data["battery"]["status"]["status"]
             data["battery"]["status"]["chargeMode"]
@@ -103,6 +105,7 @@ def ups_update(sequence):
             data["battery"]["nextChange"]["year"]
             data["battery"]["nextChange"]["month"]
             data["battery"]["nextChange"]["day"]
+            print("test-3")
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["date"] = datetime.datetime.now()
