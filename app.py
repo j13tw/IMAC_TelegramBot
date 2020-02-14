@@ -112,14 +112,14 @@ def getDl303(info):
         else:
             data += "`二氧化碳濃度: None ppm`\n"
             failList.append('co2')
-    if (info == "dp" or info == "all"):
-        dp = dbDl303DC.find_one()
-        if (dp != None):
-            if (dp['date'] < brokenTime): failList.append('dp')
-            data += "`環境露點溫度: {0:>5.1f} 度`\n".format(float(dp['dp']))
+    if (info == "dc" or info == "all"):
+        dc = dbDl303DC.find_one()
+        if (dc != None):
+            if (dc['date'] < brokenTime): failList.append('dc')
+            data += "`環境露點溫度: {0:>5.1f} 度`\n".format(float(dc['dc']))
         else:
             data += "`環境露點溫度: None 度`\n"
-            failList.append('dp')
+            failList.append('dc')
     if (len(failList) > 0): 
         data += "----------------------------------\n"
         data += "*[設備資料超時!]*\t"
@@ -152,7 +152,7 @@ def getEt7044(info):
         if (et7044 == None): sw3 = "未知"
         elif(et7044['sw3'] == True): sw3 = "開啟"
         else: sw3 = "關閉"
-        data += "`開關 4 狀態:\t" + sw3 + "`\n"  
+        data += "`開關 3 狀態:\t" + sw3 + "`\n"  
     if (info == "sw4" or info == "all"):
         if (et7044 == None): sw4 = "未知"
         elif(et7044['sw4'] == True): sw4 = "開啟"
@@ -315,7 +315,7 @@ def reply_handler(bot, update):
     if (text == '溫度'): respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     if (text == '濕度'): respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     if (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
-    if (text == '露點溫度'): respText = getDl303("dp")
+    if (text == '露點溫度'): respText = getDl303("dc")
     if (text == 'CO2'): respText = getDl303("co2")
     if (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
     if (text == '加濕器狀態'): respText = getEt7044("sw0")
