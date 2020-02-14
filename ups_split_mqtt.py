@@ -69,7 +69,7 @@ def on_message(client, userdata, msg):
         ups_b_data["output"]["volt"] = float(data["output_B"]["outputVolt_B"])
         ups_b_data["output"]["amp"] = float(data["output_B"]["outputAmp_B"])
         ups_b_data["output"]["percent"] = int(data["output_B"]["outputPercent_B"])
-        ups_a_data["output"]["watt"] = float(data["output_A"]["outputWatt_A"])
+        ups_b_data["output"]["watt"] = float(data["output_B"]["outputWatt_B"])
         ups_b_data["battery"] = {}
         ups_b_data["battery"]["status"] = {}
         ups_b_data["battery"]["lastChange"] = {}

@@ -210,11 +210,11 @@ def getUps(device_id, info):
             data += "[[電池狀態]] \n"
             data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['status']).split('(')[1].split(')')[0])
             data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['chargeMode']).split('(')[1].split(')')[0])
-            data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['batteryVolt']))
-            data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['batteryRemain_Percent']))
-            data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['batteryHealth']).split('(')[1].split(')')[0])
-            data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['lastBattery_Year']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Mon']) + "/" + str(upsInfo['battery']['lastChange']['lastBattery_Day']))
-            data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['nextBattery_Year']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Mon']) + "/" + str(upsInfo['battery']['nextChange']['nextBattery_Day']))
+            data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['volt']))
+            data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['remainPercent']))
+            data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['health']).split('(')[1].split(')')[0])
+            data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['year']) + "/" + str(upsInfo['battery']['lastChange']['month']) + "/" + str(upsInfo['battery']['lastChange']['day']))
+            data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['year']) + "/" + str(upsInfo['battery']['nextChange']['month']) + "/" + str(upsInfo['battery']['nextChange']['day']))
         if (upsInfo['date'] < brokenTime):
             data += "----------------------------------\n"
             data += "*[設備資料超時!]*\t"
