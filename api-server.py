@@ -129,7 +129,7 @@ def et7044_update():
             return {"et7044": "data_fail"}, status.HTTP_401_UNAUTHORIZED
     else:
         data = dbEt7044.find_one()
-        return {"sw0": data['sw0'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw": data['sw'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
+        return {"sw0": data['sw0'], "sw1": data['sw1'], "sw2": data['sw2'], "sw3": data['sw3'], "sw4": data['sw4'], "sw5": data['sw5'], "sw6": data['sw6'], "sw7": data['sw7'], "date": datetime.datetime.now()}
 
 @app.route('/dl303/<module>', methods=['POST'])
 def dl303_update(module):
