@@ -107,7 +107,7 @@ def ups_update(sequence):
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["date"] = datetime.datetime.now()
         data["sequence"] = sequence
-        if (dbUps.find_one({"sequence": device_id}).count() == None): dbUps.insert_one(data)
+        if (dbUps.find_one({"sequence": sequence}).count() == None): dbUps.insert_one(data)
         else: dbUps.update_one({'sequence': sequence},{'$set':data})
         return {"ups": "data_ok"}, status.HTTP_200_OK
 
