@@ -26,8 +26,8 @@ def on_connect(client, userdata, flags, rc):
     # client.subscribe("DL303/DC")
     client.subscribe("ET7044/DOstatus")
     client.subscribe("current")
-    # client.subscribe("UPS_Monitor/#")
-    client.subscribe("UPS_Monitor")
+    client.subscribe("UPS_Monitor/#")
+    # client.subscribe("UPS_Monitor")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -65,7 +65,12 @@ def on_message(client, userdata, msg):
             requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=air_condiction_b)
         except:
             pass
-    if (msg.topic == "UPS_Monitor"):
+    if (msg.topic in ["UPS_Monitor/A", "UPS_Monitor/B"]):
+        try:
+            moduleName = msg.topic.lower().split("/")[1]
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/ups/" + moduleName, json=json.loads(data.replace("'", '"')))
+        except:
+            pass
         print(data)
     print(msg.topic+" "+ data)
 
