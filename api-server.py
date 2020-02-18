@@ -43,6 +43,7 @@ def power_box_update():
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
+        print(module, sequence, request.json)
         if (not (module.lower() in ["environment", "current"])): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
         if (not (sequence.lower() in ["a", "b"])): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
