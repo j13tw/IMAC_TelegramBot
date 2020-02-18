@@ -11,7 +11,7 @@ http_server_protocol = "http"
 http_server_ip = "10.20.0.74"
 http_server_port = 5000
 
-mLab_et7044_history = [False, False, False, False, False, False, False, False]
+mLab_et7044_history = [True, False, False, False, False, False, False, False]
 
 import paho.mqtt.client as mqtt
 
@@ -21,20 +21,22 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     
-    client.subscribe("DL303/#")
+    # client.subscribe("DL303/#")
     # client.subscribe("DL303/TC")
     # client.subscribe("DL303/CO2")
     # client.subscribe("DL303/RH")
     # client.subscribe("DL303/DC")
-    client.subscribe("ET7044/DOstatus")
-    client.subscribe("current")
-    client.subscribe("UPS_Monitor/#")
+    # client.subscribe("ET7044/DOstatus")
+    # client.subscribe("current")
+    # client.subscribe("UPS_Monitor/#")
     # client.subscribe("UPS_Monitor")
+    client.subscribe("air_condiction/#")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     sendData = {}
     data = str(msg.payload.decode('utf-8'))
+    print(msg.topic+" "+ data)
     if (msg.topic in ["DL303/TC", "DL303/CO2", "DL303/RH", "DL303/DC"]):
         moduleName = msg.topic.lower().split("/")[1]
         try:
@@ -48,18 +50,18 @@ def on_message(client, userdata, msg):
         data = data.split("[")[1].split("]")[0].split(",")
         for x in range(0, len(data)):
             sendData["sw" + str(x)] = data[x].lower() in ['true']
-        mLab_et7044_status = requests.get(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/et7044")
+        mLab_et7044_status = json.loads(requests.get(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/et7044").text)
         for x in range(0, len(data)):
-            if (mLab_et7044_history[x] != mLab_et7044_status["sw" + str(x)]): mLab_change_status = mLab_change_status and True
-            if (mLab_et7044_history[x] != sendData["sw" + str(x)]): local_change_status = local_change_status and True
+            if (mLab_et7044_history[x] != mLab_et7044_status["sw" + str(x)]): mLab_change_status = True
+            if (mLab_et7044_history[x] != sendData["sw" + str(x)]): local_change_status = True
             mLab_et7044_history[x] = mLab_et7044_status["sw" + str(x)]
         print(local_change_status, mLab_change_status)
-        if (mLab_change_status == False and (mLab_change_status == True and local_change_status == True)):
-            print("mLab no change")
-            # try:
-            #     requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/et7044", json=sendData)
-            # except:
-            #     pass
+        if (mLab_change_status == False or (mLab_change_status == True and local_change_status == True)):
+            print("mLab no change or renew data to mLab")
+            try:
+                requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/et7044", json=sendData)
+            except:
+                pass
         else:
             print("mLab change")
             # client.publish("ET7044/write", mLab_et7044_history)
@@ -79,14 +81,20 @@ def on_message(client, userdata, msg):
             requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/current/b", json=air_condiction_b)
         except:
             pass
+    
     if (msg.topic in ["UPS_Monitor/A", "UPS_Monitor/B"]):
         try:
             moduleName = msg.topic.lower().split("/")[1]
             requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/ups/" + moduleName, json=json.loads(data.replace("'", '"')))
         except:
             pass
-        print(data)
-    print(msg.topic+" "+ data)
+    
+    if (msg.topic in ["air_condiction/A", "air_condiction/B"]):
+        try:
+            moduleName = msg.topic.lower().split("/")[1]
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condition/environment/" + moduleName, json=json.loads(data))
+        except:
+            pass
 
 client = mqtt.Client()
 client.on_connect = on_connect

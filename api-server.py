@@ -43,16 +43,16 @@ def power_box_update():
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
-        if (not (module.lower() in ["envoriment", "current"])): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
+        if (not (module.lower() in ["environment", "current"])): return {"air-condiction": "api_module_fail"}, status.HTTP_401_UNAUTHORIZED 
         if (not (sequence.lower() in ["a", "b"])): return {"air-condiction": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = request.json
-            if (module == "envoriment"): 
+            if (module == "environment"): 
                 try:
                     data["humi"]
                     data["temp"]
                 except:
-                    return {"air-condiction-envoriment": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+                    return {"air-condiction-environment": "data_fail"}, status.HTTP_401_UNAUTHORIZED
             if (module == "current"):
                 try:
                     data["current"]
@@ -62,10 +62,10 @@ def air_condiction_update(module, sequence):
             return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["sequence"] = sequence
         data["date"] = datetime.datetime.now()
-        if (module == "envoriment"):
+        if (module == "environment"):
             if (dbAirCondiction.find({"sequence": sequence}).count() == 0): dbAirCondiction.insert_one(data)
             else: dbAirCondiction.update_one({"sequence": sequence},{'$set':data})
-            return {"air-condiction-envoriment": "data_ok"}, status.HTTP_200_OK
+            return {"air-condiction-environment": "data_ok"}, status.HTTP_200_OK
         else:
             if (dbAirCondictionCurrent.find({"sequence": sequence}).count() == 0): dbAirCondictionCurrent.insert_one(data)
             else: dbAirCondictionCurrent.update_one({"sequence": sequence},{'$set':data})
