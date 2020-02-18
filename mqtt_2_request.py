@@ -27,7 +27,7 @@ def on_connect(client, userdata, flags, rc):
     # client.subscribe("DL303/RH")
     # client.subscribe("DL303/DC")
     # client.subscribe("ET7044/DOstatus")
-    # client.subscribe("current")
+    client.subscribe("current")
     # client.subscribe("UPS_Monitor/#")
     # client.subscribe("UPS_Monitor")
     client.subscribe("air_condiction/#")
@@ -92,7 +92,7 @@ def on_message(client, userdata, msg):
     if (msg.topic in ["air_condiction/A", "air_condiction/B"]):
         try:
             moduleName = msg.topic.lower().split("/")[1]
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condition/environment/" + moduleName, json=json.loads(data))
+            r = requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/environment/" + moduleName, json=json.loads(data))
         except:
             pass
 
