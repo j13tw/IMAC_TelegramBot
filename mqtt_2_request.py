@@ -1,4 +1,4 @@
-import paho.mqtt.subscribe as subscribe
+import paho.mqtt.client as mqtt
 import requests
 import datetime
 import json
@@ -12,8 +12,6 @@ http_server_ip = "10.20.0.74"
 http_server_port = 5000
 
 mLab_et7044_history = [True, False, False, False, False, False, False, False]
-
-import paho.mqtt.client as mqtt
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -64,7 +62,7 @@ def on_message(client, userdata, msg):
                 pass
         else:
             print("mLab change")
-            # client.publish("ET7044/write", mLab_et7044_history)
+            client.publish("ET7044/write", str(mLab_et7044_history).lower())
         
     if (msg.topic == "current"):
         data = json.loads(data)
