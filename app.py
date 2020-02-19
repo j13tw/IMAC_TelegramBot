@@ -9,6 +9,7 @@ from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMa
 import json
 from pymongo import MongoClient
 import datetime
+import time
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
@@ -362,9 +363,9 @@ def et7044_select(bot, update):
 def et7044_control(bot, update):
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     status = str(update.callback_query.data).split(':')[1].split('_')[1]
-    device_map = {"加濕器": "sw0", "進風風扇": "sw1", "排風風扇": "sw2"}
+    device_map = {"進風風扇": "sw0", "加濕器": "sw1", "排風風扇": "sw2"}
     respText = "*[" + device + " 狀態更新]*\n"
-    respText += getEt7044(device_map[device])
+    respText += "'" + device_map[device] + " 狀態: \t" + status + "'\n"
     if (status == "開啟"): chargeStatus = True
     else:  chargeStatus = False
     if (len(respText.split('維護')) == 1): 
