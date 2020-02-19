@@ -365,7 +365,7 @@ def et7044_control(bot, update):
     status = str(update.callback_query.data).split(':')[1].split('_')[1]
     device_map = {"進風風扇": "sw0", "加濕器": "sw1", "排風風扇": "sw2"}
     respText = "*[" + device + " 狀態更新]*\n"
-    respText += "'" + device_map[device] + " 狀態: \t" + status + "'\n"
+    respText += "`" + device + " 狀態: \t" + status + "`\n"
     if (status == "開啟"): chargeStatus = True
     else:  chargeStatus = False
     if (len(respText.split('維護')) == 1): 
