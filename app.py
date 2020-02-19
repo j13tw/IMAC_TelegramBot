@@ -369,7 +369,6 @@ def et7044_control(bot, update):
     else:  chargeStatus = False
     if (len(respText.split('維護')) == 1): 
         dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': {device_map[device]: chargeStatus}})
-        respText += "更新狀態" + status
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
