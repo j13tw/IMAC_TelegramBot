@@ -137,12 +137,12 @@ def getEt7044(info):
         if (et7044 == None): sw0 = "未知"
         elif(et7044['sw0'] == True): sw0 = "開啟"
         else: sw0 = "關閉"
-        data += "`加濕器 狀態:\t" + sw0 + "`\n" 
+        data += "`進風扇 狀態:\t" + sw0 + "`\n" 
     if (info == "sw1" or info == "all"):
         if (et7044 == None): sw1 = "未知"
         elif(et7044['sw1'] == True): sw1 = "開啟"
         else: sw1 = "關閉"
-        data += "`進風扇 狀態:\t" + sw1 + "`\n" 
+        data += "`加濕器 狀態:\t" + sw1 + "`\n" 
     if (info == "sw2" or info == "all"):
         if (et7044 == None): sw2 = "未知"
         elif(et7044['sw2'] == True): sw2 = "開啟"
@@ -318,8 +318,8 @@ def reply_handler(bot, update):
     if (text == '露點溫度'): respText = getDl303("dc")
     if (text == 'CO2'): respText = getDl303("co2")
     if (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
-    if (text == '加濕器狀態'): respText = getEt7044("sw0")
-    if (text == '進風扇狀態'): respText = getEt7044("sw1")
+    if (text == '進風扇狀態'): respText = getEt7044("sw0")
+    if (text == '加濕器狀態'): respText = getEt7044("sw1")
     if (text == '排風扇狀態'): respText = getEt7044("sw2")
     if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     if (text == 'UPS狀態' or text == 'ups狀態' or text == 'UPS' or text == 'ups' or text == "電源狀態"): respText = getUps("a", "all") + '\n\n' + getUps("b", "all")
@@ -347,7 +347,7 @@ def device_select(bot, update):
 
 def et7044_select(bot, update):
     device = update.callback_query.data.split(':')[1]
-    device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
+    device_map = {"進風風扇": "sw0", "加濕器": "sw1", "排風風扇": "sw2"}
     respText = "*[" + device + " 狀態控制]*\n"
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
@@ -362,10 +362,14 @@ def et7044_select(bot, update):
 def et7044_control(bot, update):
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     status = str(update.callback_query.data).split(':')[1].split('_')[1]
-    device_map = {"加濕器": "sw1", "進風風扇": "sw2", "排風風扇": "sw3"}
+    device_map = {"加濕器": "sw0", "進風風扇": "sw1", "排風風扇": "sw2"}
     respText = "*[" + device + " 狀態更新]*\n"
     respText += getEt7044(device_map[device])
-    if (len(respText.split('維護')) == 1): respText += "更新狀態" + status
+    if (status == "開啟"): chargeStatus = True
+    else:  chargeStatus = False
+    if (len(respText.split('維護')) == 1): 
+        dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': {device_map[device]: chargeStatus}})
+        respText += "更新狀態" + status
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
