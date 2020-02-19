@@ -299,8 +299,8 @@ def reply_handler(bot, update):
     if (text == '控制'): 
         respText = '請選擇所需控制設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('進風風扇', callback_data = "控制設備:" + "加濕器")],
-            [InlineKeyboardButton('加濕器', callback_data = "控制設備:" + "進風風扇")],
+            [InlineKeyboardButton('進風風扇', callback_data = "控制設備:" + "進風風扇")],
+            [InlineKeyboardButton('加濕器', callback_data = "控制設備:" + "加濕器")],
             [InlineKeyboardButton('排風風扇', callback_data = "控制設備:" + "排風風扇")]
         ]), parse_mode="Markdown")
         return
