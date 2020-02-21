@@ -70,7 +70,7 @@ def on_message(client, userdata, msg):
         air_condiction_b = {}
         power_box = {}
         air_condiction_a['current'] = data['current_a']
-        air_condiction_b['current'] = data['currents_b']
+        air_condiction_b['current'] = data['current_b']
         power_box["temp"] = data["Temperature"]
         power_box["humi"] = data["Humidity"]
         try:
