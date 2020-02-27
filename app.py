@@ -48,7 +48,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 
-def dailyReport():
+def dailyReport(mode):
     dailyRequest = dbDailyReport.find_one()
     brokenTime = datetime.date.today()
     if (dailyRequest != None):
@@ -75,7 +75,10 @@ def dailyReport():
         respText = "`快取失敗`\n"
         respText = "`[昨日功耗統計]`\n"
         respText = "`快取失敗`\n"
-    bot.send_message(chat_id=devUser_id, text=respText)
+    if (mode == 0)
+        return respText
+    else:
+        bot.send_message(chat_id=devUser_id, text=respText)
 
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
@@ -90,7 +93,7 @@ def test(mode):
 @app.route('/dailyReport', methods=['GET'])
 def dailyReport_update():
     if request.method == 'GET':
-        dailyReport()
+        dailyReport(1)
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -367,7 +370,7 @@ def reply_handler(bot, update):
     if (text == '冷氣_A' or text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣_B' or text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
-    if (text == '每日通報'): respText = dailyReport()
+    if (text == '每日通報'): respText = dailyReport(0)
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
