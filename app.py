@@ -59,7 +59,7 @@ def dailyReport(mode):
             respText += "`天氣狀態: \t" + dailyReport["weather_status"] + "`\n"
             respText += "`室外溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_outdoor_temp"]))
             respText += "`體感溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_human_temp"]))
-            respText += "`室外濕度:{0:>3d}`\n".format(float(dailyReport["weather_outdoor_humi"]))
+            respText += "`室外濕度:{0:>3d}`\n".format(int(dailyReport["weather_outdoor_humi"]))
             respText += "`[昨日功耗統計]`\n"
             respText += "`冷氣_A 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(dailyReport["air_condiction_a"])/float(dailyReport["total"]))
             respText += "`冷氣_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(dailyReport["air_condiction_b"])/float(dailyReport["total"]))
