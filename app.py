@@ -79,7 +79,7 @@ def dailyReport(mode):
     if (mode == 0):
         return respText
     else:
-        bot.send_message(chat_id=devUser_id, text=respText)
+        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
 
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
