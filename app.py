@@ -49,6 +49,7 @@ dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 
 def dailyReport(mode):
+    broken = 0
     dailyReport = dbDailyReport.find_one()
     brokenTime = datetime.date.today()
     if (dailyReport != None):
@@ -66,9 +67,9 @@ def dailyReport(mode):
             respText += "`UPS_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["ups_b"]), float(dailyReport["ups_b"])/float(dailyReport["total"]))
             respText += "`機房功耗加總 : {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
         else:
-            broken == 1
+            broken = 1
     else:
-        broken == 1
+        broken = 1
     if (broken == 1):
         respText = "*[機房服務每日通報]*\n"
         respText += "`[今日天氣預測]`\n"
