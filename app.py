@@ -45,6 +45,8 @@ dbEt7044 = myMongoDb["et7044"]
 dbUps = myMongoDb["ups"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
+dbPowerBox = myMongoDb["power_box"]
+dbDailyReport = myMongoDb["dailyReport"]
 
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
@@ -56,6 +58,26 @@ def test(mode):
     if (mode == 'onlineGif'): bot.sendAnimation(chat_id=1070358833, animation='http://d21p91le50s4xn.cloudfront.net/wp-content/uploads/2015/08/giphy.gif')
     if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
 
+@app.route('/dailyReport', methods=['GET'])
+def alert(model):
+    dailyRequest = dbDailyReport.find_one()
+    if (dailyRequest != None):
+        respText = "*[機房服務每日通報]*\n"
+        respText = "`[今日天氣預測]`\n"
+        respText = "`天氣狀態:{0:>3.1f}`\n".format(float(dailyRequest["weather_status"]))
+        respText = "`室外溫度:{0:>3.1f}`\n".format(float(dailyRequest["weather_outdoor_temp"]))
+        respText = "`體感溫度:{0:>3.1f}`\n".format(float(dailyRequest["weather_human_temp"]))
+        respText = "`室外濕度:{0:>4d}`\n".format(float(dailyRequest["weather_outdoor_humi"]))
+        respText = "`[昨日功耗統計]`\n"
+        respText += "`冷氣_A 功耗 : {0:>5.1f} 度 ({1:>3.1f}%)`\n".format(float(dailyRequest["air_condiction_a"]), float(dailyRequest["air_condiction_a"])/float(dailyRequest["total"]))
+        respText += "`冷氣_B 功耗 : {0:>5.1f} 度 ({1:>3.1f}%)`\n".format(float(dailyRequest["air_condiction_b"]), float(dailyRequest["air_condiction_b"])/float(dailyRequest["total"]))
+        respText += "`UPS_A 功耗 : {0:>5.1f} 度 ({1:>3.1f}%)`\n".format(float(dailyRequest["ups_a"]), float(dailyRequest["ups_a"])/float(dailyRequest["total"]))
+        respText += "`UPS_B 功耗 : {0:>5.1f} 度 ({1:>3.1f}%)`\n".format(float(dailyRequest["ups_b"]), float(dailyRequest["ups_b"])/float(dailyRequest["total"]))
+        respText += "`機房功耗加總 : {0:>5.1f} 度`\n".format(float(dailyRequest["total"]))
+        bot.send_message(chat_id=devUser_id, text=respText)
+        return {"dailyReport": "data_ok"}, status.HTTP_200_OK
+    else:
+        return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
 @app.route('/alert/<model>', methods=['POST'])
 def alert(model):

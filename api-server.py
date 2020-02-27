@@ -26,6 +26,25 @@ dbUps = myMongoDb["ups"]
 dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
+dbDailyReport = myMongoDb["dailyReport"]
+
+@app.route('/dailyReport', methods=['GET'])
+def daily_report():
+    data = {}
+    data["weather_status"] = "晴"
+    data["weather_outdoor_temp"] = 23.45
+    data["weather_human_temp"] = 12.34
+    data["weather_outdoor_humi"] = 87
+    data["air_condiction_a"] = 94.87
+    data["air_condiction_b"] = 94.53
+    data["ups_a"] = 123.45
+    data["ups_b"] = 101.11
+    data["total"] = data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]
+    if (dbDailyReport.find({}).count() == 0): dbDailyReport.insert_one(data)
+    else: dbDailyReport.update_one({},{'$set':data})
+    return {"ups": "data_ok"}, status.HTTP_200_OK
+
+
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
