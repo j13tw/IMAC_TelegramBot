@@ -75,7 +75,7 @@ def dailyReport(mode):
         respText += "`快取失敗`\n"
         respText += "`[昨日功耗統計]`\n"
         respText += "`快取失敗`\n"
-    if (mode == 0)
+    if (mode == 0):
         return respText
     else:
         bot.send_message(chat_id=devUser_id, text=respText)
