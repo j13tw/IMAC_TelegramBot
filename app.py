@@ -52,7 +52,7 @@ def dailyReport(mode):
     dailyReport = dbDailyReport.find_one()
     brokenTime = datetime.date.today()
     if (dailyReport != None):
-        if (str(dailyRequest["date"]) == str(brokenTime)):
+        if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
             respText += "`[今日天氣預測]`\n"
             respText += "`天氣狀態:{0:>4.1f}`\n".format(float(dailyReport["weather_status"]))
