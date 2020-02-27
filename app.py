@@ -50,20 +50,26 @@ dbDailyReport = myMongoDb["dailyReport"]
 
 def dailyReport():
     dailyRequest = dbDailyReport.find_one()
+    brokenTime = datetime.date.today()
     if (dailyRequest != None):
-        respText = "*[機房服務每日通報]*\n"
-        respText = "`[今日天氣預測]`\n"
-        respText = "`天氣狀態:{0:>4.1f}`\n".format(float(dailyRequest["weather_status"]))
-        respText = "`室外溫度:{0:>4.1f}`\n".format(float(dailyRequest["weather_outdoor_temp"]))
-        respText = "`體感溫度:{0:>4.1f}`\n".format(float(dailyRequest["weather_human_temp"]))
-        respText = "`室外濕度:{0:>3d}`\n".format(float(dailyRequest["weather_outdoor_humi"]))
-        respText = "`[昨日功耗統計]`\n"
-        respText += "`冷氣_A 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["air_condiction_a"]), float(dailyRequest["air_condiction_a"])/float(dailyRequest["total"]))
-        respText += "`冷氣_B 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["air_condiction_b"]), float(dailyRequest["air_condiction_b"])/float(dailyRequest["total"]))
-        respText += "`UPS_A 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["ups_a"]), float(dailyRequest["ups_a"])/float(dailyRequest["total"]))
-        respText += "`UPS_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["ups_b"]), float(dailyRequest["ups_b"])/float(dailyRequest["total"]))
-        respText += "`機房功耗加總 : {0:>6.2f} 度`\n".format(float(dailyRequest["total"]))
+        if (str(dailyRequest["date"]) == str(brokenTime)):
+            respText = "*[機房服務每日通報]*\n"
+            respText = "`[今日天氣預測]`\n"
+            respText = "`天氣狀態:{0:>4.1f}`\n".format(float(dailyRequest["weather_status"]))
+            respText = "`室外溫度:{0:>4.1f}`\n".format(float(dailyRequest["weather_outdoor_temp"]))
+            respText = "`體感溫度:{0:>4.1f}`\n".format(float(dailyRequest["weather_human_temp"]))
+            respText = "`室外濕度:{0:>3d}`\n".format(float(dailyRequest["weather_outdoor_humi"]))
+            respText = "`[昨日功耗統計]`\n"
+            respText += "`冷氣_A 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["air_condiction_a"]), float(dailyRequest["air_condiction_a"])/float(dailyRequest["total"]))
+            respText += "`冷氣_B 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["air_condiction_b"]), float(dailyRequest["air_condiction_b"])/float(dailyRequest["total"]))
+            respText += "`UPS_A 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["ups_a"]), float(dailyRequest["ups_a"])/float(dailyRequest["total"]))
+            respText += "`UPS_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyRequest["ups_b"]), float(dailyRequest["ups_b"])/float(dailyRequest["total"]))
+            respText += "`機房功耗加總 : {0:>6.2f} 度`\n".format(float(dailyRequest["total"]))
+        else:
+            broken == 1
     else:
+        broken == 1
+    if (broken == 1):
         respText = "*[機房服務每日通報]*\n"
         respText = "`[今日天氣預測]`\n"
         respText = "`快取失敗`\n"
@@ -82,7 +88,7 @@ def test(mode):
     if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
 
 @app.route('/dailyReport', methods=['GET'])
-def dailyReport():
+def dailyReport_update():
     if request.method == 'GET':
         dailyReport()
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
@@ -361,6 +367,7 @@ def reply_handler(bot, update):
     if (text == '冷氣_A' or text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣_B' or text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+    if (text == '每日通報'): respText = dailyReport()
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
