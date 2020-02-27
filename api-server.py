@@ -39,7 +39,7 @@ def daily_report():
     data["air_condiction_b"] = 94.53
     data["ups_a"] = 123.45
     data["ups_b"] = 101.11
-    data["total"] = float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"])
+    data["total"] = "{0:>7.3f}"float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"])
     data["date"] = datetime.datetime.now()
     if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
