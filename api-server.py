@@ -39,12 +39,11 @@ def daily_report():
     data["air_condiction_b"] = 94.53
     data["ups_a"] = 123.45
     data["ups_b"] = 101.11
-    data["total"] = data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]
-    if (dbDailyReport.find({}).count() == 0): dbDailyReport.insert_one(data)
+    data["total"] = float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"])
+    data["date"] = datetime.datetime.now()
+    if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
-    return {"ups": "data_ok"}, status.HTTP_200_OK
-
-
+    return {"dailyReport": str(data["date"]).split(".")[0] + "-create"}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
@@ -96,7 +95,6 @@ def ups_update(sequence):
         if (not (sequence.lower() in ["a", "b"])): return {"ups": "api_sequence_fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             data = request.json
-            print("test-1")
             data["connect"]    
             data["upsLife"]
             data["input"]["line"]
@@ -109,7 +107,6 @@ def ups_update(sequence):
             data["output"]["amp"]
             data["output"]["percent"]
             data["output"]["watt"]
-            print("test-2")
             data["battery"]["status"]["health"]
             data["battery"]["status"]["status"]
             data["battery"]["status"]["chargeMode"]
@@ -124,7 +121,6 @@ def ups_update(sequence):
             data["battery"]["nextChange"]["year"]
             data["battery"]["nextChange"]["month"]
             data["battery"]["nextChange"]["day"]
-            print("test-3")
         except:
             return {"ups": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         data["date"] = datetime.datetime.now()
@@ -142,7 +138,7 @@ def et7044_update():
                 return {"et7044": "data_info_fail"}, status.HTTP_401_UNAUTHORIZED
             data["date"] = datetime.datetime.now()
             if (dbEt7044.find_one() == None): dbEt7044.insert_one(data)
-            else: dbEt7044.update_one({'sw0': dbEt7044.find_one()['sw0']}, {'$set': data})
+            else: dbEt7044.update_one({}, {'$set': data})
             return {"et7044": "data_ok"}, status.HTTP_200_OK
         except:
             return {"et7044": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -161,7 +157,7 @@ def dl303_update(module):
                 data['tc']
                 data["date"] = datetime.datetime.now()
                 if (dbDl303TC.find_one() == None): dbDl303TC.insert_one(data)
-                else: dbDl303TC.update_one({'tc': dbDl303TC.find_one()['tc']}, {'$set': data})
+                else: dbDl303TC.update_one({}, {'$set': data})
                 return {"dl303": "tc_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "tc_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -170,7 +166,7 @@ def dl303_update(module):
                 data['rh']
                 data["date"] = datetime.datetime.now()
                 if (dbDl303RH.find_one() == None): dbDl303RH.insert_one(data)
-                else: dbDl303RH.update_one({'rh': dbDl303RH.find_one()['rh']}, {'$set': data})
+                else: dbDl303RH.update_one({}, {'$set': data})
                 return {"dl303": "rh_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "rh_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -179,7 +175,7 @@ def dl303_update(module):
                 data['co2']
                 data["date"] = datetime.datetime.now()
                 if (dbDl303CO2.find_one() == None): dbDl303CO2.insert_one(data)
-                else: dbDl303CO2.update_one({'co2': dbDl303CO2.find_one()['co2']}, {'$set': data})
+                else: dbDl303CO2.update_one({}, {'$set': data})
                 return {"dl303": "co2_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "co2_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -188,7 +184,7 @@ def dl303_update(module):
                 data['dc']
                 data["date"] = datetime.datetime.now()
                 if (dbDl303DC.find_one() == None): dbDl303DC.insert_one(data)
-                else: dbDl303DC.update_one({'dc': dbDl303DC.find_one()['dc']}, {'$set': data})
+                else: dbDl303DC.update_one({}, {'$set': data})
                 return {"dl303": "dc_data_ok"}, status.HTTP_200_OK
             except:
                 return {"dl303": "dc_data_info_fail"}, status.HTTP_401_UNAUTHORIZED
