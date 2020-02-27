@@ -48,37 +48,37 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 
-# def dailyReport(mode):
-#     dailyReport = dbDailyReport.find_one()
-#     brokenTime = datetime.date.today()
-#     if (dailyReport != None):
-#         if (str(dailyRequest["date"]) == str(brokenTime)):
-#             respText = "*[機房服務每日通報]*\n"
-#             respText += "`[今日天氣預測]`\n"
-#             respText += "`天氣狀態:{0:>4.1f}`\n".format(float(dailyReport["weather_status"]))
-#             respText += "`室外溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_outdoor_temp"]))
-#             respText += "`體感溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_human_temp"]))
-#             respText += "`室外濕度:{0:>3d}`\n".format(float(dailyReport["weather_outdoor_humi"]))
-#             respText += "`[昨日功耗統計]`\n"
-#             respText += "`冷氣_A 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(dailyReport["air_condiction_a"])/float(dailyReport["total"]))
-#             respText += "`冷氣_B 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(dailyReport["air_condiction_b"])/float(dailyReport["total"]))
-#             respText += "`UPS_A 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["ups_a"]), float(dailyReport["ups_a"])/float(dailyReport["total"]))
-#             respText += "`UPS_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["ups_b"]), float(dailyReport["ups_b"])/float(dailyReport["total"]))
-#             respText += "`機房功耗加總 : {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
-#         else:
-#             broken == 1
-#     else:
-#         broken == 1
-#     if (broken == 1):
-#         respText = "*[機房服務每日通報]*\n"
-#         respText += "`[今日天氣預測]`\n"
-#         respText += "`快取失敗`\n"
-#         respText += "`[昨日功耗統計]`\n"
-#         respText += "`快取失敗`\n"
-#     if (mode == 0)
-#         return respText
-#     else:
-#         bot.send_message(chat_id=devUser_id, text=respText)
+def dailyReport(mode):
+    dailyReport = dbDailyReport.find_one()
+    brokenTime = datetime.date.today()
+    if (dailyReport != None):
+        if (str(dailyRequest["date"]) == str(brokenTime)):
+            respText = "*[機房服務每日通報]*\n"
+            respText += "`[今日天氣預測]`\n"
+            respText += "`天氣狀態:{0:>4.1f}`\n".format(float(dailyReport["weather_status"]))
+            respText += "`室外溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_outdoor_temp"]))
+            respText += "`體感溫度:{0:>4.1f}`\n".format(float(dailyReport["weather_human_temp"]))
+            respText += "`室外濕度:{0:>3d}`\n".format(float(dailyReport["weather_outdoor_humi"]))
+            respText += "`[昨日功耗統計]`\n"
+            respText += "`冷氣_A 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(dailyReport["air_condiction_a"])/float(dailyReport["total"]))
+            respText += "`冷氣_B 功耗 : {0:>5.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(dailyReport["air_condiction_b"])/float(dailyReport["total"]))
+            respText += "`UPS_A 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["ups_a"]), float(dailyReport["ups_a"])/float(dailyReport["total"]))
+            respText += "`UPS_B 功耗 : {0:>6.2f} 度 ({1:>5.2f}%)`\n".format(float(dailyReport["ups_b"]), float(dailyReport["ups_b"])/float(dailyReport["total"]))
+            respText += "`機房功耗加總 : {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
+        else:
+            broken == 1
+    else:
+        broken == 1
+    if (broken == 1):
+        respText = "*[機房服務每日通報]*\n"
+        respText += "`[今日天氣預測]`\n"
+        respText += "`快取失敗`\n"
+        respText += "`[昨日功耗統計]`\n"
+        respText += "`快取失敗`\n"
+    if (mode == 0)
+        return respText
+    else:
+        bot.send_message(chat_id=devUser_id, text=respText)
 
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
@@ -93,7 +93,7 @@ def test(mode):
 @app.route('/dailyReport', methods=['GET'])
 def dailyReport_update():
     if request.method == 'GET':
-        # dailyReport(1)
+        dailyReport(1)
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
