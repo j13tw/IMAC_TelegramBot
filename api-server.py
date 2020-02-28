@@ -98,7 +98,6 @@ def ups_update(sequence):
             data["input"]["line"]
             data["input"]["freq"]
             data["input"]["volt"]
-            print("a")
             data["output"]["mode"]
             data["output"]["line"]
             data["output"]["freq"]
@@ -106,14 +105,12 @@ def ups_update(sequence):
             data["output"]["amp"]
             data["output"]["percent"]
             data["output"]["watt"]
-            print("b")
             data["battery"]["status"]["health"]
             data["battery"]["status"]["status"]
             data["battery"]["status"]["chargeMode"]
             data["battery"]["status"]["volt"]
             data["temp"]
             data["battery"]["status"]["remainPercent"]
-            print("c")
             data["battery"]["lastChange"]["year"]
             data["battery"]["lastChange"]["month"]
             data["battery"]["lastChange"]["day"]
