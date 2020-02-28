@@ -125,7 +125,7 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
     failList = []
     data = "*[DL303"
     if (info == "all"): data += "設備狀態回報]"
@@ -173,7 +173,7 @@ def getDl303(info):
 def getEt7044(info):
     data = ""
     tagOwner = 0
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
     if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
     et7044 = dbEt7044.find_one()
     if (info == "sw0" or info == "all"):
@@ -227,7 +227,7 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
     data = "*["
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
@@ -293,7 +293,7 @@ def getUps(device_id, info):
     return data
 
 def getAirCondiction(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
     failList = []
     data = "*["
     if (info == "all"): data += "冷氣監控狀態回報-"
