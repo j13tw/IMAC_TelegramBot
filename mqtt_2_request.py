@@ -19,16 +19,17 @@ def on_connect(client, userdata, flags, rc):
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     
-    client.subscribe("DL303/#")
+    # client.subscribe("DL303/#")
     # client.subscribe("DL303/TC")
     # client.subscribe("DL303/CO2")
     # client.subscribe("DL303/RH")
     # client.subscribe("DL303/DC")
-    client.subscribe("ET7044/DOstatus")
-    client.subscribe("current")
+    # client.subscribe("ET7044/DOstatus")
+    # client.subscribe("current")
     # client.subscribe("UPS_Monitor/#")
     # client.subscribe("UPS_Monitor")
-    client.subscribe("air_condiction/#")
+    client.subscribe("UPS/A/Monitor")
+    # client.subscribe("air_condiction/#")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -80,7 +81,7 @@ def on_message(client, userdata, msg):
         except:
             pass
     
-    if (msg.topic in ["UPS_Monitor/A", "UPS_Monitor/B"]):
+    if (msg.topic in ["UPS/A/Monitor", "UPS/B/Monitor"]):
         try:
             moduleName = msg.topic.lower().split("/")[1]
             requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/ups/" + moduleName, json=json.loads(data.replace("'", '"')))
