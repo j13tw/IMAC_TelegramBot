@@ -125,7 +125,7 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
     failList = []
     data = "*[DL303"
     if (info == "all"): data += "設備狀態回報]"
@@ -173,7 +173,7 @@ def getDl303(info):
 def getEt7044(info):
     data = ""
     tagOwner = 0
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
     if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
     et7044 = dbEt7044.find_one()
     if (info == "sw0" or info == "all"):
@@ -227,7 +227,7 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
     data = "*["
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
@@ -236,7 +236,6 @@ def getUps(device_id, info):
     if (upsInfo != None):
         if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(upsInfo['output']['mode'])
         if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['temp']))
-        data += str(datetime.datetime.now()).split('.')[0]
         if (info == "all"): data += "----------------------------------\n"
         if (info == "input" or info == "all"):
             data += "[[輸入狀態]] \n"
@@ -252,11 +251,11 @@ def getUps(device_id, info):
             data += "`負載比例: {0:>2d} %\n`".format(int(upsInfo['output']['percent']))
         if (info == 'battery' or info == "all"):
             data += "[[電池狀態]] \n"
-            data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['status']).split('(')[1].split(')')[0])
+            data += "`電池狀態: {0:s}`\n".format(str(upsInfo['battery']['status']['status'])
             data += "`充電模式: {0:s}`\n".format(str(upsInfo['battery']['status']['chargeMode']).split('(')[1].split(')')[0])
             data += "`電池電壓: {0:>3d} V`\n".format(int(upsInfo['battery']['status']['volt']))
             data += "`剩餘比例: {0:>3d} %`\n".format(int(upsInfo['battery']['status']['remainPercent']))
-            data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['health']).split('(')[1].split(')')[0])
+            data += "`電池健康: {0:s}`\n".format(str(upsInfo['battery']['status']['health'])
             data += "`上次更換時間: {0:s}`\n".format(str(upsInfo['battery']['lastChange']['year']) + "/" + str(upsInfo['battery']['lastChange']['month']) + "/" + str(upsInfo['battery']['lastChange']['day']))
             data += "`下次更換時間: {0:s}`\n".format(str(upsInfo['battery']['nextChange']['year']) + "/" + str(upsInfo['battery']['nextChange']['month']) + "/" + str(upsInfo['battery']['nextChange']['day']))
         if (upsInfo['date'] < brokenTime):
@@ -294,7 +293,7 @@ def getUps(device_id, info):
     return data
 
 def getAirCondiction(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-2)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=-8)
     failList = []
     data = "*["
     if (info == "all"): data += "冷氣監控狀態回報-"
