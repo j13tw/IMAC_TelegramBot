@@ -29,6 +29,7 @@ def on_connect(client, userdata, flags, rc):
     # client.subscribe("UPS_Monitor/#")
     # client.subscribe("UPS_Monitor")
     client.subscribe("UPS/A/Monitor")
+    client.subscribe("UPS/B/Monitor")
     # client.subscribe("air_condiction/#")
 
 # The callback for when a PUBLISH message is received from the server.
