@@ -236,6 +236,7 @@ def getUps(device_id, info):
     if (upsInfo != None):
         if (not (info == 'temp' or info == 'current')): data += "`UPS 狀態: {0:s}`\n".format(upsInfo['output']['mode'])
         if (info == 'temp' or info == "all"): data += "`機箱內部溫度: {0:>d} 度`\n".format(int(upsInfo['temp']))
+        data += str(datetime.datetime.now()).split('.')[0]
         if (info == "all"): data += "----------------------------------\n"
         if (info == "input" or info == "all"):
             data += "[[輸入狀態]] \n"
