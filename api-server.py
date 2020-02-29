@@ -88,7 +88,7 @@ def daily_report():
         data["air_condiction_b"] = 0.0
         data["error"].append('air_condiction_b')
     
-    data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"])), 4)
+    data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]), 4)
  
     try:
         requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "&dataTime=" + todayDate + timeStamp_b
