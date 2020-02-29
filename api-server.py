@@ -62,11 +62,8 @@ def daily_report():
         data["error"].append('power')
 
     try:
-        print("a")
         mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        print("b")
         data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
-        print("c")
     except:
         data["ups_a"] = 0.0
         data["error"].append('ups_a')
@@ -96,7 +93,9 @@ def daily_report():
  
     try:
         requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "&dataTime=" + todayDate + timeStamp_b
+        print(requestUrl)
         weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}))
+        print(weatherJson)
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
             value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
