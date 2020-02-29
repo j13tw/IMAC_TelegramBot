@@ -103,15 +103,11 @@ def daily_report():
             data[module] = value
     except:
         data["error"].append('weather')
+    # print(str(data).replace("\'", "\""))
 
-    print(str(data).replace("\'", "\""))
-
-    try:
-        # if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
-        # else: dbDailyReport.update_one({},{'$set':data})
-        return {"dailyReport": str(data["date"]).split(".")[0] + "-create"}, status.HTTP_200_OK
-    except:
-        return {"dailyReport": "weather-fail"}, status.HTTP_401_UNAUTHORIZED
+    if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
+    else: dbDailyReport.update_one({},{'$set':data})
+    return {"dailyReport": str(data["date"]).split(".")[0] + "-create", "data": data}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
