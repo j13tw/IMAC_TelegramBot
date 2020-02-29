@@ -23,7 +23,7 @@ myMongoDb = myMongoClient["smart-data-center"]
 mysqlIp = config['MYSQL']['SERVER_IP']
 mysqlPort = config['MYSQL']['SERVER_PORT']
 mysqlUser = config['MYSQL']['USER']
-mysqlPass = rconfig['MYSQL']['PASSWORD']
+mysqlPass = config['MYSQL']['PASSWORD']
 mysqlDb = config['MYSQL']['DATABASE']
 
 # Cloud mLab Setup
