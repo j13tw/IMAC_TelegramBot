@@ -50,7 +50,8 @@ def daily_report():
     apiToken = "CWB-011FFC7B-436E-4268-ABCA-998FBD6AD424"
     locationName = "%E5%8C%97%E5%8D%80"
     timeStamp_a = "T06%3A00%3A00"
-    timeStamp_b = "T06%3A00%3A00"
+    timeStamp_b = "T09%3A00%3A00"
+    timeStamp_c = "T012%3A00%3A00"
 
     try:
         mysql_conn = MySQLdb.connect(host=mysqlIp, \
@@ -93,7 +94,7 @@ def daily_report():
     data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]), 4)
  
     try:
-        requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "&dataTime=" + todayDate + timeStamp_b
+        requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "," + todayDate + timeStamp_c + "&dataTime=" + todayDate + timeStamp_b
         weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
