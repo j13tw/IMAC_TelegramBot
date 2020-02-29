@@ -51,7 +51,7 @@ def daily_report():
     locationName = "%E5%8C%97%E5%8D%80"
     timeStamp_a = "T06%3A00%3A00"
     timeStamp_b = "T09%3A00%3A00"
-    timeStamp_c = "T012%3A00%3A00"
+    timeStamp_c = "T12%3A00%3A00"
 
     try:
         mysql_conn = MySQLdb.connect(host=mysqlIp, \
