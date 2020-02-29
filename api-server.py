@@ -5,6 +5,7 @@ from pymongo import MongoClient
 import datetime
 import configparser
 import MySQLdb
+import requests
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
@@ -93,9 +94,7 @@ def daily_report():
  
     try:
         requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "&dataTime=" + todayDate + timeStamp_b
-        print(requestUrl)
         weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}))
-        print(weatherJson)
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
             value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
