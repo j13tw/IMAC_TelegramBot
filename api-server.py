@@ -53,7 +53,7 @@ def daily_report():
 
     try:
         mysql_conn = MySQLdb.connect(host=mysqlIp, \
-            port=mysqlPort, \
+            port=int(mysqlPort), \
             user=mysqlUser, \
             passwd=mysqlPass, \
             db=mysqlDb)
@@ -62,8 +62,11 @@ def daily_report():
         data["error"].append('power')
 
     try:
-        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        print("a")
+        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        print("b")
         data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
+        print("c")
     except:
         data["ups_a"] = 0.0
         data["error"].append('ups_a')
