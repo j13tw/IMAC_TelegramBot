@@ -4,6 +4,7 @@ import json
 from pymongo import MongoClient
 import datetime
 import configparser
+import MySQLdb
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
@@ -12,11 +13,20 @@ config.read('config.ini')
 # Initial Flask app
 app = Flask(__name__)
 
-# Setup Mongodb info
-print(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
+# Setup mLab Mongodb info
+# print(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
 myMongoClient = MongoClient(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
 myMongoDb = myMongoClient["smart-data-center"]
 #myMongoDb.authenticate(config['MONGODB']['USER'], config['MONGODB']['PASSWORD'])
+
+# Local Mysql Setup
+mysqlIp = config['MYSQL']['SERVER_IP']
+mysqlPort = config['MYSQL']['SERVER_PORT']
+mysqlUser = config['MYSQL']['USER']
+mysqlPass = rconfig['MYSQL']['PASSWORD']
+mysqlDb = config['MYSQL']['DATABASE']
+
+# Cloud mLab Setup
 dbDl303TC = myMongoDb["dl303/tc"]
 dbDl303RH = myMongoDb["dl303/rh"]
 dbDl303CO2 = myMongoDb["dl303/co2"]
@@ -31,19 +41,73 @@ dbDailyReport = myMongoDb["dailyReport"]
 @app.route('/dailyReport', methods=['GET'])
 def daily_report():
     data = {}
-    data["weather_status"] = "晴"
-    data["weather_outdoor_temp"] = 23.45
-    data["weather_human_temp"] = 12.34
-    data["weather_outdoor_humi"] = 87
-    data["air_condiction_a"] = 94.87
-    data["air_condiction_b"] = 94.53
-    data["ups_a"] = 123.45
-    data["ups_b"] = 101.11
-    data["total"] = "{0:>7.3f}".format(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]))
-    data["date"] = str(datetime.date.today())
-    if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
-    else: dbDailyReport.update_one({},{'$set':data})
-    return {"dailyReport": str(data["date"]).split(".")[0] + "-create"}, status.HTTP_200_OK
+    yesterdayDate = str(datetime.date.today() + datetime.timedelta(days=-1))
+    todayDate = str(datetime.date.today())
+    data["date"] = todayDate
+    data["error"] = []
+    defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
+    apiToken = "CWB-011FFC7B-436E-4268-ABCA-998FBD6AD424"
+    locationName = "%E5%8C%97%E5%8D%80"
+    timeStamp_a = "T06%3A00%3A00"
+    timeStamp_b = "T06%3A00%3A00"
+
+    try:
+        mysql_conn = MySQLdb.connect(host=mysqlIp, \
+            port=mysqlPort, \
+            user=mysqlUser, \
+            passwd=mysqlPass, \
+            db=mysqlDb)
+        mysql_connection = mysql_conn.cursor()
+    except:
+        data["error"].append('power')
+
+    try:
+        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+    except:
+        data["error"].append('ups_b')
+    
+    try:
+        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+    except:
+        data["ups_b"] = 0.0
+        data["error"].append('ups_b')
+
+    try:
+        mysql_connection.execute("select AVG(Current)*215*24*1.732/1000 from Power_Meter where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
+    except:
+        data["air_condiction_a"] = 0.0
+        data["error"].append('air_condiction_a')
+
+    try:
+        mysql_connection.execute("select AVG(Current)*215*24*1.732/1000 from Power_Meter where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+    except:
+        data["air_condiction_b"] = 0.0
+        data["error"].append('air_condiction_b')
+    
+    data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"])), 4)
+ 
+    try:
+        requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "&dataTime=" + todayDate + timeStamp_b
+        weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}))
+        for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
+            module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
+            value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
+            data[module] = value
+    except:
+        data["error"].append('weather')
+
+    print(str(data).replace("\'", "\""))
+
+    try:
+        # if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
+        # else: dbDailyReport.update_one({},{'$set':data})
+        return {"dailyReport": str(data["date"]).split(".")[0] + "-create"}, status.HTTP_200_OK
+    except:
+        return {"dailyReport": "weather-fail"}, status.HTTP_401_UNAUTHORIZED
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
