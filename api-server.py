@@ -99,6 +99,7 @@ def daily_report():
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
             value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
+            if (not (module in ["WeatherDescription", "WD", "Wx"])): value = int(value) 
             data[module] = value
     except:
         data["error"].append('weather')
