@@ -48,7 +48,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 
-def getDailyReport(mode):
+def getDailyReport():
     broken = 0
     dailyReport = dbDailyReport.find_one()
     brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
