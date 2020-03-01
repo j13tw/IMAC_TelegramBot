@@ -52,7 +52,9 @@ def getDailyReport():
     broken = 0
     dailyReport = dbDailyReport.find_one()
     brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+    print(brokenTime)
     if (dailyReport != None):
+        print(str(dailyReport["date"]))
         if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
             respText += "`[今日天氣預測]`\n"
@@ -78,8 +80,10 @@ def getDailyReport():
                 respText += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
         else:
             broken = 1
+            print("a")
     else:
         broken = 1
+        print("b")
 
     if (broken == 1):
         respText = "*[機房服務每日通報]*\n"
