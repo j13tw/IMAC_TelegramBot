@@ -27,6 +27,9 @@ mysqlUser = config['MYSQL']['USER']
 mysqlPass = config['MYSQL']['PASSWORD']
 mysqlDb = config['MYSQL']['DATABASE']
 
+# Cloud Server Setup
+herokuServer = config['HEROKU']['SERVER']
+
 # Cloud mLab Setup
 dbDl303TC = myMongoDb["dl303/tc"]
 dbDl303RH = myMongoDb["dl303/rh"]
@@ -98,8 +101,11 @@ def daily_report():
         weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
-            value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
-            if (not (module in ["WeatherDescription", "WD", "Wx"])): value = int(value) 
+            if: (module == "CI"):
+                value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][1]["value"]
+            else:
+                value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
+            if (not (module in ["WeatherDescription", "WD", "Wx", "CI"])): value = int(value) 
             data[module] = value
     except:
         data["error"].append('weather')
@@ -107,7 +113,13 @@ def daily_report():
 
     if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
-    return {"dailyReport": str(data["date"]).split(".")[0] + "-create", "data": data}, status.HTTP_200_OK
+    time.sleep(10)
+    try;
+        requests.get(herokuServer + "/dailyReport")
+    except:
+        pass
+
+    return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():

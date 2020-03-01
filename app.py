@@ -48,38 +48,48 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 
-def dailyReport(mode):
+def getDailyReport(mode):
     broken = 0
     dailyReport = dbDailyReport.find_one()
-    brokenTime = datetime.date.today()
+    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
     if (dailyReport != None):
         if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
             respText += "`[今日天氣預測]`\n"
-            respText += "`天氣狀態:\t" + dailyReport["weather_status"] + "`\n"
-            respText += "`室外溫度:{0:>5.1f} 度`\n".format(float(dailyReport["weather_outdoor_temp"]))
-            respText += "`體感溫度:{0:>5.1f} 度`\n".format(float(dailyReport["weather_human_temp"]))
-            respText += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["weather_outdoor_humi"]))
+            if (dailyReport["error"] in ["power"]): 
+                respText += "`快取失敗`\n"
+            else:
+                respText += "`天氣狀態:\t{0:s}`\n".format(dailyReport["Wx"])
+                respText += "`陣風風向:{0:>5s} %`\n".format(int(dailyReport["WD"]))
+                respText += "`平均風速:{0:>5s} %`\n".format(int(dailyReport["WS"]))
+                respText += "`降雨機率:{0:>5d} %`\n".format(int(dailyReport["PoP12h"]))
+                respText += "`舒適指數:{0:s} %`\n".format(int(dailyReport["CI"]))
+                respText += "`室外溫度:{0:>5.1f} 度`\n".format(int(dailyReport["T"]))
+                respText += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
+                respText += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
             respText += "`[昨日功耗統計]`\n"
-            respText += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))
-            respText += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
-            respText += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
-            respText += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
-            respText += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
+            if (dailyReport["error"] in ["weather"]): 
+                respText += "`快取失敗`\n"
+            else:
+                respText += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))
+                respText += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
+                respText += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
+                respText += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
+                respText += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
         else:
             broken = 1
     else:
         broken = 1
+
     if (broken == 1):
         respText = "*[機房服務每日通報]*\n"
         respText += "`[今日天氣預測]`\n"
         respText += "`快取失敗`\n"
         respText += "`[昨日功耗統計]`\n"
         respText += "`快取失敗`\n"
-    if (mode == 0):
-        return respText
-    else:
-        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
+
+    return respText
+        
 
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
@@ -94,7 +104,8 @@ def test(mode):
 @app.route('/dailyReport', methods=['GET'])
 def dailyReport_update():
     if request.method == 'GET':
-        dailyReport(1)
+        respText = getDailyReport()
+        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -125,7 +136,7 @@ def webhook_handler():
     return 'ok'
 
 def getDl303(info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=8)
     failList = []
     data = "*[DL303"
     if (info == "all"): data += "設備狀態回報]"
@@ -173,7 +184,7 @@ def getDl303(info):
 def getEt7044(info):
     data = ""
     tagOwner = 0
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=8)
     if (info == "all"): data += "*[ET7044 設備狀態回報]*\n"
     et7044 = dbEt7044.find_one()
     if (info == "sw0" or info == "all"):
@@ -227,7 +238,7 @@ def getEt7044(info):
     return data
 
 def getUps(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=8)
     data = "*["
     if (info == "all"): data += "不斷電系統狀態回報-"
     data += "UPS_" + str(device_id).upper() + "]*\n"
@@ -293,7 +304,7 @@ def getUps(device_id, info):
     return data
 
 def getAirCondiction(device_id, info):
-    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=+8)
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3, hours=8)
     failList = []
     data = "*["
     if (info == "all"): data += "冷氣監控狀態回報-"
@@ -371,7 +382,7 @@ def reply_handler(bot, update):
     if (text == '冷氣_A' or text == '冷氣A狀態' or text == '冷氣a狀態' or text == '冷氣a' or text == '冷氣A'): respText = getAirCondiction("a", "all")
     if (text == '冷氣_B' or text == '冷氣B狀態' or text == '冷氣b狀態' or text == '冷氣b' or text == '冷氣B'): respText = getAirCondiction("b", "all")
     if (text == '冷氣狀態' or text == '冷氣'): respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
-    if (text == '每日通報'): respText = dailyReport(0)
+    if (text == '每日通報'): respText = getDailyReport()
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
