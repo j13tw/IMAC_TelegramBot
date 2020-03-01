@@ -6,6 +6,7 @@ import datetime
 import configparser
 import MySQLdb
 import requests
+import time
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
