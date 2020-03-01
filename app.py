@@ -50,6 +50,7 @@ dbDailyReport = myMongoDb["dailyReport"]
 
 def getDailyReport():
     broken = 0
+    tagOwner = 0
     dailyReport = dbDailyReport.find_one()
     # brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
     brokenTime = str(datetime.datetime.now()).split(" ")[0]
@@ -58,7 +59,7 @@ def getDailyReport():
         if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
             respText += "[[今日天氣預測]]\n"
-            if (dailyReport["error"] in ["power"]): 
+            if (dailyReport["error"] in ["weather"]): 
                 respText += "`快取失敗`\n"
             else:
                 respText += "`天氣狀態:\t{0:s}`\n".format(dailyReport["Wx"])
@@ -70,7 +71,7 @@ def getDailyReport():
                 respText += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
                 respText += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
             respText += "[[昨日功耗統計]]\n"
-            if (dailyReport["error"] in ["weather"]): 
+            if (dailyReport["error"] in ["power"]): 
                 respText += "`快取失敗`\n"
             else:
                 respText += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))
@@ -78,6 +79,7 @@ def getDailyReport():
                 respText += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
                 respText += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
                 respText += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
+            if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
             broken = 1
     else:
@@ -89,7 +91,12 @@ def getDailyReport():
         respText += "`快取失敗`\n"
         respText += "[[昨日功耗統計]]\n"
         respText += "`快取失敗`\n"
+        tagOwner == 1
 
+    if (tagOwner == 1):
+        respText += "----------------------------------\n"
+        respText += "*[每日通報資料異常!]*\t"
+        respText += "[維護人員](tg://user?id="+ str(devUser_id) + ")\n"
     return respText
         
 
