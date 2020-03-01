@@ -114,7 +114,7 @@ def daily_report():
     if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
     time.sleep(10)
-    try;
+    try:
         requests.get(herokuServer + "/dailyReport")
     except:
         pass
