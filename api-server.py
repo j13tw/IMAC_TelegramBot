@@ -47,8 +47,8 @@ dbDailyReport = myMongoDb["dailyReport"]
 @app.route('/dailyReport', methods=['GET'])
 def daily_report():
     data = {}
-    yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split[" "][0]
-    todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split[" "][0]
+    yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split(" ")[0]
+    todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
     data["date"] = todayDate
     data["error"] = []
     defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
