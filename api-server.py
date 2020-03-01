@@ -10,7 +10,7 @@ import time
 
 # Load data from config.ini file
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('/home/ubuntu/IMAC_TelegramBot/config.ini')
 
 # Initial Flask app
 app = Flask(__name__)
