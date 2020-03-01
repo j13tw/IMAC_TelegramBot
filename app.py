@@ -97,6 +97,7 @@ def getDailyReport():
         respText += "----------------------------------\n"
         respText += "*[每日通報資料異常!]*\t"
         respText += "[維護人員](tg://user?id="+ str(devUser_id) + ")\n"
+        if (broken != 1): respText += "*異常模組:* _" + str(dailyReport["error"]) + "_\n"
     return respText
         
 

@@ -47,8 +47,8 @@ dbDailyReport = myMongoDb["dailyReport"]
 @app.route('/dailyReport', methods=['GET'])
 def daily_report():
     data = {}
-    yesterdayDate = str(datetime.date.today() + datetime.timedelta(days=-1))
-    todayDate = str(datetime.date.today())
+    yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split[" "][0]
+    todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split[" "][0]
     data["date"] = todayDate
     data["error"] = []
     defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
@@ -83,14 +83,14 @@ def daily_report():
         data["error"].append('ups_b')
 
     try:
-        mysql_connection.execute("select AVG(Current)*215*24*1.732/1000 from Power_Meter where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        mysql_connection.execute("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
     except:
         data["air_condiction_a"] = 0.0
         data["error"].append('air_condiction_a')
 
     try:
-        mysql_connection.execute("select AVG(Current)*215*24*1.732/1000 from Power_Meter where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+        mysql_connection.execute("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
     except:
         data["air_condiction_b"] = 0.0
