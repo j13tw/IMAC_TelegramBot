@@ -62,8 +62,8 @@ def getDailyReport():
                 respText += "`快取失敗`\n"
             else:
                 respText += "`天氣狀態:\t{0:s}`\n".format(dailyReport["Wx"])
-                respText += "`陣風風向:{0:>5s} %`\n".format(int(dailyReport["WD"]))
-                respText += "`平均風速:{0:>5s} %`\n".format(int(dailyReport["WS"]))
+                respText += "`陣風風向:{0:>5s} %`\n".format(dailyReport["WD"])
+                respText += "`平均風速:{0:>5s} %`\n".format(dailyReport["WS"])
                 respText += "`降雨機率:{0:>5d} %`\n".format(int(dailyReport["PoP12h"]))
                 respText += "`舒適指數:{0:s} %`\n".format(int(dailyReport["CI"]))
                 respText += "`室外溫度:{0:>5.1f} 度`\n".format(int(dailyReport["T"]))
