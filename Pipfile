@@ -13,6 +13,7 @@ requests = "*"
 pymongo = "*"
 flask-api = "*"
 dnspython = "*"
+paho-mqtt = "*"
 
 [requires]
 python_version = "3.6"

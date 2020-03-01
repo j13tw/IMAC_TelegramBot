@@ -52,9 +52,7 @@ def getDailyReport():
     broken = 0
     tagOwner = 0
     dailyReport = dbDailyReport.find_one()
-    # brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
-    brokenTime = str(datetime.datetime.now()).split(" ")[0]
-    print(brokenTime)
+    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
     if (dailyReport != None):
         if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
