@@ -30,6 +30,7 @@ mysqlDb = config['MYSQL']['DATABASE']
 
 # Cloud Server Setup
 herokuServer = config['HEROKU']['SERVER']
+herokuServerProtocol = config['HEROKU']['SERVER_PROTOCOL']
 
 # Cloud mLab Setup
 dbDl303TC = myMongoDb["dl303/tc"]
@@ -121,10 +122,10 @@ def daily_report():
     time.sleep(5)
 
     try:
-        requests.get(herokuServer + "/dailyReport")
+        requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
     except:
         pass
-        
+
     return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
