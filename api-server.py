@@ -101,7 +101,7 @@ def daily_report():
         weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
         for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
             module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
-            if: (module == "CI"):
+            if (module == "CI"):
                 value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][1]["value"]
             else:
                 value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
