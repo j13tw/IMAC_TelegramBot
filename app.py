@@ -91,7 +91,7 @@ def getDailyReport():
         respText += "`快取失敗`\n"
         respText += "[[昨日功耗統計]]\n"
         respText += "`快取失敗`\n"
-        tagOwner == 1
+        tagOwner = 1
 
     if (tagOwner == 1):
         respText += "----------------------------------\n"

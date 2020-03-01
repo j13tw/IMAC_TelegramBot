@@ -110,7 +110,7 @@ def daily_report():
             data[module] = value
     except:
         data["error"].append('weather')
-    print(str(data).replace("\'", "\""))
+    # print(str(data).replace("\'", "\""))
 
     if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
@@ -120,7 +120,7 @@ def daily_report():
     # except:
     #     pass
 
-    return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
+    return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": str(data).replace("\'", "\"")}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
