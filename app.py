@@ -59,7 +59,7 @@ def getDailyReport():
         if (str(dailyReport["date"]) == str(brokenTime)):
             respText = "*[機房服務每日通報]*\n"
             respText += "[[今日天氣預測]]\n"
-            if (dailyReport["error"] in ["weather"]): 
+            if ("weather" in dailyReport["error"]): 
                 respText += "`快取失敗`\n"
             else:
                 respText += "`天氣狀態:\t{0:s}`\n".format(dailyReport["Wx"])
@@ -71,7 +71,7 @@ def getDailyReport():
                 respText += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
                 respText += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
             respText += "[[昨日功耗統計]]\n"
-            if (dailyReport["error"] in ["power"]): 
+            if ("power" in dailyReport["error"]): 
                 respText += "`快取失敗`\n"
             else:
                 respText += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))

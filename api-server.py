@@ -118,12 +118,13 @@ def daily_report():
     else: 
         dbDailyReport.update_one({},{'$set':data})
 
-    # time.sleep(5)
-    # try:
-    #     requests.get(herokuServer + "/dailyReport")
-    # except:
-    #     pass
+    time.sleep(5)
 
+    try:
+        requests.get(herokuServer + "/dailyReport")
+    except:
+        pass
+        
     return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
