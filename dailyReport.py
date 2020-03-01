@@ -18,4 +18,4 @@ while (True):
     if (int(timeJson["day"]) != preDay): 
         preDay = int(timeJson["day"])
         sendReport = 0
-    time.slppe(15)
+    time.sleep(15)
