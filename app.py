@@ -65,7 +65,7 @@ def getDailyReport():
                 respText += "`陣風風向:{0:>5s} %`\n".format(dailyReport["WD"])
                 respText += "`平均風速:{0:>5d} %`\n".format(int(dailyReport["WS"]))
                 respText += "`降雨機率:{0:>5d} %`\n".format(int(dailyReport["PoP12h"]))
-                respText += "`舒適指數:{0:s} %`\n".format(int(dailyReport["CI"]))
+                respText += "`舒適指數:{0:s} %`\n".format(dailyReport["CI"])
                 respText += "`室外溫度:{0:>5.1f} 度`\n".format(int(dailyReport["T"]))
                 respText += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
                 respText += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
