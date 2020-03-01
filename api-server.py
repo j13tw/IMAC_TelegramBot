@@ -83,6 +83,7 @@ def daily_report():
         data["error"].append('ups_b')
 
     try:
+        print("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         mysql_connection.execute("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
     except:
@@ -90,6 +91,7 @@ def daily_report():
         data["error"].append('air_condiction_a')
 
     try:
+        print("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         mysql_connection.execute("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
         data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
     except:
