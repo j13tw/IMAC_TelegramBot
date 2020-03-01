@@ -110,7 +110,7 @@ def daily_report():
             data[module] = value
     except:
         data["error"].append('weather')
-    # print(str(data).replace("\'", "\""))
+    print(str(data).replace("\'", "\""))
 
     if (dbDailyReport.find_one() == None): dbDailyReport.insert_one(data)
     else: dbDailyReport.update_one({},{'$set':data})
