@@ -418,7 +418,7 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '服務狀態']
+    device_list = ['環控設備' ,'溫度', '濕度', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '服務狀態']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -441,7 +441,7 @@ def reply_handler(bot, update):
         return
 
     # 所有設備
-    if (text == '監控設備'): 
+    if (text == '環控設備'): 
         respText = '請選擇 監測設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('DL303 工業監測器', callback_data = "device:" + "DL303")],
@@ -489,7 +489,16 @@ def reply_handler(bot, update):
     if (text == '排風扇狀態'): respText = getEt7044("sw2")
 
     # Power Meter + UPS 電流 回覆
-    if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
+    if (text == '電流'): 
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton('冷氣空調主機_A', callback_data = "current:" + "冷氣_A")],
+            [InlineKeyboardButton('冷氣空調主機_B', callback_data = "current:" + "冷氣_B")],
+            [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "current:" + "UPS_B")],
+            [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "current:" + "UPS_B")],
+            [InlineKeyboardButton('全部列出', callback_data = "current:" + "全部列出")]
+        ]), parse_mode="Markdown")
+        return
+        respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     
     # UPS 功能 回覆
     if (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態", 'Ups']):
@@ -570,6 +579,15 @@ def humi_select(bot, update):
     else: respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+def current_select(bot, update):
+    device = update.callback_query.data.split(':')[1]
+    if (device == "冷氣_A"): respText = getAirCondiction("a", "current")
+    elif (device == "冷氣_B"): respText = getAirCondiction("b", "current")
+    elif (device == "UPS_A"): respText = getUps("a", "current")
+    elif (device == "UPS_B"): respText = getUps("b", "current")
+    else: respText = getAirCondiction("a", "current") + "\n" + respText = getAirCondiction("b", "current") + getUps("a", "current") + "\n" + getUps("b", "current")
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+
 def ups_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "UPS_A"): respText = getUps("a", "all")
@@ -591,8 +609,8 @@ def et7044_select(bot, update):
     respText += getEt7044(device_map[device])
     if (len(respText.split('維護')) == 1):
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton("開啟", callback_data = "控制狀態:" + device + "_開啟"), 
-            InlineKeyboardButton("關閉", callback_data = "控制狀態:" + device + "_關閉")],
+            [InlineKeyboardButton("開啟", callback_data = "開關:" + device + "_開啟"), 
+            InlineKeyboardButton("關閉", callback_data = "開關:" + device + "_關閉")],
         ]), parse_mode="Markdown")
     else:
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
@@ -625,6 +643,7 @@ dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS'))
 dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'device'))
 dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'humi'))
+dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'current'))
 
 if __name__ == "__main__":
     # Running server
