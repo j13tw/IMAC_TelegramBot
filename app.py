@@ -53,22 +53,20 @@ def getServiceList():
     broken = 0
     tagOwner = 0
     serviceList = dbServiceCheck.find_one()
-    print(serviceList["date"])
     brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
-    print(brokenTime)
     if (serviceList != None):
-        if (str(serviceList["date"]) == str(brokenTime)):
+        if (str(serviceList["date"]).split(" ")[0] == str(brokenTime)):
             if ("輪播 Dashboard" not in serviceList["error"]):
                 data = serviceList
             else:
-                data = "`輪播 DashBoard 資料快取失敗`\n"
+                data = "`\n輪播 DashBoard 資料快取失敗`"
         else:
             broken = 1
     else:
         broken = 1
 
     if (broken == 1):
-        data = "`資料庫快取失敗`\n"
+        data = "`\n資料庫快取失敗`"
     return data
 
 def getServiceCheck():
