@@ -43,92 +43,137 @@ dbAirCondiction = myMongoDb["air_condiction"]
 dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
+dbServiceCheck = myMongoDb["serviceCheck"]
 
+@app.route('/serviceCheck', methods=['GET', 'POST'])
+def serviceCheck():
+    if request.method == 'GET':
+        updateService = 0
+        data = {}
+        data["date"] = str(datetime.datetime.now() + datetime.timedelta(hours=8))
+
+        try:
+            data["service"] = json.loads(requests.get("http://10.0.0.140:30010/").text)["res"]
+        except:
+            updateService = 1
+
+        if (not updateService):
+            for x in range(0, len(data["service"])):
+                try:
+                    if (data["service"][x]["name"] != "Kubernetes Dashboard"): r = requests.get(data["service"][x]["url"])
+                    else: r = requests.get(data["service"][x]["url"], verify=False)
+                    if (r.status_code == 200): data["service"][x]["status"] = "正常"
+                    else: data["service"][x]["name"]["status"] = "異常"
+                except:
+                    data["service"][x]["status"] = "異常"
+                if (len(data["service"][x]) == 5): data["service"][x]["notice"] = ""
+                if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
+                    data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
+                    data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
+
+            if (dbServiceCheck.find_one() == None): 
+                dbServiceCheck.insert_one(data)
+                del data["_id"]
+            else: 
+                dbServiceCheck.update_one({},{'$set':data})
+            
+            if (data["date"] >= data["date"].split(" ")[0] + " 20:00:00" and data["date"] <= data["date"].split(" ")[0] + " 20:00:59"):
+                try:
+                    requests.get(herokuServerProtocol + "://" + herokuServer + "/serviceCheck")
+                except:
+                    pass
+
+            return {"serviceCheck": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
+        else:
+            return {"serviceCheck": str(data["date"]).split(".")[0] + "-fail", "data": data}, status.HTTP_401_UNAUTHORIZED
+
+    
 @app.route('/dailyReport', methods=['GET'])
 def daily_report():
-    data = {}
-    yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split(" ")[0]
-    todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
-    data["date"] = todayDate
-    data["error"] = []
-    defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
-    apiToken = "CWB-011FFC7B-436E-4268-ABCA-998FBD6AD424"
-    locationName = "%E5%8C%97%E5%8D%80"
-    timeStamp_a = "T06%3A00%3A00"
-    timeStamp_b = "T09%3A00%3A00"
-    timeStamp_c = "T12%3A00%3A00"
+    if request.method == 'GET':
+        data = {}
+        yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split(" ")[0]
+        todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+        data["date"] = todayDate
+        data["error"] = []
+        defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
+        apiToken = "CWB-011FFC7B-436E-4268-ABCA-998FBD6AD424"
+        locationName = "%E5%8C%97%E5%8D%80"
+        timeStamp_a = "T06%3A00%3A00"
+        timeStamp_b = "T09%3A00%3A00"
+        timeStamp_c = "T12%3A00%3A00"
 
-    try:
-        mysql_conn = MySQLdb.connect(host=mysqlIp, \
-            port=int(mysqlPort), \
-            user=mysqlUser, \
-            passwd=mysqlPass, \
-            db=mysqlDb)
-        mysql_connection = mysql_conn.cursor()
-    except:
-        data["error"].append('power')
+        try:
+            mysql_conn = MySQLdb.connect(host=mysqlIp, \
+                port=int(mysqlPort), \
+                user=mysqlUser, \
+                passwd=mysqlPass, \
+                db=mysqlDb)
+            mysql_connection = mysql_conn.cursor()
+        except:
+            data["error"].append('power')
 
-    try:
-        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
-    except:
-        data["ups_a"] = 0.0
-        data["error"].append('ups_a')
+        try:
+            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
+        except:
+            data["ups_a"] = 0.0
+            data["error"].append('ups_a')
+        
+        try:
+            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+        except:
+            data["ups_b"] = 0.0
+            data["error"].append('ups_b')
+
+        try:
+            print("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            mysql_connection.execute("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
+        except:
+            data["air_condiction_a"] = 0.0
+            data["error"].append('air_condiction_a')
+
+        try:
+            print("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            mysql_connection.execute("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+        except:
+            data["air_condiction_b"] = 0.0
+            data["error"].append('air_condiction_b')
+        
+        data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]), 4)
     
-    try:
-        mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
-    except:
-        data["ups_b"] = 0.0
-        data["error"].append('ups_b')
+        try:
+            requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "," + todayDate + timeStamp_c + "&dataTime=" + todayDate + timeStamp_b
+            weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
+            for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
+                module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
+                if (module == "CI"):
+                    value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][1]["value"]
+                else:
+                    value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
+                if (not (module in ["WeatherDescription", "WD", "Wx", "CI"])): value = int(value) 
+                data[module] = value
+        except:
+            data["error"].append('weather')
+        # print(str(data).replace("\'", "\""))
 
-    try:
-        print("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        mysql_connection.execute("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
-    except:
-        data["air_condiction_a"] = 0.0
-        data["error"].append('air_condiction_a')
+        if (dbDailyReport.find_one() == None): 
+            dbDailyReport.insert_one(data)
+            del data["_id"]
+        else: 
+            dbDailyReport.update_one({},{'$set':data})
 
-    try:
-        print("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        mysql_connection.execute("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-        data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
-    except:
-        data["air_condiction_b"] = 0.0
-        data["error"].append('air_condiction_b')
-    
-    data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]), 4)
- 
-    try:
-        requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "," + todayDate + timeStamp_c + "&dataTime=" + todayDate + timeStamp_b
-        weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
-        for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
-            module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]
-            if (module == "CI"):
-                value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][1]["value"]
-            else:
-                value = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["time"][0]["elementValue"][0]["value"]
-            if (not (module in ["WeatherDescription", "WD", "Wx", "CI"])): value = int(value) 
-            data[module] = value
-    except:
-        data["error"].append('weather')
-    # print(str(data).replace("\'", "\""))
+        time.sleep(5)
 
-    if (dbDailyReport.find_one() == None): 
-        dbDailyReport.insert_one(data)
-        del data["_id"]
-    else: 
-        dbDailyReport.update_one({},{'$set':data})
+        try:
+            requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
+        except:
+            pass
 
-    time.sleep(5)
-
-    try:
-        requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
-    except:
-        pass
-
-    return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
+        return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
 @app.route('/power_box', methods=['POST'])
 def power_box_update():
