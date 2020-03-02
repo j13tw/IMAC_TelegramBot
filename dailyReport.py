@@ -18,4 +18,8 @@ while (True):
     if (int(timeJson["day"]) != preDay): 
         preDay = int(timeJson["day"])
         sendReport = 0
-    time.sleep(15)
+    try: 
+        requests.get("http://127.0.0.1:5000/serviceCheck")
+    except: 
+        pass
+    time.sleep(60)
