@@ -531,7 +531,7 @@ dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'控制設備'))
 dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'控制狀態'))
 dispatcher.add_handler(CallbackQueryHandler(air_condiction_select, pattern=r'冷氣狀態'))
-dispatcher.add_handler(CallbackQueryHandler(ups_control, pattern=r'UPS狀態'))
+dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS狀態'))
 
 
 if __name__ == "__main__":
