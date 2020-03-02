@@ -82,6 +82,7 @@ def getServiceCheck():
                     data += "[[" + serviceStatus["service"][x]["name"] + "]]\n"
                     data += "`服務輪播: " + str(serviceStatus["service"][x]["enabled"]) + "`\n"
                     data += "`服務狀態: " + serviceStatus["service"][x]["status"] + "`\n"
+                    data += "\n"
                     if (serviceStatus["service"][x]["status"] == "異常"): tagOwner = 1
             else:
                 data += "`輪播 DashBoard 資料快取失敗`\n"
