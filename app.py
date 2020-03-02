@@ -520,9 +520,8 @@ def reply_handler(bot, update):
         respText = "*[機房服務列表]*"
         try:
             serviceList = getServiceList()["service"]
-            print(str(serviceList))
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton(serviceList["service"][x]["name"], callback_data = "service" + serviceList["service"][x]["name"], url=serviceList["service"][x]["url"]) for x in range(0, len(serviceList))]
+                [InlineKeyboardButton(serviceList[x]["name"], callback_data = "service" + serviceList[x]["name"], url=serviceList[x]["url"]) for x in range(0, len(serviceList))]
             ]), parse_mode="Markdown")
             return
         except:
