@@ -585,7 +585,7 @@ dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'開關'))
 dispatcher.add_handler(CallbackQueryHandler(air_condiction_select, pattern=r'冷氣'))
 dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS'))
 dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'環控'))
-# dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
+dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 # dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'濕度'))
 
 if __name__ == "__main__":
