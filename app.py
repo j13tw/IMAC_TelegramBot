@@ -437,12 +437,12 @@ def reply_handler(bot, update):
     if (text == '溫度'): 
         respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('DL303 工業監測器', callback_data = "溫度:" + "DL303")],
-            [InlineKeyboardButton('冷氣_A 出風口', callback_data = "溫度:" + "冷氣_A")],
-            [InlineKeyboardButton('冷氣_B 出風口', callback_data = "溫度:" + "冷氣_B")],
-            [InlineKeyboardButton('UPS_A 機箱內部', callback_data = "溫度:" + "UPS_B")],
-            [InlineKeyboardButton('UPS_B 機箱內部', callback_data = "溫度:" + "UPS_B")],
-            [InlineKeyboardButton('全部列出', callback_data = "溫度:" + "全部列出")]
+            [InlineKeyboardButton('DL303 工業監測器', callback_data = "temp:" + "DL303")],
+            [InlineKeyboardButton('冷氣_A 出風口', callback_data = "temp:" + "冷氣_A")],
+            [InlineKeyboardButton('冷氣_B 出風口', callback_data = "temp:" + "冷氣_B")],
+            [InlineKeyboardButton('UPS_A 機箱內部', callback_data = "temp:" + "UPS_B")],
+            [InlineKeyboardButton('UPS_B 機箱內部', callback_data = "temp:" + "UPS_B")],
+            [InlineKeyboardButton('全部列出', callback_data = "temp:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
         
@@ -514,15 +514,15 @@ def device_select(bot, update):
     else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getUps("a", "all") + '\n' + getUps("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
-# def temp_select(bot, update):
-#     device = update.callback_query.data.split(':')[1]
-#     if (device == "DL303"): respText = getDl303("tc")
-#     elif (device == "冷氣_A"): respText = getAirCondiction("a", "temp")
-#     elif (device == "冷氣_B"): respText = getAirCondiction("b", "temp")
-#     elif (device == "UPS_A"): respText = getUps("a", "temp")
-#     elif (device == "UPS_B"): respText = getUps("b", "temp")
-#     else: respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
-#     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+def temp_select(bot, update):
+    device = update.callback_query.data.split(':')[1]
+    if (device == "DL303"): respText = getDl303("tc")
+    elif (device == "冷氣_A"): respText = getAirCondiction("a", "temp")
+    elif (device == "冷氣_B"): respText = getAirCondiction("b", "temp")
+    elif (device == "UPS_A"): respText = getUps("a", "temp")
+    elif (device == "UPS_B"): respText = getUps("b", "temp")
+    else: respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # def humi_select(bot, update):
 #     device = update.callback_query.data.split(':')[1]
@@ -585,7 +585,7 @@ dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'開關'))
 dispatcher.add_handler(CallbackQueryHandler(air_condiction_select, pattern=r'冷氣'))
 dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS'))
 dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'環控'))
-# dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'溫度'))
+# dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 # dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'濕度'))
 
 if __name__ == "__main__":
