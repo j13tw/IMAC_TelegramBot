@@ -161,14 +161,14 @@ def daily_report():
 
         try:
             mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
+            data["ups_a"] = round(float(mysql_connection.fetchone()[0])+(2.0*215.0*24/1000), 4)
         except:
             data["ups_a"] = 0.0
             data["error"].append('ups_a')
         
         try:
             mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
+            data["ups_b"] = round(float(mysql_connection.fetchone()[0])+(2.0*215.0*24/1000), 4)
         except:
             data["ups_b"] = 0.0
             data["error"].append('ups_b')
@@ -189,7 +189,8 @@ def daily_report():
             data["air_condiction_b"] = 0.0
             data["error"].append('air_condiction_b')
         
-        data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"]), 4)
+        data["water_cooler"] = 45.0
+        data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"] + data["water_cooler"]), 4)
     
         try:
             requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "," + todayDate + timeStamp_c + "&dataTime=" + todayDate + timeStamp_b

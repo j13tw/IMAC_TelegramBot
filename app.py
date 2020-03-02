@@ -132,6 +132,7 @@ def getDailyReport():
                 data += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
                 data += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
                 data += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
+                data += "`水塔功耗(預估): {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_cooler"]), float(float(dailyReport["water_cooler"])/float(dailyReport["total"])*100.0))
                 data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
