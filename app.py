@@ -53,7 +53,9 @@ def getServiceList():
     broken = 0
     tagOwner = 0
     serviceList = dbServiceCheck.find_one()
-    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=-8)).split(" ")[0]
+    print(serviceList["date"])
+    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+    print(brokenTime)
     if (serviceList != None):
         if (str(serviceList["date"]) == str(brokenTime)):
             if ("輪播 Dashboard" not in serviceList["error"]):
