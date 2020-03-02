@@ -80,8 +80,6 @@ def serviceList():
                         data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
                     else:
                         del data["service"][x]["notice"]
-                else:
-                    del data["service"][x]["notice"]
 
         if (dbServiceList.find_one() == None): 
             dbServiceList.insert_one(data)
