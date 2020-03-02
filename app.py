@@ -515,6 +515,7 @@ def device_select(bot, update):
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 def temp_select(bot, update):
+    print("???")
     device = update.callback_query.data.split(':')[1]
     if (device == "DL303"): respText = getDl303("tc")
     elif (device == "冷氣_A"): respText = getAirCondiction("a", "temp")
@@ -526,7 +527,7 @@ def temp_select(bot, update):
 
 def humi_select(bot, update):
     device = update.callback_query.data.split(':')[1]
-    if (device == "DL303"): respText = getDl303("tc")
+    if (device == "DL303"): respText = getDl303("rh")
     elif (device == "冷氣_A"): respText = getAirCondiction("a", "humi")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "humi")
     else: respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
