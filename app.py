@@ -521,9 +521,9 @@ def reply_handler(bot, update):
         try:
             serviceList = getServiceList()["service"]
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton(serviceList["service"][x]["name"], callback_data = "service" + serviceList["service"][x]["name"], url=serviceList["service"][x]["url"]) for x in range(0, len(serviceList))]
-        ]), parse_mode="Markdown")
-        return
+                [InlineKeyboardButton(serviceList["service"][x]["name"], callback_data = "service" + serviceList["service"][x]["name"], url=serviceList["service"][x]["url"]) for x in range(0, len(serviceList))]
+            ]), parse_mode="Markdown")
+            return
         except:
             respText ＋= getServiceList()
 
