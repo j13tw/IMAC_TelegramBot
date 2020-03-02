@@ -522,6 +522,7 @@ def reply_handler(bot, update):
             serviceList = getServiceList()["service"]
             for x in range(0, len(serviceList)):
                 if (serviceList[x].get("user") != None and serviceList[x].get("pass") != None):
+                    respText += "\n"
                     respText += "[[" + serviceList[x]["name"] + "]]\n"
                     respText += "帳號:" + serviceList[x]["user"] + "\n"
                     respText += "密碼:" + serviceList[x]["pass"] + "\n"
