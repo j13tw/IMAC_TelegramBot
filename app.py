@@ -525,7 +525,7 @@ def reply_handler(bot, update):
             ]), parse_mode="Markdown")
             return
         except:
-            respText ＋= getServiceList()
+            respText += getServiceList()
 
     #    print(dir(update.message))
     if (respText != ""): 
