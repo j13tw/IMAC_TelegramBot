@@ -520,7 +520,7 @@ def reply_handler(bot, update):
         respText = "*[機房服務列表]*"
         try:
             serviceList = getServiceList()["service"]
-            for x in range(0, len(serviceList):
+            for x in range(0, len(serviceList)):
                 if (serviceList[x].get("user") != None and serviceList[x].get("pass") != None):
                     respText += "[[" + serviceList[x]["name"] + "]]\n"
                     respText += "帳號:" + serviceList[x]["user"] + "\n"
