@@ -54,7 +54,7 @@ def getServiceList():
     broken = 0
     tagOwner = 0
     serviceList = dbServiceCheck.find_one()
-    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+    brokenTime = str(datetime.datetime.now()).split(" ")[0]
     if (serviceList != None):
         if (str(serviceList["date"]).split(" ")[0] == str(brokenTime)):
             if ("輪播 Dashboard" not in serviceList["error"]):
@@ -74,7 +74,7 @@ def getServiceCheck():
     broken = 0
     tagOwner = 0
     serviceStatus = dbServiceCheck.find_one()
-    brokenTime = str(datetime.datetime.now() + datetime.timedelta(minutes=-3 ,hours=8))
+    brokenTime = str(datetime.datetime.now() + datetime.timedelta(minutes=-3))
     if (serviceStatus != None):
         if (str(serviceStatus["date"]) > str(brokenTime)):
             data = "*[機房交接服務檢測]*\n"
@@ -108,7 +108,7 @@ def getDailyReport():
     broken = 0
     tagOwner = 0
     dailyReport = dbDailyReport.find_one()
-    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+    brokenTime = str(datetime.datetime.now()).split(" ")[0]
     if (dailyReport != None):
         if (str(dailyReport["date"]) == str(brokenTime)):
             data = "*[機房監控每日通報]*\n"

@@ -12,14 +12,21 @@ while (True):
     if (int(timeJson["hour"]) == 8 and sendReport == 0):
         sendReport = 1
         try: 
-            requests.get("http://127.0.0.1:5000/dailyReport")
+            r = requests.get("http://127.0.0.1:5000/dailyReport")
+            print(r.text)
+        except: 
+            pass
+        try: 
+            r = requests.get("http://127.0.0.1:5000/serviceList")
+            print(r.text)
         except: 
             pass
     if (int(timeJson["day"]) != preDay): 
         preDay = int(timeJson["day"])
         sendReport = 0
     try: 
-        requests.get("http://127.0.0.1:5000/serviceCheck")
+        r = requests.get("http://127.0.0.1:5000/serviceCheck")
+        print(r.text)
     except: 
         pass
     time.sleep(60)

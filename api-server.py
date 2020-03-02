@@ -46,13 +46,13 @@ dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 
-@app.route('/serviceCheck', methods=['GET', 'POST'])
-def serviceCheck():
+@app.route('/serviceList', methods=['GET'])
+def serviceList():
     if request.method == 'GET':
         updateService = 0
         data = {}
         data["error"] = []
-        data["date"] = str(datetime.datetime.now() + datetime.timedelta(hours=8))
+        data["date"] = str(datetime.datetime.now())
 
         try:
             data["service"] = json.loads(requests.get("http://10.0.0.140:30010/").text)["res"]
@@ -74,25 +74,61 @@ def serviceCheck():
                     data["service"][x]["status"] = "異常"
                     data["error"].append(data["service"][x]["name"])
 
-                if (len(data["service"][x]) == 5): data["service"][x]["notice"] = ""
-                if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
-                    data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
-                    data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
+                if (data["service"][x].get("notice") != None):
+                    if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
+                        data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
+                        data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
+                    else:
+                        del data["service"][x]["notice"]
+                else:
+                    del data["service"][x]["notice"]
+
+        if (dbServiceList.find_one() == None): 
+            dbServiceList.insert_one(data)
+            del data["_id"]
+        else: 
+            dbServiceList.update_one({},{'$set':data})
+
+        return {"serviceList": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
+
+
+@app.route('/serviceCheck', methods=['GET'])
+def serviceCheck():
+    if request.method == 'GET':
+        updateService = 0
+        data = {}
+        data["error"] = []
+        data["date"] = str(datetime.datetime.now())
+
+        try:
+            data["service"] = json.loads(requests.get("http://10.0.0.140:30010/").text)["res"]
+        except:
+            updateService = 1
+            data["error"].append("輪播 Dashboard")
+
+        if (not updateService):
+            for x in range(0, len(data["service"])):
+                try:
+                    if (data["service"][x]["name"] != "Kubernetes Dashboard"): r = requests.get(data["service"][x]["url"])
+                    else: r = requests.get(data["service"][x]["url"], verify=False)
+                    if (r.status_code == 200): 
+                        data["service"][x]["status"] = "正常"
+                    else: 
+                        data["service"][x]["name"]["status"] = "異常"
+                        data["error"].append(data["service"][x]["name"])
+                except:
+                    data["service"][x]["status"] = "異常"
+                    data["error"].append(data["service"][x]["name"])
+
+                if (data["service"][x].get("notice") != None): del data["service"][x]["notice"]
 
         if (dbServiceCheck.find_one() == None): 
             dbServiceCheck.insert_one(data)
             del data["_id"]
         else: 
             dbServiceCheck.update_one({},{'$set':data})
-        
-        if (data["date"] >= data["date"].split(" ")[0] + " 08:00:00" and data["date"] <= data["date"].split(" ")[0] + " 08:00:59"):
-            if (dbServiceList.find_one() == None): 
-                dbServiceList.insert_one(data)
-                del data["_id"]
-            else: 
-                dbServiceList.update_one({},{'$set':data})
 
-        if (data["date"] >= data["date"].split(" ")[0] + " 20:00:00" and data["date"] <= data["date"].split(" ")[0] + " 20:00:59"):
+        if (data["date"] >= data["date"].split(" ")[0] + " 12:00:00" and data["date"] <= data["date"].split(" ")[0] + " 12:00:59"):
             try:
                 requests.get(herokuServerProtocol + "://" + herokuServer + "/serviceCheck")
             except:
@@ -105,8 +141,8 @@ def serviceCheck():
 def daily_report():
     if request.method == 'GET':
         data = {}
-        yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).split(" ")[0]
-        todayDate = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+        yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(days=-1)).split(" ")[0]
+        todayDate = str(datetime.datetime.now()).split(" ")[0]
         data["date"] = todayDate
         data["error"] = []
         defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
