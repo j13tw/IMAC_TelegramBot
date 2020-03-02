@@ -585,7 +585,7 @@ def current_select(bot, update):
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "current")
     elif (device == "UPS_A"): respText = getUps("a", "current")
     elif (device == "UPS_B"): respText = getUps("b", "current")
-    else: respText = getAirCondiction("a", "current") + "\n" + respText = getAirCondiction("b", "current") + getUps("a", "current") + "\n" + getUps("b", "current")
+    else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 def ups_select(bot, update):
