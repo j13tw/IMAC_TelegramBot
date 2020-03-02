@@ -48,6 +48,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
+dbServiceList = myMongoDb["serviceList"]
 
 def getServiceList():
     broken = 0
@@ -75,7 +76,7 @@ def getServiceCheck():
     serviceStatus = dbServiceCheck.find_one()
     brokenTime = str(datetime.datetime.now() + datetime.timedelta(minutes=-3 ,hours=8))
     if (serviceStatus != None):
-        if (str(serviceStatus["date"]) < str(brokenTime)):
+        if (str(serviceStatus["date"]) > str(brokenTime)):
             data = "*[機房交接服務檢測]*\n"
             if ("輪播 Dashboard" not in serviceStatus["error"]):
                 for x in range(0, len(serviceStatus["service"])):
