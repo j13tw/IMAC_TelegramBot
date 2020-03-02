@@ -78,8 +78,7 @@ def serviceList():
                     if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
                         data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
                         data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
-                    else:
-                        del data["service"][x]["notice"]
+                    del data["service"][x]["notice"]
 
         if (dbServiceList.find_one() == None): 
             dbServiceList.insert_one(data)
