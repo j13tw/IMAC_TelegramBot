@@ -60,14 +60,14 @@ def getServiceList():
             if ("輪播 Dashboard" not in serviceList["error"]):
                 data = serviceList
             else:
-                data = "`\n輪播 DashBoard 資料快取失敗`"
+                data = "`輪播 DashBoard 資料快取失敗`"
         else:
             broken = 1
     else:
         broken = 1
 
     if (broken == 1):
-        data = "`\n資料庫快取失敗`"
+        data = "`資料庫快取失敗`"
     return data
 
 def getServiceCheck():
