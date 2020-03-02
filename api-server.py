@@ -44,6 +44,7 @@ dbAirCondictionCurrent = myMongoDb["air_condiction_current"]
 dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
+dbServiceList = myMongoDb["serviceList"]
 
 @app.route('/serviceCheck', methods=['GET', 'POST'])
 def serviceCheck():
@@ -72,7 +73,7 @@ def serviceCheck():
                 except:
                     data["service"][x]["status"] = "異常"
                     data["error"].append(data["service"][x]["name"])
-                    
+
                 if (len(data["service"][x]) == 5): data["service"][x]["notice"] = ""
                 if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
                     data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
@@ -84,6 +85,13 @@ def serviceCheck():
         else: 
             dbServiceCheck.update_one({},{'$set':data})
         
+        if (data["date"] >= data["date"].split(" ")[0] + " 08:00:00" and data["date"] <= data["date"].split(" ")[0] + " 08:00:59"):
+            if (dbServiceList.find_one() == None): 
+                dbServiceList.insert_one(data)
+                del data["_id"]
+            else: 
+                dbServiceList.update_one({},{'$set':data})
+
         if (data["date"] >= data["date"].split(" ")[0] + " 20:00:00" and data["date"] <= data["date"].split(" ")[0] + " 20:00:59"):
             try:
                 requests.get(herokuServerProtocol + "://" + herokuServer + "/serviceCheck")
