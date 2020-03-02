@@ -57,8 +57,8 @@ def getServiceCheck():
     if (serviceStatus != None):
         if (str(dailyReport["date"]) == str(brokenTime)):
             data = "*[機房交接服務檢測]*\n"
-            if ("輪播 Dashboard" not in serviceStatus["error"])
-                for x in range(0, len(serviceStatus["service"]))
+            if ("輪播 Dashboard" not in serviceStatus["error"]):
+                for x in range(0, len(serviceStatus["service"])):
                     data += "[[" + serviceStatus["service"][x]["name"] + "]]\n"
                     data += "`服務輪播: " + serviceStatus["service"][x]["enabled"] + "`\n"
                     data += "`服務狀態: " + serviceStatus["service"][x]["status"] + "`\n"
