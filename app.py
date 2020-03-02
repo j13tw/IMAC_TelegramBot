@@ -49,6 +49,26 @@ dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
 
+def getServiceList():
+    broken = 0
+    tagOwner = 0
+    serviceList = dbServiceCheck.find_one()
+    brokenTime = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
+    if (serviceList != None):
+        if (str(serviceList["date"]) == str(brokenTime)):
+            if ("輪播 Dashboard" not in serviceList["error"]):
+                data = serviceList
+            else:
+                data = "`輪播 DashBoard 資料快取失敗`\n"
+        else:
+            broken = 1
+    else:
+        broken = 1
+
+    if (broken == 1):
+        data = "`資料庫快取失敗`\n"
+    return data
+
 def getServiceCheck():
     broken = 0
     tagOwner = 0
@@ -73,7 +93,7 @@ def getServiceCheck():
 
     if (broken == 1):
         data = "*[機房交接服務檢測]*\n"
-        data += "`快取失敗`\n"
+        data += "`資料快取失敗`\n"
         tagOwner = 1
 
     if (tagOwner == 1):
@@ -120,9 +140,9 @@ def getDailyReport():
     if (broken == 1):
         data = "*[機房監控每日通報]*\n"
         data += "[[今日天氣預測]]\n"
-        data += "`快取失敗`\n"
+        data += "`資料快取失敗`\n"
         data += "[[昨日功耗統計]]\n"
-        data += "`快取失敗`\n"
+        data += "`資料快取失敗`\n"
         tagOwner = 1
 
     if (tagOwner == 1):
@@ -400,7 +420,7 @@ def reply_handler(bot, update):
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
-    if (text == '控制'): 
+    if (text == '遠端控制'): 
         respText = '請選擇所需控制設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('進風風扇', callback_data = "控制:" + "進風風扇")],
@@ -422,13 +442,13 @@ def reply_handler(bot, update):
     if (text == '監控設備'): 
         respText = '請選擇 監測設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('DL303 工業監測器', callback_data = "環控:" + "DL303")],
-            [InlineKeyboardButton('ET7044 工業控制器', callback_data = "環控:" + "ET7044")],
-            [InlineKeyboardButton('冷氣_A', callback_data = "環控:" + "冷氣_A")],
-            [InlineKeyboardButton('冷氣_B', callback_data = "環控:" + "冷氣_B")],
-            [InlineKeyboardButton('UPS_A', callback_data = "環控:" + "UPS_B")],
-            [InlineKeyboardButton('UPS_B', callback_data = "環控:" + "UPS_B")],
-            [InlineKeyboardButton('全部列出', callback_data = "環控:" + "全部列出")]
+            [InlineKeyboardButton('DL303 工業監測器', callback_data = "device:" + "DL303")],
+            [InlineKeyboardButton('ET7044 工業控制器', callback_data = "device:" + "ET7044")],
+            [InlineKeyboardButton('冷氣空調主機_A', callback_data = "device:" + "冷氣_A")],
+            [InlineKeyboardButton('冷氣空調主機_B', callback_data = "device:" + "冷氣_B")],
+            [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "device:" + "UPS_B")],
+            [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "device:" + "UPS_B")],
+            [InlineKeyboardButton('全部列出', callback_data = "device:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
 
@@ -496,6 +516,16 @@ def reply_handler(bot, update):
     # 每日通報 & 服務檢測 & 服務列表 回覆
     if (text == '每日通報'): respText = getDailyReport()
     if (text == '服務狀態'): respText = getServiceCheck()
+    if (text == '服務列表'):
+        respText = "*[機房服務列表]*"
+        try:
+            serviceList = getServiceList()["service"]
+            bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+            [InlineKeyboardButton(serviceList["service"][x]["name"], callback_data = "service" + serviceList["service"][x]["name"], url=serviceList["service"][x]["url"]) for range(0, len(serviceList))]
+        ]), parse_mode="Markdown")
+        return
+        except:
+            respText ＋= getServiceList()
 
     #    print(dir(update.message))
     if (respText != ""): 
@@ -584,7 +614,7 @@ dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'控制'))
 dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'開關'))
 dispatcher.add_handler(CallbackQueryHandler(air_condiction_select, pattern=r'冷氣'))
 dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS'))
-dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'環控'))
+dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'device'))
 dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'humi'))
 
