@@ -418,7 +418,7 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '本日輪值', '每日通報', '服務狀態', '服務列表']
+    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '服務狀態']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
