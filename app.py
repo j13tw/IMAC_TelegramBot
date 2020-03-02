@@ -437,7 +437,7 @@ def reply_handler(bot, update):
     if (text == '電流'): respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     
     # UPS 功能 回覆
-    if (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態, 'Ups']):
+    if (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態", 'Ups']):
         respText = '請選擇 UPS～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('UPS_A', callback_data = "UPS狀態:" + "UPS_A")],
