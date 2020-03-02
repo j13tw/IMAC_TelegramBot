@@ -53,7 +53,7 @@ dbServiceList = myMongoDb["serviceList"]
 def getServiceList():
     broken = 0
     tagOwner = 0
-    serviceList = dbServiceCheck.find_one()
+    serviceList = dbServiceList.find_one()
     brokenTime = str(datetime.datetime.now()).split(" ")[0]
     if (serviceList != None):
         if (str(serviceList["date"]).split(" ")[0] == str(brokenTime)):
