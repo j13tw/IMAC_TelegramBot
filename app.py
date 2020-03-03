@@ -725,7 +725,7 @@ dispatcher.add_handler(CallbackQueryHandler(ups_select, pattern=r'UPS'))
 dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'device'))
 dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'humi'))
-dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'current'))
+dispatcher.add_handler(CallbackQueryHandler(current_select, pattern=r'current'))
 
 if __name__ == "__main__":
     # Running server
