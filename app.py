@@ -49,6 +49,23 @@ dbPowerBox = myMongoDb["power_box"]
 dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
+dbRotationUser = myMongoDb["rotationUser"]
+
+def getRotationUser():
+    data = ""
+    rotationUser = dbRotationUser.find_one()
+    todayWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8)).weekday()
+    tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, day=-1)).weekday()
+    if (rotationUser =!= None):
+        data += "`今日輪值人員`"
+        for x in range(0, len(rotationUser["rotation"][todayWeekDay]["user"]))
+            data += rotationUser["rotation"][todayWeekDay]["user"][x]
+        data += "`今日交接人員`"
+        for x in range(0, len(rotationUser["rotation"][tomorrow]["user"]))
+            data += rotationUser["rotation"][tomorrow]["user"][x]
+    else:
+        data = "`資料庫快取失敗`"
+    return data
 
 def getServiceList():
     broken = 0
