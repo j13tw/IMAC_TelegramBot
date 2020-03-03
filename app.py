@@ -191,6 +191,15 @@ def test(mode):
     if (mode == 'onlineGif'): bot.sendAnimation(chat_id=1070358833, animation='http://d21p91le50s4xn.cloudfront.net/wp-content/uploads/2015/08/giphy.gif')
     if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
 
+@app.route('/rotationUser', methods=['GET'])
+def rotationUser_update():
+    if request.method == 'GET':
+        respText = getRotationUser()
+        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
+        return {"rotationUser": "data_ok"}, status.HTTP_200_OK
+    else:
+        return {"rotationUser": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+
 @app.route('/serviceCheck', methods=['GET'])
 def serviceCheck_update():
     if request.method == 'GET':

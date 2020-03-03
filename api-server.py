@@ -47,8 +47,14 @@ dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 
-@app.route('/rotationUser/<x>', methods=['POST'])
+@app.route('/rotationUser/<x>', methods=['GET', 'POST'])
 def rotationUser(x):
+    if request.method == 'GET':
+       try:
+            requests.get(herokuServerProtocol + "://" + herokuServer + "/rotationUser")
+        except:
+            pass
+
     if request.method == 'POST':
         if (int(x) < 1 and int(x) > 7): return {"rotationUser": "weekDay-fail"}, status.HTTP_401_UNAUTHORIZED
         userList = request.json

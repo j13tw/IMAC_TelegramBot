@@ -21,6 +21,11 @@ while (True):
             print(r.text)
         except: 
             pass
+        try: 
+            r = requests.get("http://127.0.0.1:5000/otationUser")
+            print(r.text)
+        except: 
+            pass
     if (int(timeJson["day"]) != preDay): 
         preDay = int(timeJson["day"])
         sendReport = 0
