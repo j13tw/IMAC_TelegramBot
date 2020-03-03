@@ -56,24 +56,24 @@ def rotationUser(x):
         if (dbServiceList.find_one() == None): 
                 data = {}
                 data["rotation"] = []
-                for x in range(1, 8):
+                for y in range(1, 8):
                     weekDay = ""
-                    if (x == 1): weekDay = "一"
-                    elif (x == 2): weekDay = "二"
-                    elif (x == 3): weekDay = "三"
-                    elif (x == 4): weekDay = "四"
-                    elif (x == 5): weekDay = "五"
-                    elif (x == 6): weekDay = "六"
+                    if (y == 1): weekDay = "一"
+                    elif (y == 2): weekDay = "二"
+                    elif (y == 3): weekDay = "三"
+                    elif (y == 4): weekDay = "四"
+                    elif (y == 5): weekDay = "五"
+                    elif (y == 6): weekDay = "六"
                     else: weekDay = "日"
                     data["rotation"].append({})
-                    data["rotation"][int(x)-1]["user"] = []
-                    data["rotation"][int(x)-1]["user"].append("星期" + weekDay +  "_人員_0")
-                    data["rotation"][int(x)-1]["user"].append("星期" + weekDay + "_人員_1")
+                    data["rotation"][int(y)-1]["user"] = []
+                    data["rotation"][int(y)-1]["user"].append("星期" + weekDay +  "_人員_0")
+                    data["rotation"][int(y)-1]["user"].append("星期" + weekDay + "_人員_1")
                 print(str(data).replace("\'", "\""))
                 dbRotationUser.insert_one(data)
                 del data["_id"]
         else: 
-            dbRotationUser.update_one({},{'$set':{"rotation." + str(int(x-1)) + ".user": userList["user"]}})
+            dbRotationUser.update_one({},{'$set':{"rotation." + str(int(x)-1) + ".user": userList["user"]}})
             data = dbRotationUser.find_one()
             del data["_id"]
     
