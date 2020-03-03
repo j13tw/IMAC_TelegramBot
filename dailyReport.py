@@ -22,7 +22,7 @@ while (True):
         except: 
             pass
         try: 
-            r = requests.get("http://127.0.0.1:5000/otationUser")
+            r = requests.get("http://127.0.0.1:5000/rotationUser/0")
             print(r.text)
         except: 
             pass
