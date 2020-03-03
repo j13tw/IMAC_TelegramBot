@@ -55,7 +55,7 @@ def getRotationUser():
     data = ""
     rotationUser = dbRotationUser.find_one()
     todayWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8)).weekday()
-    tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, day=-1)).weekday()
+    tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).weekday()
     if (rotationUser != None):
         data += "*[本日輪值人員公告]*\n"
         data += "`今日輪值人員`\n"
