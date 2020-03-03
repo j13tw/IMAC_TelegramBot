@@ -478,7 +478,7 @@ def listCommand(bot, update):
     respText += "`4. 冷氣a狀態、冷氣A狀態`\n"
     respText += "[[機房 瞬間功耗電流]]\n"
     respText += "`1. 電流`\n"
-    respText += "[[UPS 不斷電系統 (A/B)]]]\n"
+    respText += "[[UPS 不斷電系統 (A/B)]]\n"
     respText += "`1. 溫度、電流`\n"
     respText += "`2. UPS、Ups、ups`\n"
     respText += "`3. 電源狀態、UPS狀態、ups狀態`\n"
@@ -567,6 +567,7 @@ def reply_handler(bot, update):
 
     # Power Meter + UPS 電流 回覆
     if (text == '電流'): 
+        respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('冷氣空調主機_A', callback_data = "current:" + "冷氣_A")],
             [InlineKeyboardButton('冷氣空調主機_B', callback_data = "current:" + "冷氣_B")],
