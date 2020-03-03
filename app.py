@@ -436,7 +436,7 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['環控設備' ,'溫度', '濕度', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '服務狀態']
+    device_list = ['環控設備' ,'溫度', '濕度', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '機房輪值']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -543,6 +543,7 @@ def reply_handler(bot, update):
     if (text in ['冷氣_B', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 每日通報 & 服務檢測 & 服務列表 回覆
+    if (text == "機房輪值"): respText = getRotationUser()
     if (text == '每日通報'): respText = getDailyReport()
     if (text == '服務狀態'): respText = getServiceCheck()
     if (text == '服務列表'):
