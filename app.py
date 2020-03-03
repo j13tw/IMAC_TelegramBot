@@ -446,6 +446,41 @@ def getAirCondiction(device_id, info):
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
 
+def addBot(bot, update)
+    respText = "*[歡迎加入 NUTC-IMAC 機房監控機器人]*"
+    respText += "`[[快速使用]]\t請輸入 \"輔助鍵盤\" 進行使用~`\n"
+    respText += "`[[進階指令]]\t請輸入 \"/command\" 進行檢視~`"
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+
+def listCommand(bot, update)
+    respText = "*[輔助指令列表]*\n"
+    respText += "*命名規則: A (靠牆) / B (靠窗)*"
+    respText += "[[每日通報]]"
+    respText += "`每日通報`"
+    respText += "[[機房輪值]]"
+    respText += "`機房輪值`"
+    respText += "[[機房服務檢視]]"
+    respText += "`服務列表、服務狀態、服務檢測`"
+    respText += "[[所有環控設備]]\n"
+    respText += "`環控設備`\n"
+    respText += "[[DL303 工業監測器]]\n"
+    respText += "`DL303、溫度、濕度、CO2、露點溫度`\n"
+    respText += "[[ET7044 工業控制器]]\n"
+    respText += "`ET7044、進風扇狀態、加濕器狀態、排風扇狀態、遠端控制`\n"
+    respText += "[[冷氣 空調主機 (A/B)]]\n"
+    respText += "`冷氣、冷氣狀態`\n"
+    respText += "`冷氣_A、冷氣_a、冷氣A狀態、冷氣a狀態、冷氣a、冷氣A`\n"
+    respText += "`冷氣_B、冷氣_b、冷氣B狀態、冷氣b狀態、冷氣b、冷氣B`\n"
+    respText += "[[機房 瞬間功耗電流]]\n"
+    respText += "`電流`\n"
+    respText += "[[UPS 不斷電系統 (A/B)]]]\n"
+    respText += "`UPS狀態、ups狀態、UPS、ups、電源狀態、Ups'`\n"
+    respText += "`UPS_A、UPSA狀態、upsa狀態、UPSA、upsa、UpsA、Upsa`\n"
+    respText += "`UPS_B、UPSB狀態、upsb狀態、UPSB、upsb、UpsB、Upsb`\n"
+
+
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+
 def reply_handler(bot, update):
     """Reply message."""
     # print(dir(bot))
@@ -453,7 +488,7 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['環控設備' ,'溫度', '濕度', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '機房輪值']
+    device_list = ['環控設備' ,'溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '機房輪值']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -556,13 +591,13 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('全部列出', callback_data = "冷氣:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
-    if (text in ['冷氣_A', '冷氣A狀態', '冷氣a狀態', '冷氣a', '冷氣A']): respText = getAirCondiction("a", "all")
-    if (text in ['冷氣_B', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
+    if (text in ['冷氣_A', '冷氣_a', '冷氣A狀態', '冷氣a狀態', '冷氣a', '冷氣A']): respText = getAirCondiction("a", "all")
+    if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 每日通報 & 服務檢測 & 服務列表 回覆
-    if (text == "機房輪值"): respText = getRotationUser()
+    if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
     if (text == '每日通報'): respText = getDailyReport()
-    if (text == '服務狀態'): respText = getServiceCheck()
+    if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
     if (text == '服務列表'):
         respText = "*[機房服務列表]*\n"
         try:
@@ -671,6 +706,8 @@ dispatcher = Dispatcher(bot, None)
 # Add handler for handling message, there are many kinds of message. For this handler, it particular handle text
 # message.
 
+dispatcher.add_handler(CommandHandler('start', addBot))
+dispatcher.add_handler(CommandHandler('command', listCommand))
 dispatcher.add_handler(MessageHandler(Filters.text, reply_handler))
 dispatcher.add_handler(CallbackQueryHandler(et7044_select, pattern=r'控制'))
 dispatcher.add_handler(CallbackQueryHandler(et7044_control, pattern=r'開關'))
