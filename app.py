@@ -57,12 +57,20 @@ def getRotationUser():
     todayWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8)).weekday()
     tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, day=-1)).weekday()
     if (rotationUser != None):
-        data += "`今日輪值人員`"
-        for x in range(0, len(rotationUser["rotation"][todayWeekDay]["user"]))
+        data += "*[本日輪值人員公告]*\n"
+        data += "`今日輪值人員`\n"
+        for x in range(0, len(rotationUser["rotation"][todayWeekDay]["user"])):
             data += rotationUser["rotation"][todayWeekDay]["user"][x]
-        data += "`今日交接人員`"
-        for x in range(0, len(rotationUser["rotation"][tomorrow]["user"]))
-            data += rotationUser["rotation"][tomorrow]["user"][x]
+            if (x != len(rotationUser["rotation"][todayWeekDay]["user"]) - 1): data += ", "
+            else:
+                data += "\n"
+
+        data += "`今日交接人員`\n"
+        for x in range(0, len(rotationUser["rotation"][tomorrowDay]["user"])):
+            data += rotationUser["rotation"][tomorrowDay]["user"][x] + "\n"
+            if (x != len(rotationUser["rotation"][tomorrowDay]["user"]) - 1): data += ", "
+            else:
+                data += "\n"
     else:
         data = "`資料庫快取失敗`"
     return data
