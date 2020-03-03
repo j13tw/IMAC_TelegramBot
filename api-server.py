@@ -52,12 +52,12 @@ def rotationUser(x):
     if request.method == 'GET':
         if (dbServiceList.find_one() != None):
             weekDay = 0
-            if (int(datetime.date.today().month)%6 == 3) weekDay = 0
-            elif (int(datetime.date.today().month)%6 == 4) weekDay = 1
-            elif (int(datetime.date.today().month)%6 == 5) weekDay = 2
-            elif (int(datetime.date.today().month)%6 == 6) weekDay = 3
-            elif (int(datetime.date.today().month)%6 == 7) weekDay = 4
-            elif (int(datetime.date.today().month)%6 == 8) weekDay = 5
+            if (int(datetime.date.today().month)%6 == 3): weekDay = 0
+            elif (int(datetime.date.today().month)%6 == 4): weekDay = 1
+            elif (int(datetime.date.today().month)%6 == 5): weekDay = 2
+            elif (int(datetime.date.today().month)%6 == 6): weekDay = 3
+            elif (int(datetime.date.today().month)%6 == 7): weekDay = 4
+            elif (int(datetime.date.today().month)%6 == 8): weekDay = 5
             user = dbRotationUser.find_one()["rotation"][weekDay]['user']
             dbRotationUser.update_one({},{'$set':{"rotation." + str(int(x)-1) + ".user": user}})
        try:
