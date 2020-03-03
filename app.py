@@ -66,9 +66,9 @@ def getRotationUser():
                 data += "\n"
 
         data += "`今日交接人員`\n"
-        for x in range(0, len(rotationUser["rotation"][tomorrowDay]["user"])):
-            data += rotationUser["rotation"][tomorrowDay]["user"][x] + "\n"
-            if (x != len(rotationUser["rotation"][tomorrowDay]["user"]) - 1): data += ", "
+        for x in range(0, len(rotationUser["rotation"][tomorrowWeekDay]["user"])):
+            data += rotationUser["rotation"][tomorrowWeekDay]["user"][x] + "\n"
+            if (x != len(rotationUser["rotation"][tomorrowWeekDay]["user"]) - 1): data += ", "
             else:
                 data += "\n"
     else:
