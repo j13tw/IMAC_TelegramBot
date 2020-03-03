@@ -55,17 +55,17 @@ def getRotationUser():
     data = ""
     rotationUser = dbRotationUser.find_one()
     todayWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8)).weekday()
-    tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, days=-1)).weekday()
+    tomorrowWeekDay = (datetime.datetime.now() + datetime.timedelta(hours=8, days=1)).weekday()
     if (rotationUser != None):
         data += "*[本日輪值人員公告]*\n"
-        data += "`今日輪值人員`\n"
+        data += "[[今日輪值人員]]\n"
         for x in range(0, len(rotationUser["rotation"][todayWeekDay]["user"])):
             data += rotationUser["rotation"][todayWeekDay]["user"][x]
             if (x != len(rotationUser["rotation"][todayWeekDay]["user"]) - 1): data += ", "
             else:
                 data += "\n"
 
-        data += "`今日交接人員`\n"
+        data += "[[今日交接人員]]\n"
         for x in range(0, len(rotationUser["rotation"][tomorrowWeekDay]["user"])):
             data += rotationUser["rotation"][tomorrowWeekDay]["user"][x] + "\n"
             if (x != len(rotationUser["rotation"][tomorrowWeekDay]["user"]) - 1): data += ", "
