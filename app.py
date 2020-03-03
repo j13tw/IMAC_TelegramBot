@@ -480,9 +480,10 @@ def listCommand(bot, update):
     respText += "`1. 電流`\n"
     respText += "[[UPS 不斷電系統 (A/B)]]]\n"
     respText += "`1. 溫度、電流`\n"
-    respText += "`2. UPS狀態、ups狀態、UPS、ups、電源狀態、Ups'`\n"
-    respText += "`3. UPSA、upsa、UpsA、Upsa`\n"
-    respText += "`4. UPS_A、UPSA狀態、upsa狀態`\n"
+    respText += "`2. UPS、Ups、ups`\n"
+    respText += "`3. 電源狀態、UPS狀態、ups狀態`\n"
+    respText += "`4. UPSA、upsa、UpsA、Upsa`\n"
+    respText += "`5. UPS_A、UPSA狀態、upsa狀態`\n"
 
 
     bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
