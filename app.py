@@ -495,7 +495,7 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['環控設備' ,'溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '遠端控制', '每日通報', '服務列表', '機房輪值']
+    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -513,7 +513,8 @@ def reply_handler(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
-            [str(s) for s in device_list[8:12]]
+            [str(s) for s in device_list[8:12]],
+            [str(s) for s in device_list[13:14]],
         ], resize_keyboard=True), parse_mode="Markdown")
         return
 
