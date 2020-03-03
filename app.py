@@ -67,7 +67,7 @@ def getRotationUser():
 
         data += "[[今日交接人員]]\n"
         for x in range(0, len(rotationUser["rotation"][tomorrowWeekDay]["user"])):
-            data += rotationUser["rotation"][tomorrowWeekDay]["user"][x] + "\n"
+            data += rotationUser["rotation"][tomorrowWeekDay]["user"][x]
             if (x != len(rotationUser["rotation"][tomorrowWeekDay]["user"]) - 1): data += ", "
             else:
                 data += "\n"
