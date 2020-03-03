@@ -448,19 +448,19 @@ def getAirCondiction(device_id, info):
 
 def addBot(bot, update):
     respText = "*[歡迎加入 NUTC-IMAC 機房監控機器人]*"
-    respText += "`[[快速使用]]\t請輸入 \"輔助鍵盤\" 進行使用~`\n"
-    respText += "`[[進階指令]]\t請輸入 \"/command\" 進行檢視~`"
+    respText += "[[快速使用]]\t`請輸入 \"輔助鍵盤\" 進行使用~`\n"
+    respText += "[[進階指令]]\t`請輸入 \"/command\" 進行檢視~`"
     bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
 
 def listCommand(bot, update):
     respText = "*[輔助指令列表]*\n"
-    respText += "*命名規則: A (靠牆) / B (靠窗)*"
-    respText += "[[每日通報]]"
-    respText += "`每日通報`"
-    respText += "[[機房輪值]]"
-    respText += "`機房輪值`"
-    respText += "[[機房服務檢視]]"
-    respText += "`服務列表、服務狀態、服務檢測`"
+    respText += "*命名規則: A (靠牆) / B (靠窗)*\n"
+    respText += "[[每日通報]]\n"
+    respText += "`每日通報`\n"
+    respText += "[[機房輪值]]\n"
+    respText += "`機房輪值`\n"
+    respText += "[[機房服務檢視]]\n"
+    respText += "`服務列表、服務狀態、服務檢測`\n"
     respText += "[[所有環控設備]]\n"
     respText += "`環控設備`\n"
     respText += "[[DL303 工業監測器]]\n"
@@ -468,15 +468,15 @@ def listCommand(bot, update):
     respText += "[[ET7044 工業控制器]]\n"
     respText += "`ET7044、進風扇狀態、加濕器狀態、排風扇狀態、遠端控制`\n"
     respText += "[[冷氣 空調主機 (A/B)]]\n"
-    respText += "`冷氣、冷氣狀態`\n"
-    respText += "`冷氣_A、冷氣_a、冷氣A狀態、冷氣a狀態、冷氣a、冷氣A`\n"
-    respText += "`冷氣_B、冷氣_b、冷氣B狀態、冷氣b狀態、冷氣b、冷氣B`\n"
+    respText += "`1. 冷氣、冷氣狀態`\n"
+    respText += "`2. 冷氣_A、冷氣_a、冷氣A狀態、冷氣a狀態、冷氣a、冷氣A`\n"
+    respText += "`3. 冷氣_B、冷氣_b、冷氣B狀態、冷氣b狀態、冷氣b、冷氣B`\n"
     respText += "[[機房 瞬間功耗電流]]\n"
     respText += "`電流`\n"
     respText += "[[UPS 不斷電系統 (A/B)]]]\n"
-    respText += "`UPS狀態、ups狀態、UPS、ups、電源狀態、Ups'`\n"
-    respText += "`UPS_A、UPSA狀態、upsa狀態、UPSA、upsa、UpsA、Upsa`\n"
-    respText += "`UPS_B、UPSB狀態、upsb狀態、UPSB、upsb、UpsB、Upsb`\n"
+    respText += "`1. UPS狀態、ups狀態、UPS、ups、電源狀態、Ups'`\n"
+    respText += "`2. UPS_A、UPSA狀態、upsa狀態、UPSA、upsa、UpsA、Upsa`\n"
+    respText += "`3. UPS_B、UPSB狀態、upsb狀態、UPSB、upsb、UpsB、Upsb`\n"
 
     bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
 
