@@ -514,7 +514,7 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]],
-            [str(s) for s in device_list[13:14]],
+            [str(s) for s in device_list[12:14]],
         ], resize_keyboard=True), parse_mode="Markdown")
         return
 
