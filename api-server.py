@@ -81,7 +81,7 @@ def rotationUser(x):
             data = dbRotationUser.find_one()
             del data["_id"]
     
-        return {"rotationUser": "success", "data":str(data).replace("\'", "\"")}, status.HTTP_200_OK
+        return {"rotationUser": "success", "data": data}, status.HTTP_200_OK
 
 @app.route('/serviceList', methods=['GET'])
 def serviceList():
