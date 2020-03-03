@@ -446,13 +446,13 @@ def getAirCondiction(device_id, info):
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
 
-def addBot(bot, update)
+def addBot(bot, update):
     respText = "*[歡迎加入 NUTC-IMAC 機房監控機器人]*"
     respText += "`[[快速使用]]\t請輸入 \"輔助鍵盤\" 進行使用~`\n"
     respText += "`[[進階指令]]\t請輸入 \"/command\" 進行檢視~`"
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
-def listCommand(bot, update)
+def listCommand(bot, update):
     respText = "*[輔助指令列表]*\n"
     respText += "*命名規則: A (靠牆) / B (靠窗)*"
     respText += "[[每日通報]]"
@@ -477,7 +477,6 @@ def listCommand(bot, update)
     respText += "`UPS狀態、ups狀態、UPS、ups、電源狀態、Ups'`\n"
     respText += "`UPS_A、UPSA狀態、upsa狀態、UPSA、upsa、UpsA、Upsa`\n"
     respText += "`UPS_B、UPSB狀態、upsb狀態、UPSB、upsb、UpsB、Upsb`\n"
-
 
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
