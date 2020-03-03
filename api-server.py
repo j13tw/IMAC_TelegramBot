@@ -67,8 +67,12 @@ def rotationUser(x):
                     else: weekDay = "日"
                     data["rotation"].append({})
                     data["rotation"][int(y)-1]["user"] = []
-                    data["rotation"][int(y)-1]["user"].append("星期" + weekDay +  "_人員_0")
-                    data["rotation"][int(y)-1]["user"].append("星期" + weekDay + "_人員_1")
+                    if (int(x)-1 == y):
+                        for z in range(0, len(userList["user"])):
+                            data["rotation"][int(y)-1]["user"].append(userList["user"][z])
+                    else:
+                        data["rotation"][int(y)-1]["user"].append("星期" + weekDay +  "_人員_0")
+                        data["rotation"][int(y)-1]["user"].append("星期" + weekDay + "_人員_1")
                 print(str(data).replace("\'", "\""))
                 dbRotationUser.insert_one(data)
                 del data["_id"]
