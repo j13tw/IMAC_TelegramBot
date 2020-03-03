@@ -59,7 +59,7 @@ def rotationUser(x):
             elif (int(datetime.date.today().month)%6 == 7): weekDay = 4
             elif (int(datetime.date.today().month)%6 == 8): weekDay = 5
             user = dbRotationUser.find_one()["rotation"][weekDay]['user']
-            dbRotationUser.update_one({},{'$set':{"rotation." + str(int(x)-1) + ".user": user}})
+            dbRotationUser.update_one({},{'$set':{"rotation." + str(6) + ".user": user}})
         try:
             requests.get(herokuServerProtocol + "://" + herokuServer + "/rotationUser")
         except:
