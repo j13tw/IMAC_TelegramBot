@@ -48,7 +48,7 @@ dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 
 @app.route('/rotationUser/<x>', methods=['POST'])
-def rotationUser(x)
+def rotationUser(x):
     if request.method == 'POST':
         if (int(x) < 1 and int(x) > 7): return {"rotationUser": "weekDay-fail"}, status.HTTP_401_UNAUTHORIZED
         userList = request.json
