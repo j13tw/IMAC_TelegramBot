@@ -648,7 +648,7 @@ def daily_select(bot, update):
         [str(s) for s in device_list[8:12]],
         [str(s) for s in device_list[12:14]],
     ], resize_keyboard=True), parse_mode="Markdown")
-    bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+    bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
     return
 
 def device_select(bot, update):
