@@ -214,6 +214,7 @@ def daily_report():
             data["error"].append('power')
 
         try:
+            print("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["ups_a"] = round(float(mysql_connection.fetchone()[0])+(1.5*218.0*24/1000), 4)
         except:
@@ -221,6 +222,7 @@ def daily_report():
             data["error"].append('ups_a')
         
         try:
+            print("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["ups_b"] = round(float(mysql_connection.fetchone()[0])+(2.0*218.0*24/1000), 4)
         except:
@@ -268,10 +270,10 @@ def daily_report():
             if (dbDailyReport.find_one()["date"] != data["date"]):
                 dbDailyReport.update_one({},{'$set':data})
                 time.sleep(5)
-            try:
-                requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
-            except:
-                pass
+                try:
+                    requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
+                except:
+                    pass
 
         return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
