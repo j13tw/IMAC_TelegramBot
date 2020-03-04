@@ -51,6 +51,9 @@ dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 
+# 懶人遙控器鍵盤定義
+device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值']
+
 def getRotationUser():
     data = ""
     rotationUser = dbRotationUser.find_one()
@@ -495,7 +498,6 @@ def reply_handler(bot, update):
     # print(dir(update.message))
     # print(update.message.chat)
     # print(update.message.chat_id)
-    device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值']
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
