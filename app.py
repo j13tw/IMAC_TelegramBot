@@ -518,7 +518,7 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[8:12]],
             [str(s) for s in device_list[12:14]],
         ], resize_keyboard=True), parse_mode="Markdown")
-        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.png', 'rb'))
+        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
         return
 
     # 所有設備
@@ -613,7 +613,7 @@ def reply_handler(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton("功能列表", callback_data = "daily")]
             ]), parse_mode="Markdown")
-        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.png', 'rb'))
+        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
         return
             
     if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
