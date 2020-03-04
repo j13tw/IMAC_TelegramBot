@@ -509,7 +509,7 @@ def reply_handler(bot, update):
         return
     # 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
-        respText = '輔助鍵盤已彈出～'
+        respText = '功能輔助鍵盤已彈出～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
@@ -605,7 +605,12 @@ def reply_handler(bot, update):
 
     # 每日通報 & 服務檢測 & 服務列表 回覆
     if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
-    if (text == '每日通報'): respText = getDailyReport()
+    if (text == '每日通報'): 
+        respText = getDailyReport()
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton("服務列表" callback_data = "daily"]
+            ]), parse_mode="Markdown")
+            
     if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
     if (text == '服務列表'):
         respText = "*[機房服務列表]*\n"
@@ -629,6 +634,16 @@ def reply_handler(bot, update):
     #    update.message.reply_text(respText)
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         # update.message.reply_markdown(respText)
+
+def daily_select(bot, update):
+    respText = '功能輔助鍵盤已彈出～'
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
+        [str(s) for s in device_list[0:4]],
+        [str(s) for s in device_list[4:8]],
+        [str(s) for s in device_list[8:12]],
+        [str(s) for s in device_list[12:14]],
+    ], resize_keyboard=True), parse_mode="Markdown")
+    return
 
 def device_select(bot, update):
     device = update.callback_query.data.split(':')[1]
@@ -726,6 +741,7 @@ dispatcher.add_handler(CallbackQueryHandler(device_select, pattern=r'device'))
 dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'humi'))
 dispatcher.add_handler(CallbackQueryHandler(current_select, pattern=r'current'))
+dispatcher.add_handler(CallbackQueryHandler(daily_select, pattern=r'daily'))
 
 if __name__ == "__main__":
     # Running server

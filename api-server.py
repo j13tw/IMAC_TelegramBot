@@ -192,9 +192,9 @@ def serviceCheck():
 def daily_report():
     if request.method == 'GET':
         data = {}
-        yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(days=-1)).split(" ")[0]
-        todayDate = str(datetime.datetime.now()).split(" ")[0]
-        data["date"] = todayDate
+        yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(days=-2, hours=8)).split(" ")[0]
+        todayDate = str(datetime.datetime.now() + datetime.timedelta(days=-1, hours=8)).split(" ")[0]
+        data["date"] = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
         data["error"] = []
         defaultUrl = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-073"
         apiToken = "CWB-011FFC7B-436E-4268-ABCA-998FBD6AD424"
@@ -214,30 +214,30 @@ def daily_report():
             data["error"].append('power')
 
         try:
-            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            data["ups_a"] = round(float(mysql_connection.fetchone()[0])+(2.0*215.0*24/1000), 4)
+            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+            data["ups_a"] = round(float(mysql_connection.fetchone()[0])+(1.5*218.0*24/1000), 4)
         except:
             data["ups_a"] = 0.0
             data["error"].append('ups_a')
         
         try:
-            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            data["ups_b"] = round(float(mysql_connection.fetchone()[0])+(2.0*215.0*24/1000), 4)
+            mysql_connection.execute("select AVG(Output_Watt)*24 from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+            data["ups_b"] = round(float(mysql_connection.fetchone()[0])+(2.0*218.0*24/1000), 4)
         except:
             data["ups_b"] = 0.0
             data["error"].append('ups_b')
 
         try:
-            print("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            mysql_connection.execute("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            print("select AVG(Current_A)*215*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+            mysql_connection.execute("select AVG(Current_A)*218*12*1.732/1000 from Power_Meter where Current_A > 0 and Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["air_condiction_a"] = round(float(mysql_connection.fetchone()[0]), 4)
         except:
             data["air_condiction_a"] = 0.0
             data["error"].append('air_condiction_a')
 
         try:
-            print("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
-            mysql_connection.execute("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 00:00:00\" and \"" + todayDate + " 00:00:00\";")
+            print("select AVG(Current_B)*215*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+            mysql_connection.execute("select AVG(Current_B)*218*12*1.732/1000 from Power_Meter where Current_B > 0 and Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["air_condiction_b"] = round(float(mysql_connection.fetchone()[0]), 4)
         except:
             data["air_condiction_b"] = 0.0
@@ -261,18 +261,17 @@ def daily_report():
             data["error"].append('weather')
         # print(str(data).replace("\'", "\""))
 
-        if (dbDailyReport.find_one() == None): 
+        if (dbDailyReport.find_one() == None):
             dbDailyReport.insert_one(data)
             del data["_id"]
         else: 
-            dbDailyReport.update_one({},{'$set':data})
-
-        time.sleep(5)
-
-        try:
-            requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
-        except:
-            pass
+            if (dbDailyReport.find_one()["date"] != data["date"]):
+                dbDailyReport.update_one({},{'$set':data})
+                time.sleep(5)
+            try:
+                requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
+            except:
+                pass
 
         return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
