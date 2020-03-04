@@ -511,13 +511,14 @@ def reply_handler(bot, update):
         return
     # 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
-        respText = '功能輔助鍵盤已彈出～'
+        respText = '輔助鍵盤功能已開啟～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]],
             [str(s) for s in device_list[12:14]],
         ], resize_keyboard=True), parse_mode="Markdown")
+        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.png', 'rb'))
         return
 
     # 所有設備
@@ -610,8 +611,9 @@ def reply_handler(bot, update):
     if (text == '每日通報'): 
         respText = getDailyReport()
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton("服務列表", callback_data = "daily")]
+                [InlineKeyboardButton("功能列表", callback_data = "daily")]
             ]), parse_mode="Markdown")
+        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.png', 'rb'))
         return
             
     if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
@@ -639,7 +641,7 @@ def reply_handler(bot, update):
         # update.message.reply_markdown(respText)
 
 def daily_select(bot, update):
-    respText = '功能輔助鍵盤已彈出～'
+    respText = '輔助鍵盤功能已開啟～'
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
         [str(s) for s in device_list[0:4]],
         [str(s) for s in device_list[4:8]],
