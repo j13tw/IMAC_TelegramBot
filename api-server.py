@@ -243,7 +243,7 @@ def daily_report():
             data["air_condiction_b"] = 0.0
             data["error"].append('air_condiction_b')
         
-        data["water_cooler"] = round(5*220*1.732/1000, 4)
+        data["water_cooler"] = round(5*220*1.732*24/1000, 4)
         data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"] + data["water_cooler"]), 4)
     
         try:
