@@ -249,7 +249,7 @@ def daily_report():
         data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"] + data["water_cooler"]), 4)
     
         try:
-            requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + todayDate + timeStamp_a + "," + todayDate + timeStamp_b + "," + todayDate + timeStamp_c + "&dataTime=" + todayDate + timeStamp_b
+            requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + data["date"] + timeStamp_a + "," + data["date"] + timeStamp_b + "," + data["date"] + timeStamp_c + "&dataTime=" + data["date"] + timeStamp_b
             weatherJson = json.loads(requests.get(requestUrl, headers = {'accept': 'application/json'}).text)
             for x in range(0, len(weatherJson["records"]["locations"][0]["location"][0]["weatherElement"])):
                 module = weatherJson["records"]["locations"][0]["location"][0]["weatherElement"][x]["elementName"]

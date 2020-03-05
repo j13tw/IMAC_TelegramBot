@@ -217,6 +217,7 @@ def dailyReport_update():
     if request.method == 'GET':
         respText = getDailyReport()
         bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
+        bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
