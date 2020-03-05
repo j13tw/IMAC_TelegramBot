@@ -473,9 +473,7 @@ def reply_handler(bot, update):
     # print(dir(update))
     # print(dir(update.message))
     # print(update.message.chat)
-    print(update.message.chat_id)
-    print(devUser_id)
-    print(update.message.chat_id == devUser_id)
+    # print(update.message.chat_id)\
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -585,7 +583,7 @@ def reply_handler(bot, update):
     if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    if (update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         # 遠端控制
         if (text == '遠端控制'): 
             respText = '請選擇所需控制設備～'
@@ -616,7 +614,7 @@ def reply_handler(bot, update):
         # 每日通報
         if (text == "機房輪值" or text == "輪值"): respText = getRotationUser()
     
-    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"]): 
+    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
