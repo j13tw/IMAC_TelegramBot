@@ -205,7 +205,7 @@ def test(mode):
 def rotationUser_update():
     if request.method == 'GET':
         respText = getRotationUser()
-        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
+        bot.send_message(chat_id=devUser_id, text=respText, reply_markup = ReplyKeyboardRemove(), parse_mode="Markdown")
         return {"rotationUser": "data_ok"}, status.HTTP_200_OK
     else:
         return {"rotationUser": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -478,11 +478,7 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
-    if (text == '關閉鍵盤'):
-        respText = '輔助鍵盤功能已關閉～'
-        bot.send_message(chat_id=update.message.chat_id, text="", reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
-
-    # 懶人遙控器鍵盤
+    # 開啟 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
         respText = '輔助鍵盤功能已開啟～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
@@ -492,6 +488,13 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[12:14]],
         ], resize_keyboard=True), parse_mode="Markdown")
         bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+        return
+
+    
+    #   關閉 懶人遙控器鍵盤
+    if (text == '關閉鍵盤'):
+        respText = '輔助鍵盤功能已關閉～'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
         return
 
     # 所有設備
