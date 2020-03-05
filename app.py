@@ -607,7 +607,7 @@ def reply_handler(bot, update):
         # 每日通報 & 
         if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
     
-    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"): 
+    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
