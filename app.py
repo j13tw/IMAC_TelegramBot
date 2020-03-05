@@ -25,6 +25,8 @@ app = Flask(__name__)
 
 # Initial bot by Telegram access token
 bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
+
+# Setup user & group id for reply specify message
 group_id = config['TELEGRAM']['GROUP_ID']
 devUser_id = config['TELEGRAM']['DEV_USER_ID']
 
@@ -54,6 +56,7 @@ dbRotationUser = myMongoDb["rotationUser"]
 # 懶人遙控器鍵盤定義
 device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值']
 
+# collect the the day of matainer in mLab db.
 def getRotationUser():
     data = ""
     rotationUser = dbRotationUser.find_one()
@@ -78,6 +81,7 @@ def getRotationUser():
         data = "`資料庫快取失敗`"
     return data
 
+# collect the smart-data-center website url & login info in mLab db.
 def getServiceList():
     broken = 0
     tagOwner = 0
@@ -98,6 +102,7 @@ def getServiceList():
         data = "`資料庫快取失敗`"
     return data
 
+# collect the smart-data-center website dashboard service status in mLab db.
 def getServiceCheck():
     broken = 0
     tagOwner = 0
@@ -132,6 +137,7 @@ def getServiceCheck():
         if (broken != 1): data += "*異常服務:* _" + str(checkService["error"]) + "_\n"
     return data
 
+# collect the daily report data (weather / power usage) in mLab db.
 def getDailyReport():
     broken = 0
     tagOwner = 0
@@ -183,7 +189,7 @@ def getDailyReport():
         if (broken != 1): data += "*異常模組:* _" + str(dailyReport["error"]) + "_\n"
     return data
         
-
+# test api function, can test the ("message", "photo", "audio", "gif") reply to develope user.
 @app.route('/test/<mode>', methods=['GET'])
 def test(mode):
     if (mode == 'message'): bot.send_message(chat_id=devUser_id, text="telegramBot 服務測試訊息")
@@ -194,6 +200,7 @@ def test(mode):
     if (mode == 'onlineGif'): bot.sendAnimation(chat_id=1070358833, animation='http://d21p91le50s4xn.cloudfront.net/wp-content/uploads/2015/08/giphy.gif')
     if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
 
+# rotationUser api function, send smart-data-center maintainer in this day.
 @app.route('/rotationUser', methods=['GET'])
 def rotationUser_update():
     if request.method == 'GET':
@@ -203,6 +210,7 @@ def rotationUser_update():
     else:
         return {"rotationUser": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
+# service check api function, check the smart-data-center website dashboard service.
 @app.route('/serviceCheck', methods=['GET'])
 def serviceCheck_update():
     if request.method == 'GET':
@@ -212,6 +220,7 @@ def serviceCheck_update():
     else:
         return {"serviceCheck": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
+# daily report api function, will notice the daily report to specify group or user.
 @app.route('/dailyReport', methods=['GET'])
 def dailyReport_update():
     if request.method == 'GET':
@@ -223,6 +232,7 @@ def dailyReport_update():
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
+# alert notification api, auto notice the notifaiction to telegram specify user / group.
 @app.route('/alert/<model>', methods=['POST'])
 def alert(model):
     if request.method == 'POST':
@@ -238,6 +248,7 @@ def alert(model):
         except:
             return {"alert": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
+# telegram bot data reciver.
 @app.route('/hook', methods=['POST'])
 def webhook_handler():
     """Set route /hook with POST method will trigger this method."""
@@ -248,6 +259,7 @@ def webhook_handler():
         dispatcher.process_update(update)
     return 'ok'
 
+# collect the dl303 data (temperature/humidity/co2/dew-point) in mLab db.
 def getDl303(info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     failList = []
@@ -294,6 +306,7 @@ def getDl303(info):
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data
 
+# collect the et-7044 status in mLab.
 def getEt7044(info):
     data = ""
     tagOwner = 0
@@ -350,6 +363,7 @@ def getEt7044(info):
         data += "[維護人員](tg://user?id="+ str(et7044_owner) + ")\n"
     return data
 
+# collect the UPS (status/input/output/battery/temperature) status in mLab.
 def getUps(device_id, info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     data = "*["
@@ -416,6 +430,7 @@ def getUps(device_id, info):
         data += "[維護人員](tg://user?id="+ str(ups_owner) + ")\n"
     return data
 
+# collect the Air-Condiction (current/temperature/humidity) status in mLab.
 def getAirCondiction(device_id, info):
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     failList = []
@@ -451,48 +466,7 @@ def getAirCondiction(device_id, info):
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
 
-def addBot(bot, update):
-    respText = "*[歡迎加入 NUTC-IMAC 機房監控機器人]*"
-    respText += "[[快速使用]]\t`請輸入 \"輔助鍵盤\"。`\n"
-    respText += "[[進階指令]]\t`請輸入 \"/command\"。`"
-    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
-
-def listCommand(bot, update):
-    respText = "*[輔助指令列表]*\n"
-    respText += "`命名規則: A (靠牆) / B (靠窗)`\n"
-    respText += "[[每日通報]]\n"
-    respText += "`1. 每日通報`\n"
-    respText += "[[機房輪值]]\n"
-    respText += "`1. 機房輪值`\n"
-    respText += "[[機房服務檢視]]\n"
-    respText += "`1. 服務列表`\n"
-    respText += "`2. 服務狀態、服務檢測`\n"
-    respText += "[[所有環控設備]]\n"
-    respText += "`1. 環控設備`\n"
-    respText += "[[DL303 工業監測器]]\n"
-    respText += "`1. DL303`\n"
-    respText += "`1. 溫度、溫濕度、濕度、CO2、露點溫度`\n"
-    respText += "[[ET7044 工業控制器]]\n"
-    respText += "`1. ET7044`\n"
-    respText += "`2. 遠端控制`\n"
-    respText += "`3. 進風扇狀態、加濕器狀態、排風扇狀態`\n"
-    respText += "[[冷氣 空調主機 (A/B)]]\n"
-    respText += "`1. 冷氣、冷氣狀態`\n"
-    respText += "`2. 電流、溫度、濕度、溫濕度`\n"
-    respText += "`3. 冷氣_A、冷氣_a、冷氣A、冷氣a`\n"
-    respText += "`4. 冷氣a狀態、冷氣A狀態`\n"
-    respText += "[[機房 瞬間功耗電流]]\n"
-    respText += "`1. 電流`\n"
-    respText += "[[UPS 不斷電系統 (A/B)]]\n"
-    respText += "`1. 溫度、電流`\n"
-    respText += "`2. UPS、Ups、ups`\n"
-    respText += "`3. 電源狀態、UPS狀態、ups狀態`\n"
-    respText += "`4. UPSA、upsa、UpsA、Upsa`\n"
-    respText += "`5. UPS_A、UPSA狀態、upsa狀態`\n"
-
-
-    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
-
+# recive the all of the user/group message handler.
 def reply_handler(bot, update):
     """Reply message."""
     # print(dir(bot))
@@ -641,6 +615,49 @@ def reply_handler(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         # update.message.reply_markdown(respText)
 
+# Command "/satrt" callback. 
+def addBot(bot, update):
+    respText = "*[歡迎加入 NUTC-IMAC 機房監控機器人]*"
+    respText += "[[快速使用]]\t`請輸入 \"輔助鍵盤\"。`\n"
+    respText += "[[進階指令]]\t`請輸入 \"/command\"。`"
+    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+
+# Command "/command" callback. 
+def listCommand(bot, update):
+    respText = "*[輔助指令列表]*\n"
+    respText += "`命名規則: A (靠牆) / B (靠窗)`\n"
+    respText += "[[每日通報]]\n"
+    respText += "`1. 每日通報`\n"
+    respText += "[[機房輪值]]\n"
+    respText += "`1. 機房輪值`\n"
+    respText += "[[機房服務檢視]]\n"
+    respText += "`1. 服務列表`\n"
+    respText += "`2. 服務狀態、服務檢測`\n"
+    respText += "[[所有環控設備]]\n"
+    respText += "`1. 環控設備`\n"
+    respText += "[[DL303 工業監測器]]\n"
+    respText += "`1. DL303`\n"
+    respText += "`1. 溫度、溫濕度、濕度、CO2、露點溫度`\n"
+    respText += "[[ET7044 工業控制器]]\n"
+    respText += "`1. ET7044`\n"
+    respText += "`2. 遠端控制`\n"
+    respText += "`3. 進風扇狀態、加濕器狀態、排風扇狀態`\n"
+    respText += "[[冷氣 空調主機 (A/B)]]\n"
+    respText += "`1. 冷氣、冷氣狀態`\n"
+    respText += "`2. 電流、溫度、濕度、溫濕度`\n"
+    respText += "`3. 冷氣_A、冷氣_a、冷氣A、冷氣a`\n"
+    respText += "`4. 冷氣a狀態、冷氣A狀態`\n"
+    respText += "[[機房 瞬間功耗電流]]\n"
+    respText += "`1. 電流`\n"
+    respText += "[[UPS 不斷電系統 (A/B)]]\n"
+    respText += "`1. 溫度、電流`\n"
+    respText += "`2. UPS、Ups、ups`\n"
+    respText += "`3. 電源狀態、UPS狀態、ups狀態`\n"
+    respText += "`4. UPSA、upsa、UpsA、Upsa`\n"
+    respText += "`5. UPS_A、UPSA狀態、upsa狀態`\n"
+    bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+
+# 每日通報 按鈕鍵盤 callback
 def daily_select(bot, update):
     respText = '輔助鍵盤功能已開啟～'
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
@@ -652,6 +669,7 @@ def daily_select(bot, update):
     bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
     return
 
+# 環控裝置 按鈕鍵盤 callback
 def device_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "DL303"): respText = getDl303("all")
@@ -663,6 +681,7 @@ def device_select(bot, update):
     else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getUps("a", "all") + '\n' + getUps("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# 溫度 按鈕鍵盤 callback
 def temp_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "DL303"): respText = getDl303("tc")
@@ -673,6 +692,7 @@ def temp_select(bot, update):
     else: respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# 濕度 按鈕鍵盤 callback
 def humi_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "DL303"): respText = getDl303("rh")
@@ -681,6 +701,7 @@ def humi_select(bot, update):
     else: respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# 電流 按鈕鍵盤 callback
 def current_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "current")
@@ -690,6 +711,7 @@ def current_select(bot, update):
     else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# UPS 按鈕鍵盤 callback
 def ups_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "UPS_A"): respText = getUps("a", "all")
@@ -697,6 +719,7 @@ def ups_select(bot, update):
     else: respText = getUps("a", "all") + "\n" + getUps("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# 冷氣 按鈕鍵盤 callback
 def air_condiction_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
@@ -704,6 +727,7 @@ def air_condiction_select(bot, update):
     else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
+# ET-7044 (選設備) 按鈕鍵盤 callback
 def et7044_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     device_map = {"進風風扇": "sw0", "加濕器": "sw1", "排風風扇": "sw2"}
@@ -718,6 +742,7 @@ def et7044_select(bot, update):
         bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
+# ET-7044 (開關) 按鈕鍵盤 callback
 def et7044_control(bot, update):
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     status = str(update.callback_query.data).split(':')[1].split('_')[1]
