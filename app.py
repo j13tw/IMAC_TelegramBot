@@ -585,7 +585,7 @@ def reply_handler(bot, update):
     if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    if (update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    if ((update.message.chat_id == devUser_id) or (update.message.chat_id == group_id)):
         # 遠端控制
         if (text == '遠端控制'): 
             respText = '請選擇所需控制設備～'
