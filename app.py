@@ -27,13 +27,13 @@ app = Flask(__name__)
 bot = telegram.Bot(token=(config['TELEGRAM']['ACCESS_TOKEN']))
 
 # Setup user & group id for reply specify message
-group_id = config['TELEGRAM']['GROUP_ID']
-devUser_id = config['TELEGRAM']['DEV_USER_ID']
+group_id = int(config['TELEGRAM']['GROUP_ID'])
+devUser_id = int(config['TELEGRAM']['DEV_USER_ID'])
 
-dl303_owner = config['DEVICE']['DL303_OWNER']
-et7044_owner = config['DEVICE']['ET7044_OWNER']
-ups_owner = config['DEVICE']['UPS_OWNER']
-air_condiction_owner = config['DEVICE']['AIR_CONDICTION_OWNER']
+dl303_owner = int(config['DEVICE']['DL303_OWNER'])
+et7044_owner = int(config['DEVICE']['ET7044_OWNER'])
+ups_owner = int(config['DEVICE']['UPS_OWNER'])
+air_condiction_owner = int(config['DEVICE']['AIR_CONDICTION_OWNER'])
 
 # Setup Mongodb info
 myMongoClient = MongoClient(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
@@ -475,7 +475,6 @@ def reply_handler(bot, update):
     # print(update.message.chat)
     print(update.message.chat_id)
     print(devUser_id)
-    print(str(update.message.chat_id) == devUser_id)
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -585,7 +584,7 @@ def reply_handler(bot, update):
     if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    if ((update.message.chat_id == devUser_id) or (update.message.chat_id == group_id)):
+    if (update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         # 遠端控制
         if (text == '遠端控制'): 
             respText = '請選擇所需控制設備～'
