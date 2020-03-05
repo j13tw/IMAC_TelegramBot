@@ -216,8 +216,9 @@ def serviceCheck_update():
 def dailyReport_update():
     if request.method == 'GET':
         respText = getDailyReport()
-        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
-        bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+        bot.send_message(chat_id=devUser_id, text=respText, reply_markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton("功能列表", callback_data = "daily")]
+            ]), parse_mode="Markdown")
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK
     else:
         return {"dailyReport": "data_fail"}, status.HTTP_401_UNAUTHORIZED
