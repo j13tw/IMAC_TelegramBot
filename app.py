@@ -646,6 +646,9 @@ def addBot(bot, update):
 def listCommand(bot, update):
     respText = "*[輔助指令列表]*\n"
     respText += "`命名規則: A (靠牆) / B (靠窗)`\n"
+    respText += "[[快速鍵盤]]\n"
+    respText += "`1. 輔助鍵盤`\n"
+    respText += "`2. 關閉鍵盤`\n"
     respText += "[[每日通報]]\n"
     respText += "`1. 每日通報`\n"
     respText += "[[機房輪值]]\n"
