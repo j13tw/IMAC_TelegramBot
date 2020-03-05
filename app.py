@@ -477,14 +477,7 @@ def reply_handler(bot, update):
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
-    if (text == '遠端控制'): 
-        respText = '請選擇所需控制設備～'
-        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-            [InlineKeyboardButton('進風風扇', callback_data = "控制:" + "進風風扇")],
-            [InlineKeyboardButton('加濕器', callback_data = "控制:" + "加濕器")],
-            [InlineKeyboardButton('排風風扇', callback_data = "控制:" + "排風風扇")]
-        ]), parse_mode="Markdown")
-        return
+
     # 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
         respText = '輔助鍵盤功能已開啟～'
@@ -582,17 +575,19 @@ def reply_handler(bot, update):
     if (text in ['冷氣_A', '冷氣_a', '冷氣A狀態', '冷氣a狀態', '冷氣a', '冷氣A']): respText = getAirCondiction("a", "all")
     if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
-    # 每日通報 & 服務檢測 & 服務列表 回覆
-    if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
-    if (text == '每日通報'): 
-        respText = getDailyReport()
-        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-                [InlineKeyboardButton("功能列表", callback_data = "daily")]
+    # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
+    if (update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+        # 遠端控制
+        if (text == '遠端控制'): 
+            respText = '請選擇所需控制設備～'
+            bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton('進風風扇', callback_data = "控制:" + "進風風扇")],
+                [InlineKeyboardButton('加濕器', callback_data = "控制:" + "加濕器")],
+                [InlineKeyboardButton('排風風扇', callback_data = "控制:" + "排風風扇")]
             ]), parse_mode="Markdown")
-        return
-            
-    if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
-    if (text == '服務列表'):
+            return
+        # 機房 Dashboard 服務列表
+        if (text == '服務列表'):
         respText = "*[機房服務列表]*\n"
         try:
             serviceList = getServiceList()["service"]
@@ -608,6 +603,24 @@ def reply_handler(bot, update):
             return
         except:
             respText += getServiceList()
+        
+        # 每日通報 & 
+        if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
+    
+    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"): 
+        respText = '您的權限不足～, 請在機器人群組內使用。'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+        return
+    
+    if (text == '每日通報'): 
+        respText = getDailyReport()
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+                [InlineKeyboardButton("功能列表", callback_data = "daily")]
+            ]), parse_mode="Markdown")
+        return
+
+    # 機房 Dashboard 服務檢測 回覆            
+    if (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
 
     #    print(dir(update.message))
     if (respText != ""): 
