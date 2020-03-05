@@ -478,6 +478,10 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
+    if (text == '關閉鍵盤'):
+        respText = '輔助鍵盤功能已關閉～'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True)), parse_mode="Markdown")
+
     # 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
         respText = '輔助鍵盤功能已開啟～'
