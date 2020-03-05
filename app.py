@@ -475,6 +475,7 @@ def reply_handler(bot, update):
     # print(update.message.chat)
     print(update.message.chat_id)
     print(devUser_id)
+    print(update.message.chat_id == devUser_id)
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
