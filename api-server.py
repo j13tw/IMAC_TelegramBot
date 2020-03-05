@@ -192,6 +192,7 @@ def serviceCheck():
 def daily_report():
     if request.method == 'GET':
         data = {}
+        sendTelegram = 0
         yesterdayDate = str(datetime.datetime.now() + datetime.timedelta(days=-2, hours=8)).split(" ")[0]
         todayDate = str(datetime.datetime.now() + datetime.timedelta(days=-1, hours=8)).split(" ")[0]
         data["date"] = str(datetime.datetime.now() + datetime.timedelta(hours=8)).split(" ")[0]
@@ -266,14 +267,18 @@ def daily_report():
         if (dbDailyReport.find_one() == None):
             dbDailyReport.insert_one(data)
             del data["_id"]
+            sendTelegram = 1
         else: 
             if (dbDailyReport.find_one()["date"] != data["date"]):
                 dbDailyReport.update_one({},{'$set':data})
-                time.sleep(5)
-                try:
-                    requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
-                except:
-                    pass
+                sendTelegram = 1
+                
+        if (sendTelegram == 1):
+            time.sleep(5)
+            try:
+                requests.get(herokuServerProtocol + "://" + herokuServer + "/dailyReport")
+            except:
+                pass
 
         return {"dailyReport": str(data["date"]).split(".")[0] + "-success", "data": data}, status.HTTP_200_OK
 
