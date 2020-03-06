@@ -839,6 +839,7 @@ def device_setting(bot, update):
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
+        print(setting_list.index(device))
         print (setting_json_list[setting_list.index(device)])
     else:
         respText = device + "\t資料已重設"
