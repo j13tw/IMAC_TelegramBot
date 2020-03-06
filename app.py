@@ -855,6 +855,7 @@ def et7044_control(bot, update):
 
 #  機房資訊確認 按鈕鍵盤 callback
 def device_setting(bot, update):
+    global settingObject
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
@@ -863,6 +864,7 @@ def device_setting(bot, update):
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
     else:
         respText = device + "\t資料已重設"
+        settingObject = ""
     
     bot.edit_message_reply_markup(chat_id=update.callback_query.message.chat_id, message_id=update.callback_query.message.message_id, reply_markup=None)
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
