@@ -54,12 +54,14 @@ dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 
 settingMode = 0
+settingObject = ""
 
 # 懶人遙控器鍵盤定義
 device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房資訊', '機房資訊']
 
 # 設定機房資訊定義
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86_PC', 'Server Board', 'GPU Card', '離開設定狀態']
+setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '台']
 
 # collect the the day of matainer in mLab db.
 def getRotationUser():
@@ -473,7 +475,7 @@ def getAirCondiction(device_id, info):
 
 # recive the all of the user/group message handler.
 def reply_handler(bot, update):
-    global settingMode
+    global settingMode, settingObject
     """Reply message."""
     # print(dir(bot))
     # print(dir(update))
@@ -483,6 +485,29 @@ def reply_handler(bot, update):
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
+
+    if (settingMode == 1 and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+        if (text in setting_list[:-1]):
+            settingObject = text
+        elif (text in setting_list[-1])
+            respText += "您已離開機房資訊設定模式~"
+            settingMode = 0
+            bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+            return
+        else:
+            try:
+                int(text)
+                respText += "*[請確認機房設備數量]*"
+                respText += "設定項目:\t" + settingObject
+                respText += "設定數量:\t" + text + setting_unit_list(setting_list.index(settingObject))
+                bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
+                    [InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text)],
+                    [InlineKeyboardButton('錯誤', callback_data = "setting:" + settingObject)]
+                ]), parse_mode="Markdown")
+                return
+            except:
+                respText = '機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。'
+
 
     # 開啟 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
@@ -632,7 +657,7 @@ def reply_handler(bot, update):
             bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
 
     
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房資訊", "機房資訊"]): 
+    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量", "機房資訊"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
@@ -797,6 +822,16 @@ def et7044_control(bot, update):
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
+#  機房資訊確認 按鈕鍵盤 callback
+def device_setting(bot, update):
+    device = str(update.callback_query.data).split(':')[0].split('_')[0])
+    if (len(update.callback_query.data).split(':')[1].split('_') == 2):
+        count = str(update.callback_query.data).split(':')[1].split('_')[1]
+        respText = device + "\t設定成功"
+    else:
+        respText = device + "\t資料已重設"
+    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
 
@@ -815,6 +850,7 @@ dispatcher.add_handler(CallbackQueryHandler(temp_select, pattern=r'temp'))
 dispatcher.add_handler(CallbackQueryHandler(humi_select, pattern=r'humi'))
 dispatcher.add_handler(CallbackQueryHandler(current_select, pattern=r'current'))
 dispatcher.add_handler(CallbackQueryHandler(daily_select, pattern=r'daily'))
+dispatcher.add_handler(CallbackQueryHandler(device_setting, pattern=r'setting'))
 
 if __name__ == "__main__":
     # Running server
