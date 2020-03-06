@@ -558,6 +558,8 @@ def reply_handler(bot, update):
         else:
             respText = '`機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。\n'
             respText = '`關閉設定模式，請輸入 \"離開設定狀態\"`'
+        bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+        return
 
     # 開啟 懶人遙控器鍵盤
     elif (text == '輔助鍵盤'):
