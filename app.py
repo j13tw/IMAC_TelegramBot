@@ -52,6 +52,7 @@ dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
+dbDeviceCount = myMongoDb['deviceCount']
 
 settingMode = 0
 settingObject = ""
@@ -64,7 +65,22 @@ setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SD
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '台']
 
-# collect the the day of matainer in mLab db.
+# collect the smart-data-center number of the device
+def getDeviceCount():
+    if (dbDeviceCount.find_one() == None):
+        data = {}
+        for x in setting_json_list:
+            data[x] = 0
+        dbDeviceCount.insert_one(data)
+    
+    deviceCount = dbDeviceCount.find_one()
+    data = "*[機房設備資訊]*"
+    for x in range(0, len(setting_json_list)):
+        data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list]) + "\t" + setting_unit_list[x] + "`\n"
+    return data
+    
+
+# collect the day of matainer in mLab db.
 def getRotationUser():
     data = ""
     rotationUser = dbRotationUser.find_one()
@@ -506,7 +522,6 @@ def reply_handler(bot, update):
                 respText += "*[請確認機房設備數量]*\n"
                 respText += "`設定項目:\t" + settingObject + "`\n"
                 respText += "`設定數量:\t" + text + setting_unit_list[setting_list.index(settingObject)] + "`"
-                print(respText)
                 bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text), 
@@ -517,7 +532,8 @@ def reply_handler(bot, update):
             except:
                 respText = settingObject + '\t數值輸入錯誤～, 請重新輸入！'
         else:
-            respText = '機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。'
+            respText = '`機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。\n'
+            respText = '`關閉設定模式，請輸入 \"離開設定狀態\"`'
 
     # 開啟 懶人遙控器鍵盤
     elif (text == '輔助鍵盤'):
@@ -666,6 +682,9 @@ def reply_handler(bot, update):
             ], resize_keyboard=True), parse_mode="Markdown")
             bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
             return
+        
+        if (text == "機房資訊"):
+            respText = getDeviceCount()
 
     
     elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量", "機房資訊"]): 
