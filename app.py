@@ -498,6 +498,7 @@ def reply_handler(bot, update):
             return
         elif (settingObject != ""):
             print(text)
+            print(int(text))
             try:
                 int(text)
                 respText += "*[請確認機房設備數量]*"
