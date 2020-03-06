@@ -59,7 +59,7 @@ dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 dbDeviceCount = myMongoDb['deviceCount']
 
-settingMode = 0
+settingMode = False
 settingObject = ""
 
 # 懶人遙控器鍵盤定義
@@ -526,11 +526,11 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
-    print("settingMode = " + str(settingMode))
+    print("settingMode = ", settingMode)
     print("data = " + text)
     print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
 
-    if (settingMode == 1 and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
+    if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         if (text in setting_list[:-1]):
             settingObject = text
             respText = "`請輸入" + settingObject + "數量~`"
@@ -538,7 +538,7 @@ def reply_handler(bot, update):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
             respText += "`您已離開機房資訊設定模式~`"
-            settingMode = 0
+            settingMode = False
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
             return
         elif (settingObject != ""):
@@ -706,7 +706,7 @@ def reply_handler(bot, update):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
             respText += '`機房資訊 設定模式開啟～`'
-            settingMode = 1
+            settingMode = True
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
                 [str(s) for s in setting_list[0:3]],
                 [str(s) for s in setting_list[3:6]],
