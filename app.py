@@ -229,7 +229,7 @@ def deviceCount_update():
         data = {}
         try:
             resp = request.json
-            data["disk"] = resp["disk"]
+            data["storage"] = resp["disk"]
             data["pc"] = resp["pc"]
             data["ram"] = resp["ram"]
             data["sdn"] = resp["sdnSwitch"]
