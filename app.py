@@ -77,8 +77,7 @@ def getDeviceCount():
     data = "*[機房設備資訊]*\n"
     for x in range(0, len(setting_json_list)):
         data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n"
-    return data
-    
+    return data   
 
 # collect the day of matainer in mLab db.
 def getRotationUser():
@@ -223,6 +222,25 @@ def test(mode):
     if (mode == 'onlineAudio'): bot.sendPhoto(chat_id=devUser_id, audio='http://s80.youtaker.com/other/2015/10-6/mp31614001370a913212b795478095673a25cebc651a080.mp3')
     if (mode == 'onlineGif'): bot.sendAnimation(chat_id=1070358833, animation='http://d21p91le50s4xn.cloudfront.net/wp-content/uploads/2015/08/giphy.gif')
     if (mode == 'localGif'): bot.sendAnimation(chat_id=1070358833, animation=open('./test.gif', 'rb'))
+
+@app.route('/linebot', methods=['POST'])
+def deviceCount_update():
+    if request.method == 'POST':
+        data = {}
+        try:
+            resp = request.json
+            print(resp)
+            data["disk"]
+            data["pc"]
+            data["ram"]
+            data["sdnSwitch"]
+            data["server"]
+            data["switch"]
+            data["vcpu"]
+            dbDeviceCount.update_one({}, {'$set': {'cpu': data["vcpu"], ram: data['ram'], 'switch': data['switch'], 'sdn': data['sdnSwitch'], 'server': data["server"], 'pc': data['pc'], 'storage': data["switch"]}})
+            return {"linebor": "data_success"}, status.HTTP_200_OK
+        except:
+            return {"linebor": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
 # rotationUser api function, send smart-data-center maintainer in this day.
 @app.route('/rotationUser', methods=['GET'])
@@ -503,7 +521,7 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
-    if (settingMode == 1 and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    if (settingMode == 1 and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         if (text in setting_list[:-1]):
             settingObject = text
             respText = "`請輸入" + settingObject + "數量~`"
