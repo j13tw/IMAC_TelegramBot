@@ -513,7 +513,6 @@ def reply_handler(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
             return
         elif (settingObject != ""):
-            print(text)
             try:
                 if (settingObject == "Storage (TB)"):
                     float(text)
@@ -860,6 +859,7 @@ def device_setting(bot, update):
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
+        settingObject = ""
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
     else:
         respText = device + "\t資料已重設"
