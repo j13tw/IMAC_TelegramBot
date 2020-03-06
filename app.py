@@ -63,7 +63,7 @@ device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '�
 # 設定機房資訊定義
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86-PC', 'Server Board', 'GPU Card', '離開設定狀態']
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
-setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '台']
+setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
 # collect the smart-data-center number of the device
 def getDeviceCount():
@@ -76,7 +76,7 @@ def getDeviceCount():
     deviceCount = dbDeviceCount.find_one()
     data = "*[機房設備資訊]*\n"
     for x in range(0, len(setting_json_list)):
-        data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n"
+        data += "`1" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n"
     return data
     
 
