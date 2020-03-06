@@ -37,7 +37,7 @@ ups_owner = int(config['DEVICE']['UPS_OWNER'])
 air_condiction_owner = int(config['DEVICE']['AIR_CONDICTION_OWNER'])
 
 # LineBot Sync
-linebotServerProtocol = config['LINE']['SERVER']
+linebotServerProtocol = config['LINE']['SERVER_PROTOCOL']
 linebotServer = config['LINE']['SERVER']
 
 # Setup Mongodb info
@@ -895,7 +895,7 @@ def device_setting(bot, update):
         elif device == "sdn": device = "sdnSwitch"
         elif device == "storage": device = "disk"
         else: device = device
-        requests.get(linebotServerProtocol + "/" + linebotServerProtocol + "/telegram/" + device + "/" + str(count))
+        requests.get(linebotServerProtocol + "/" + linebotServer + "/telegram/" + device + "/" + str(count))
     else:
         respText = device + "\t資料已重設"
         settingObject = ""
