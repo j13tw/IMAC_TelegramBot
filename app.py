@@ -76,7 +76,7 @@ def getDeviceCount():
     deviceCount = dbDeviceCount.find_one()
     data = "*[機房設備資訊]*\n"
     for x in range(1, len(setting_json_list)):
-        data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n"
+        data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n\r"
     return data
     
 
