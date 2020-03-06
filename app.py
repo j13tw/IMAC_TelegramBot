@@ -8,6 +8,7 @@ from telegram.ext import Dispatcher, MessageHandler, Filters, CallbackQueryHandl
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 import json
 from pymongo import MongoClient
+import requests
 import datetime
 import time
 
@@ -34,6 +35,10 @@ dl303_owner = int(config['DEVICE']['DL303_OWNER'])
 et7044_owner = int(config['DEVICE']['ET7044_OWNER'])
 ups_owner = int(config['DEVICE']['UPS_OWNER'])
 air_condiction_owner = int(config['DEVICE']['AIR_CONDICTION_OWNER'])
+
+# LineBot Sync
+linebotServerProtocol = config['LINE']['SERVER']
+linebotServer = config['LINE']['SERVER']
 
 # Setup Mongodb info
 myMongoClient = MongoClient(config['MONGODB']['SERVER_PROTOCOL'] + "://" + config['MONGODB']['USER'] + ":" + config['MONGODB']['PASSWORD'] + "@" + config['MONGODB']['SERVER'])
@@ -238,9 +243,9 @@ def deviceCount_update():
             data["cpu"] = resp["vcpu"]
             print(str(data).replace('\'', "\""))
             dbDeviceCount.update_one({}, {'$set': data})
-            return {"linebor": "data_success"}, status.HTTP_200_OK
+            return {"linebot": "data_success"}, status.HTTP_200_OK
         except:
-            return {"linebor": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+            return {"linebot": "data_fail"}, status.HTTP_401_UNAUTHORIZED
 
 # rotationUser api function, send smart-data-center maintainer in this day.
 @app.route('/rotationUser', methods=['GET'])
@@ -878,10 +883,14 @@ def device_setting(bot, update):
     global settingObject
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
-        count = str(update.callback_query.data).split(':')[1].split('_')[1]
+        count = int(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
         settingObject = ""
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
+        if device == "cpu": device = "vcpu"
+        if device == "sdn": device = "sdnSwitch"
+        if device == "storage": device = "disk"
+        requests.get(linebotServerProtocol + "/" + linebotServerProtocol + "/telegram/" + device + "/" + count)
     else:
         respText = device + "\t資料已重設"
         settingObject = ""

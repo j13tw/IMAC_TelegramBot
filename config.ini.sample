@@ -26,3 +26,6 @@ DL303_OWNER = dl303-owner-telegram-id
 ET7044_OWNER = et7044-owner-telegram-id
 UPS_OWNER = ups-owner-telegram-id
 AIR_CONDICTION_OWNER = air-condiction-owner-telegram-id
+
+[LINE]
+SERVER = xxxx-xxxx-xxxx.herokuapp.com 
