@@ -828,7 +828,7 @@ def et7044_control(bot, update):
 
 #  機房資訊確認 按鈕鍵盤 callback
 def device_setting(bot, update):
-    device = str(update.callback_query.data).split(':')[0].split('_')[0])
+    device = str(update.callback_query.data).split(':')[0].split('_')[0]
     if (len(update.callback_query.data).split(':')[1].split('_') == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
