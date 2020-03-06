@@ -74,7 +74,7 @@ def getDeviceCount():
         dbDeviceCount.insert_one(data)
     
     deviceCount = dbDeviceCount.find_one()
-    data = "*[機房設備資訊]*"
+    data = "*[機房設備資訊]*\n"
     for x in range(0, len(setting_json_list)):
         data += "`" + setting_list[x] + ": \t"+ str(deviceCount[setting_json_list[x]]) + "\t" + setting_unit_list[x] + "`\n"
     return data
@@ -859,6 +859,7 @@ def device_setting(bot, update):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
         print (setting_json_list[setting_list.index(device)])
+        dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
     else:
         respText = device + "\t資料已重設"
     
