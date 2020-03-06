@@ -53,8 +53,13 @@ dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 
+settingMode = 0
+
 # 懶人遙控器鍵盤定義
-device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值']
+device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房資訊', '機房資訊']
+
+# 設定機房資訊定義
+setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86_PC', 'Server Board', 'GPU Card', '離開設定狀態']
 
 # collect the the day of matainer in mLab db.
 def getRotationUser():
@@ -468,12 +473,13 @@ def getAirCondiction(device_id, info):
 
 # recive the all of the user/group message handler.
 def reply_handler(bot, update):
+    global settingMode
     """Reply message."""
     # print(dir(bot))
     # print(dir(update))
     # print(dir(update.message))
     # print(update.message.chat)
-    # print(update.message.chat_id)\
+    # print(update.message.chat_id)
     # for s in device_list: print(s)
     text = update.message.text
     respText = ""
@@ -485,7 +491,7 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]],
-            [str(s) for s in device_list[12:14]],
+            [str(s) for s in device_list[12:16]]
         ], resize_keyboard=True), parse_mode="Markdown")
         bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
         return
@@ -583,7 +589,7 @@ def reply_handler(bot, update):
     if (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    if (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房資訊", "機房資訊"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         # 遠端控制
         if (text == '遠端控制'): 
             respText = '請選擇所需控制設備～'
@@ -613,8 +619,20 @@ def reply_handler(bot, update):
         
         # 每日通報
         if (text == "機房輪值" or text == "輪值"): respText = getRotationUser()
+
+        # 設定機房資訊
+        if (text == "設定機房資訊"):
+            respText = '設定機房資訊 模式開啟～'
+            settingMode = 1
+            bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
+                [str(s) for s in setting_list[0:3]],
+                [str(s) for s in setting_list[3:6]],
+                [str(s) for s in setting_list[6:9]]
+            ], resize_keyboard=True), parse_mode="Markdown")
+            bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+
     
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表"]): 
+    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房資訊", "機房資訊"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
@@ -687,7 +705,7 @@ def daily_select(bot, update):
         [str(s) for s in device_list[0:4]],
         [str(s) for s in device_list[4:8]],
         [str(s) for s in device_list[8:12]],
-        [str(s) for s in device_list[12:14]],
+        [str(s) for s in device_list[12:16]],
     ], resize_keyboard=True), parse_mode="Markdown")
     bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
     return
