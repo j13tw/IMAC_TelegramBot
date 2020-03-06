@@ -499,13 +499,13 @@ def reply_handler(bot, update):
         elif (settingObject != ""):
             print(text)
             try:
-                int(text)
-                print("a")
+                if (settingObject == "Storage (TB)"):
+                    float(text)
+                else:
+                    int(text)
                 respText += "*[請確認機房設備數量]*"
-                print("b")
                 respText += "`設定項目:\t" + settingObject + "`\n"
-                print("c")
-                respText += "`設定數量:\t" + text + setting_unit_list(setting_list.index(settingObject)) + "`"
+                respText += "`設定數量:\t" + text + setting_unit_list[setting_list.index(settingObject)] + "`"
                 print(respText)
                 bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                     [
