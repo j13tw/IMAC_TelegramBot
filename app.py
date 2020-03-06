@@ -226,16 +226,11 @@ def test(mode):
 @app.route('/linebot', methods=['POST'])
 def deviceCount_update():
     if request.method == 'POST':
-        data = {}
         try:
-            resp = request.json
-            print(resp)
+            data = request.json
             data["disk"]
-            print(str(data))
             data["pc"]
-            print(str(data))
             data["ram"]
-            print(str(data))
             data["sdnSwitch"]
             data["server"]
             data["switch"]
