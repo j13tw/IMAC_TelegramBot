@@ -508,7 +508,9 @@ def reply_handler(bot, update):
             settingObject = text
             respText = "`請輸入" + settingObject + "數量~`"
         elif (text in setting_list[-1]):
-            respText = "`您已離開機房資訊設定模式~`"
+            respText = getDeviceCount()
+            respText += "----------------------------------\n"
+            respText += "`您已離開機房資訊設定模式~`"
             settingMode = 0
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
             return
@@ -520,7 +522,7 @@ def reply_handler(bot, update):
                     int(text)
                 respText += "*[請確認機房設備數量]*\n"
                 respText += "`設定項目:\t" + settingObject + "`\n"
-                respText += "`設定數量:\t" + text + setting_unit_list[setting_list.index(settingObject)] + "`"
+                respText += "`設定數量:\t" + text + "\t" + setting_unit_list[setting_list.index(settingObject)] + "`"
                 bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text), 
