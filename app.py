@@ -61,6 +61,7 @@ device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '�
 
 # 設定機房資訊定義
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86_PC', 'Server Board', 'GPU Card', '離開設定狀態']
+setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '台']
 
 # collect the the day of matainer in mLab db.
@@ -490,24 +491,27 @@ def reply_handler(bot, update):
         if (text in setting_list[:-1]):
             settingObject = text
         elif (text in setting_list[-1])
-            respText += "您已離開機房資訊設定模式~"
+            respText += "`您已離開機房資訊設定模式~`"
             settingMode = 0
             bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
             return
-        else:
+        elif (settingObject != ""):
             try:
                 int(text)
                 respText += "*[請確認機房設備數量]*"
-                respText += "設定項目:\t" + settingObject
-                respText += "設定數量:\t" + text + setting_unit_list(setting_list.index(settingObject))
+                respText += "`設定項目:\t" + settingObject + "`\n"
+                respText += "`設定數量:\t" + text + setting_unit_list(setting_list.index(settingObject)) + "`"
                 bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text)],
-                    [InlineKeyboardButton('錯誤', callback_data = "setting:" + settingObject)]
+                    [
+                        InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text), 
+                        InlineKeyboardButton('錯誤', callback_data = "setting:" + settingObject)
+                    ]
                 ]), parse_mode="Markdown")
                 return
             except:
-                respText = '機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。'
-
+                respText = settingObject + '\t數值輸入錯誤～, 請重新輸入！'
+        else:
+            respText = '機房資訊設定中, 若需查詢其他服務, 請先關閉設定模式。'
 
     # 開啟 懶人遙控器鍵盤
     if (text == '輔助鍵盤'):
@@ -828,9 +832,11 @@ def device_setting(bot, update):
     if (len(update.callback_query.data).split(':')[1].split('_') == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
+        print setting_json_list[setting_list.index(device)]
     else:
         respText = device + "\t資料已重設"
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # New a dispatcher for bot
 dispatcher = Dispatcher(bot, None)
