@@ -226,15 +226,16 @@ def test(mode):
 @app.route('/linebot', methods=['POST'])
 def deviceCount_update():
     if request.method == 'POST':
+        data = {}
         try:
-            data = request.json
-            data["disk"]
-            data["pc"]
-            data["ram"]
-            data["sdnSwitch"]
-            data["server"]
-            data["switch"]
-            data["vcpu"]
+            resp = request.json
+            data["disk"] = resp["disk"]
+            data["pc"] = resp["pc"]
+            data["ram"] = resp["ram"]
+            data["sdn"] = resp["sdnSwitch"]
+            data["server"] = resp["server"]
+            data["switch"] = resp["switch"]
+            data["cpu"] = resp["vcpu"]
             print(str(data).replace('\'', "\""))
             dbDeviceCount.update_one({}, {'$set': data})
             return {"linebor": "data_success"}, status.HTTP_200_OK
