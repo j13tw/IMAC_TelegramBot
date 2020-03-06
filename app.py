@@ -77,6 +77,7 @@ def getDeviceCount():
     data = "*[機房設備資訊]*\n"
     for x in range(0, len(setting_json_list)):
         data += "`" + setting_list[x] + ": "+ str(deviceCount[setting_json_list[x]]) + setting_unit_list[x] + "`\n"
+        data += "`" + setting_list[x] + ": "+ str(deviceCount[setting_json_list[x]]) + setting_unit_list[x] + "`\n"
     return data
     
 
