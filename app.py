@@ -675,7 +675,7 @@ def reply_handler(bot, update):
         if (text == "設定機房\n設備數量"):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
-            respText = '`機房資訊 設定模式開啟～`'
+            respText += '`機房資訊 設定模式開啟～`'
             settingMode = 1
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
                 [str(s) for s in setting_list[0:3]],
@@ -860,7 +860,6 @@ def device_setting(bot, update):
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
-        print (setting_json_list[setting_list.index(device)])
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
     else:
         respText = device + "\t資料已重設"
