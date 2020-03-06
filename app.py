@@ -526,6 +526,10 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
+    print("settingMode = " + str(settingMode))
+    print("data = " + text)
+    print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
+
     if (settingMode == 1 and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         if (text in setting_list[:-1]):
             settingObject = text
