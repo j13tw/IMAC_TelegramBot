@@ -832,7 +832,7 @@ def device_setting(bot, update):
     if (len(update.callback_query.data).split(':')[1].split('_') == 2):
         count = str(update.callback_query.data).split(':')[1].split('_')[1]
         respText = device + "\t設定成功"
-        print setting_json_list[setting_list.index(device)]
+        print (setting_json_list[setting_list.index(device)])
     else:
         respText = device + "\t資料已重設"
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
