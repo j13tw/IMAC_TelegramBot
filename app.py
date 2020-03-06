@@ -490,7 +490,7 @@ def reply_handler(bot, update):
     if (settingMode == 1 and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         if (text in setting_list[:-1]):
             settingObject = text
-        elif (text in setting_list[-1])
+        elif (text in setting_list[-1]):
             respText += "`您已離開機房資訊設定模式~`"
             settingMode = 0
             bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
