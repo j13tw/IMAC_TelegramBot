@@ -229,13 +229,17 @@ def deviceCount_update():
         try:
             data = request.json
             data["disk"]
+            print(data["disk"])
             data["pc"]
+            print(data["pc"])
             data["ram"]
+            print(data["ram"])
             data["sdnSwitch"]
+            print(data["sdnSwitch"])
             data["server"]
             data["switch"]
             data["vcpu"]
-            print(str(data))
+            print(str(data).replace('\'', "\""))
             dbDeviceCount.update_one({}, {'$set': {'cpu': data["vcpu"], ram: data['ram'], 'switch': data['switch'], 'sdn': data['sdnSwitch'], 'server': data["server"], 'pc': data['pc'], 'storage': data["switch"]}})
             return {"linebor": "data_success"}, status.HTTP_200_OK
         except:
