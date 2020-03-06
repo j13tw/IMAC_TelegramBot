@@ -889,9 +889,10 @@ def device_setting(bot, update):
         respText = device + "\t設定成功"
         settingObject = ""
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
-        if device == "cpu": device = "vcpu"
-        if device == "sdn": device = "sdnSwitch"
-        if device == "storage": device = "disk"
+        if setting_json_list[setting_list.index(device)] == "cpu": device = "vcpu"
+        if setting_json_list[setting_list.index(device)] == "sdn": device = "sdnSwitch"
+        if setting_json_list[setting_list.index(device)] == "storage": device = "disk"
+        else: device = setting_json_list[setting_list.index(device)]
         requests.get(linebotServerProtocol + "/" + linebotServerProtocol + "/telegram/" + device + "/" + str(count))
     else:
         respText = device + "\t資料已重設"
