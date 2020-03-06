@@ -842,8 +842,8 @@ def device_setting(bot, update):
         print (setting_json_list[setting_list.index(device)])
     else:
         respText = device + "\t資料已重設"
-    print(dir(update.callback_query.message))
-    bot.edit_message_text(chat_id=update.callback_query.message.chat_id, text=respText, message_id=update.callback_query.message.message_id, parse_mode="Markdown")
+    
+    bot.edit_reply_markup(chat_id=update.callback_query.message.chat_id, message_id=update.callback_query.message.message_id, reply_markup=None)
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
     return
 
