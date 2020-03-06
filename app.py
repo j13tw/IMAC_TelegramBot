@@ -895,7 +895,7 @@ def device_setting(bot, update):
         elif device == "sdn": device = "sdnSwitch"
         elif device == "storage": device = "disk"
         else: device = device
-        requests.get(linebotServerProtocol + "/" + linebotServer + "/telegram/" + device + "/" + str(count))
+        requests.get(linebotServerProtocol + "://" + linebotServer + "/telegram/" + device + "/" + str(count))
     else:
         respText = device + "\t資料已重設"
         settingObject = ""
