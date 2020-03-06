@@ -497,11 +497,13 @@ def reply_handler(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
             return
         elif (settingObject != ""):
+            print(text)
             try:
                 int(text)
                 respText += "*[請確認機房設備數量]*"
                 respText += "`設定項目:\t" + settingObject + "`\n"
                 respText += "`設定數量:\t" + text + setting_unit_list(setting_list.index(settingObject)) + "`"
+                print(respText)
                 bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton('正確', callback_data = "setting:" + settingObject + "_" + text), 
