@@ -673,7 +673,9 @@ def reply_handler(bot, update):
 
         # 設定機房資訊
         if (text == "設定機房\n設備數量"):
-            respText = '設定機房資訊 模式開啟～'
+            respText = getDeviceCount()
+            respText += "----------------------------------\n"
+            respText = '`機房資訊 設定模式開啟～`'
             settingMode = 1
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
                 [str(s) for s in setting_list[0:3]],
