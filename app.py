@@ -59,7 +59,6 @@ dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 dbDeviceCount = myMongoDb['deviceCount']
 
-settingMode = False
 settingObject = ""
 
 # 懶人遙控器鍵盤定義
@@ -74,6 +73,7 @@ setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 def getDeviceCount():
     if (dbDeviceCount.find_one() == None):
         data = {}
+        data['setting'] = False
         for x in setting_json_list:
             data[x] = 0
         dbDeviceCount.insert_one(data)
@@ -530,6 +530,8 @@ def reply_handler(bot, update):
     print("data = " + text)
     print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
 
+    settingMode = dbDeviceCount.find_one()['setting']
+
     if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         if (text in setting_list[:-1]):
             settingObject = text
@@ -538,7 +540,7 @@ def reply_handler(bot, update):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
             respText += "`您已離開機房資訊設定模式~`"
-            settingMode = False
+            dbDeviceCount.update_one({}, {'$set': {'setting': False}})
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardRemove(remove_keyboard=True), parse_mode="Markdown")
             return
         elif (settingObject != ""):
@@ -706,7 +708,7 @@ def reply_handler(bot, update):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
             respText += '`機房資訊 設定模式開啟～`'
-            settingMode = True
+            dbDeviceCount.update_one({}, {'$set': {'setting': True}})
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
                 [str(s) for s in setting_list[0:3]],
                 [str(s) for s in setting_list[3:6]],
