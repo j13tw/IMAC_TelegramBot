@@ -58,6 +58,7 @@ dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 dbDeviceCount = myMongoDb['deviceCount']
+dbCameraPower = myMongoDb['cameraPower']
 
 # 懶人遙控器鍵盤定義
 device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房\n設備數量', '機房資訊']
