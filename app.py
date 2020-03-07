@@ -673,7 +673,7 @@ def reply_handler(bot, update):
     elif (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量", "機房資訊"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         # 遠端控制
         if (text == '遠端控制'): 
             respText = '請選擇所需控制設備～'
@@ -717,16 +717,15 @@ def reply_handler(bot, update):
             ], resize_keyboard=True), parse_mode="Markdown")
             bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
             return
-        
-        if (text == "機房資訊"):
-            respText = getDeviceCount()
-
     
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量", "機房資訊"]): 
+    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
-    
+        
+    elif (text == "機房資訊"):
+        respText = getDeviceCount()
+
     elif (text == '每日通報'): 
         respText = getDailyReport()
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
