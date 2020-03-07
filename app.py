@@ -59,8 +59,6 @@ dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 dbDeviceCount = myMongoDb['deviceCount']
 
-settingObject = ""
-
 # 懶人遙控器鍵盤定義
 device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房\n設備數量', '機房資訊']
 
@@ -74,6 +72,7 @@ def getDeviceCount():
     if (dbDeviceCount.find_one() == None):
         data = {}
         data['setting'] = False
+        data['settingObject'] = ""
         for x in setting_json_list:
             data[x] = 0
         dbDeviceCount.insert_one(data)
@@ -517,7 +516,6 @@ getDeviceCount()
 
 # recive the all of the user/group message handler.
 def reply_handler(bot, update):
-    global settingMode, settingObject
     """Reply message."""
     # print(dir(bot))
     # print(dir(update))
@@ -535,9 +533,10 @@ def reply_handler(bot, update):
     print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
 
     if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
+        settingObject = dbDeviceCount.find_one()['settingObject']
         if (text in setting_list[:-1]):
-            settingObject = text
-            respText = "`請輸入" + settingObject + "數量~`"
+            dbDeviceCount.update_one({}, {'$set': {'settingObject': text}})
+            respText = "`請輸入" + text + "數量~`"
         elif (text in setting_list[-1]):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
@@ -890,7 +889,6 @@ def et7044_control(bot, update):
 
 #  機房資訊確認 按鈕鍵盤 callback
 def device_setting(bot, update):
-    global settingObject
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
         if (device == "Storage (TB)"):
@@ -898,7 +896,7 @@ def device_setting(bot, update):
         else:
             count = int(str(update.callback_query.data).split(':')[1].split('_')[1])
         respText = device + "\t設定成功"
-        settingObject = ""
+        dbDeviceCount.update_one({}, {'$set': {'settingObject': ""}})
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
         device = setting_json_list[setting_list.index(device)]
         # linbot sync device count
@@ -909,7 +907,7 @@ def device_setting(bot, update):
         requests.get(linebotServerProtocol + "://" + linebotServer + "/telegram/" + device + "/" + str(count))
     else:
         respText = device + "\t資料已重設"
-        settingObject = ""
+        dbDeviceCount.update_one({}, {'$set': {'settingObject': ""}})
     
     bot.edit_message_reply_markup(chat_id=update.callback_query.message.chat_id, message_id=update.callback_query.message.message_id, reply_markup=None)
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
