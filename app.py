@@ -69,8 +69,6 @@ setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SD
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
-getDeviceCount()
-
 # collect the smart-data-center number of the device
 def getDeviceCount():
     if (dbDeviceCount.find_one() == None):
@@ -514,6 +512,8 @@ def getAirCondiction(device_id, info):
         data += "[維護人員](tg://user?id="+ str(air_condiction_owner) + ")\n"
         data += "*異常模組:* _" + str(failList) + "_\n"
     return data  
+
+getDeviceCount()
 
 # recive the all of the user/group message handler.
 def reply_handler(bot, update):
