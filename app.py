@@ -577,7 +577,7 @@ def reply_handler(bot, update):
             [str(s) for s in device_list[8:12]],
             [str(s) for s in device_list[12:16]]
         ], resize_keyboard=True), parse_mode="Markdown")
-        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.heic', 'rb'))
+        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
         return
 
     
@@ -715,7 +715,7 @@ def reply_handler(bot, update):
                 [str(s) for s in setting_list[3:6]],
                 [str(s) for s in setting_list[6:9]]
             ], resize_keyboard=True), parse_mode="Markdown")
-            bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.heic', 'rb'))
+            bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
             return
     
     elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"]): 
@@ -796,7 +796,7 @@ def daily_select(bot, update):
         [str(s) for s in device_list[8:12]],
         [str(s) for s in device_list[12:16]],
     ], resize_keyboard=True), parse_mode="Markdown")
-    bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.heic', 'rb'))
+    bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
     return
 
 # 環控裝置 按鈕鍵盤 callback
