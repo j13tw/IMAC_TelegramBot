@@ -893,7 +893,10 @@ def device_setting(bot, update):
     global settingObject
     device = str(update.callback_query.data).split(':')[1].split('_')[0]
     if (len(str(update.callback_query.data).split(':')[1].split('_')) == 2):
-        count = int(str(update.callback_query.data).split(':')[1].split('_')[1])
+        if (device == "Storage (TB)"):
+            count = float(str(update.callback_query.data).split(':')[1].split('_')[1])
+        else:
+            count = int(str(update.callback_query.data).split(':')[1].split('_')[1])
         respText = device + "\t設定成功"
         settingObject = ""
         dbDeviceCount.update_one({}, {'$set': {setting_json_list[setting_list.index(device)]:count}})
