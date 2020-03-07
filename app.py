@@ -69,6 +69,8 @@ setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SD
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
+getDeviceCount()
+
 # collect the smart-data-center number of the device
 def getDeviceCount():
     if (dbDeviceCount.find_one() == None):
@@ -526,11 +528,11 @@ def reply_handler(bot, update):
     text = update.message.text
     respText = ""
 
+    settingMode = dbDeviceCount.find_one()['setting']
+
     print("settingMode = ", settingMode)
     print("data = " + text)
     print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
-
-    settingMode = dbDeviceCount.find_one()['setting']
 
     if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         if (text in setting_list[:-1]):
