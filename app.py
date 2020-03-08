@@ -237,7 +237,7 @@ def getDailyReport():
                 data += "`冷氣水塔功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_tank"]), float(float(dailyReport["water_tank"])/float(dailyReport["total"])*100.0))
                 data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
             data += "`電表功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
-            data += "`統計區間: " + cameraPower['today']['date'] + "~" + cameraPower['yesterday']['date']+ "`\n"
+            data += "`統計區間: \n" + str(cameraPower['today']['date']).split(".")[0] + "\n~" + str(cameraPower['yesterday']['date']).split(".")[0] + "`\n"
             
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
