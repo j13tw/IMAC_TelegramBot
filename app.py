@@ -297,7 +297,7 @@ def deviceCount_update():
 def rotationUser_update():
     if request.method == 'GET':
         respText = getRotationUser()
-        bot.send_message(chat_id=devUser_id, text=respText, reply_markup = ReplyKeyboardRemove(), parse_mode="Markdown")
+        bot.send_message(chat_id=group_id, text=respText, reply_markup = ReplyKeyboardRemove(), parse_mode="Markdown")
         return {"rotationUser": "data_ok"}, status.HTTP_200_OK
     else:
         return {"rotationUser": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -307,7 +307,7 @@ def rotationUser_update():
 def serviceCheck_update():
     if request.method == 'GET':
         respText = getServiceCheck()
-        bot.send_message(chat_id=devUser_id, text=respText, parse_mode="Markdown")
+        bot.send_message(chat_id=group_id, text=respText, parse_mode="Markdown")
         return {"serviceCheck": "data_ok"}, status.HTTP_200_OK
     else:
         return {"serviceCheck": "data_fail"}, status.HTTP_401_UNAUTHORIZED
@@ -574,9 +574,9 @@ def reply_handler(bot, update):
 
     settingMode = dbDeviceCount.find_one()['setting']
 
-    print("settingMode = ", settingMode)
-    print("data = " + text)
-    print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
+    # print("settingMode = ", settingMode)
+    # print("data = " + text)
+    # print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
 
     if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         settingObject = dbDeviceCount.find_one()['settingObject']
@@ -824,7 +824,8 @@ def listCommand(bot, update):
     respText += "[[所有環控設備]]\n"
     respText += "`1. 環控設備`\n"
     respText += "[[AI 智慧辨識 電錶]]\n"
-    respText += "`1. 電錶度數、電錶狀態、智慧電表`\n"
+    respText += "`1. 電錶、電錶度數、電錶狀態、智慧電錶`\n"
+    respText += "`2. 電表、電表度數、電表狀態、智慧電表`\n"
     respText += "[[DL303 工業監測器]]\n"
     respText += "`1. DL303`\n"
     respText += "`1. 溫度、溫濕度、濕度、CO2、露點溫度`\n"
