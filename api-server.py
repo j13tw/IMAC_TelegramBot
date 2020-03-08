@@ -342,8 +342,9 @@ def water_tank_update():
             data["date"] = str(datetime.datetime.now())
             if (dbWaterTank.find_one() == None): dbWaterTank.insert_one(data)
             else: dbWaterTank.update_one({}, {'$set': data})
+            return {"power_tank": "data_ok"}, status.HTTP_200_OK
         except:
-            return {"power_tank": "data_format_fail"}
+            return {"power_tank": "data_format_fail"}, status.HTTP_401_UNAUTHORIZED 
 
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
