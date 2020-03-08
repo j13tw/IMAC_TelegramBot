@@ -72,7 +72,7 @@ setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
 # collect the AI CV Image recognition
 def getCameraPower():
-    data = "*[AI 辨識電錶 設備狀態回報]*\n"
+    data = "*[AI 辨識電錶 狀態回報]*\n"
     if (dbCameraPower.find_one() != None):
         data += "[[今日辨識結果]]\n"
         data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date'])), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
@@ -87,7 +87,7 @@ def getCameraPower():
         data += "[[上次辨識結果]]"
         data += "`統計度數: 未知`\n"
         data += "`更新時間: None 度`\n"
-        tagOwner = 1
+    return data
 
 # collect the water tank current in mLab
 def getWaterTank():
@@ -642,6 +642,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('冷氣空調-冷卻水塔', callback_data = "device:" + "水塔")],
             [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "device:" + "UPS_B")],
             [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "device:" + "UPS_B")],
+            [InlineKeyboardButton('AI 辨識智慧電表', callback_data = "device:" + "電錶")],
             [InlineKeyboardButton('全部列出', callback_data = "device:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
@@ -694,8 +695,13 @@ def reply_handler(bot, update):
         return
         respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     
+    # 冷氣水塔 回覆
     elif (text in ["水塔", "水塔狀態"]):
         respText = getWaterTank()
+
+    # AI 辨識點錶度數
+    elif (text in ["電表度數", "電錶度數", "電表狀態", "電錶狀態", "智慧電表", "智慧電錶"]):
+        respText = getCameraPower()
 
     # UPS 功能 回覆
     elif (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態", 'Ups']):
@@ -815,6 +821,8 @@ def listCommand(bot, update):
     respText += "`2. 服務狀態、服務檢測`\n"
     respText += "[[所有環控設備]]\n"
     respText += "`1. 環控設備`\n"
+    respText += "[[AI 智慧辨識 電錶]]\n"
+    respText += "`1. 電錶度數、電錶狀態、智慧電表`\n"
     respText += "[[DL303 工業監測器]]\n"
     respText += "`1. DL303`\n"
     respText += "`1. 溫度、溫濕度、濕度、CO2、露點溫度`\n"
@@ -859,7 +867,8 @@ def device_select(bot, update):
     elif (device == "水塔"): respText = getWaterTank()
     elif (device == "UPS_A"): respText = getUps("a", "all")
     elif (device == "UPS_B"): respText = getUps("b", "all")
-    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank() + '\n' + getUps("a", "all") + '\n' + getUps("b", "all")
+    elif (device == "電錶"): respText = getCameraPower()
+    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank() + '\n' + getUps("a", "all") + '\n' + getUps("b", "all") + '\n' + getCameraPower()
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # 溫度 按鈕鍵盤 callback
