@@ -55,23 +55,24 @@ def cameraPower_update():
         data = {}
         try:
             cameraPower = request.json
+            cameraPower["cameraPower"]
         except:
             return {"cameraPower": "data-format-fail"}, status.HTTP_401_UNAUTHORIZED
-        if (cameraPower.get("cameraPower") == None or type(cameraPower.get("cameraPower")) not in [float]): return {"cameraPower": "data-fail"}, status.HTTP_401_UNAUTHORIZED
+        if (type(cameraPower.get("cameraPower")) not in [float]): return {"cameraPower": "data-type-fail"}, status.HTTP_401_UNAUTHORIZED
         if (dbCameraPower.find_one() == None):
             data["today"] = {}
             data["today"]["power"] = cameraPower["cameraPower"] 
-            data["today"]["date"] = str(dateTime.dateTime.now())
+            data["today"]["date"] = str(datetime.datetime.now())
             data["yesterday"] = {}
             data["yesterday"]["power"] = 0.0 
-            data["yesterday"]["date"] = str(dateTime.dateTime.now())
+            data["yesterday"]["date"] = str(datetime.datetime.now())
             dbCameraPower.insert_one(data)
         else:
             data = dbCameraPower.find_one()
             del data["yesterday"]
             data["yesterday"] = data["today"]
             date["power"] = cameraPower["cameraPower"]
-            data["today"]["date"] = str(dateTime.dateTime.now())
+            data["today"]["date"] = str(datetime.datetime.now())
             dbCameraPower.update_one({}, {'$set': data})
         return {"cameraPower": "data_ok"}, status.HTTP_200_OK
 
@@ -98,9 +99,10 @@ def rotationUser(x):
         if (int(x) < 1 and int(x) > 7): return {"rotationUser": "weekDay-fail"}, status.HTTP_401_UNAUTHORIZED
         try:
             userList = request.json
+            userList["user"]
         except:
             return {"rotationUser": "data-format-fail"}, status.HTTP_401_UNAUTHORIZED
-        if (userList.get("user") == None or type(userList.get("user")) not in [list] ): return {"rotationUser": "data-fail"}, status.HTTP_401_UNAUTHORIZED
+        if (type(userList.get("user")) not in [list]): return {"rotationUser": "data-type-fail"}, status.HTTP_401_UNAUTHORIZED
         if (dbServiceList.find_one() == None): 
                 data = {}
                 data["rotation"] = []
