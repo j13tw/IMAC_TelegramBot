@@ -702,7 +702,7 @@ def reply_handler(bot, update):
         respText = getWaterTank()
 
     # AI 辨識點錶度數
-    elif (text in ["電表度數", "電錶度數", "電表狀態", "電錶狀態", "智慧電表", "智慧電錶"]):
+    elif (text in ["電表", "電錶", "電表度數", "電錶度數", "電表狀態", "電錶狀態", "智慧電表", "智慧電錶"]):
         respText = getCameraPower()
 
     # UPS 功能 回覆
