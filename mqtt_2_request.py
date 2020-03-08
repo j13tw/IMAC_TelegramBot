@@ -31,6 +31,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("UPS/A/Monitor")
     client.subscribe("UPS/B/Monitor")
     client.subscribe("air_condiction/#")
+    client.subscribe("waterTank")
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
@@ -92,7 +93,13 @@ def on_message(client, userdata, msg):
     if (msg.topic in ["air_condiction/A", "air_condiction/B"]):
         try:
             moduleName = msg.topic.lower().split("/")[1]
-            r = requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/environment/" + moduleName, json=json.loads(data))
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/air_condiction/environment/" + moduleName, json=json.loads(data))
+        except:
+            pass
+
+    if (msg.topic == "waterTank"):
+        try:
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/ups/" + moduleName, json=json.loads(data))
         except:
             pass
 

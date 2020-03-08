@@ -46,6 +46,35 @@ dbDailyReport = myMongoDb["dailyReport"]
 dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
+dbWaterTank = myMongoDb['waterTank']
+dbCameraPower = myMongoDb['cameraPower']
+
+@app.route('/cameraPower', methods=['POST'])
+def cameraPower_update():
+    if request.method == 'POST':
+        data = {}
+        try:
+            cameraPower = request.json
+        except:
+            return {"cameraPower": "data-format-fail"}, status.HTTP_401_UNAUTHORIZED
+        if (cameraPower.get("cameraPower") == None or type(cameraPower.get("cameraPower")) not in [float]) return {"cameraPower": "data-fail"}, status.HTTP_401_UNAUTHORIZED
+        data["cameraPower"] = cameraPower["cameraPower"]
+        if (dbCameraPower.find_one() == None):
+            data["today"] = {}
+            data["today"]["power"] = 0.0 
+            data["today"]["date"] = str(dateTime.dateTime.now())
+            data["yesterday"] = {}
+            data["yesterday"]["power"] = 0.0 
+            data["yesterday"]["date"] = str(dateTime.dateTime.now())
+            dbCameraPower.insert_one(data)
+        else:
+            data = dbCameraPower.find_one()
+            del data["yesterday"]
+            data["yesterday"] = data["today"]
+            date["power"] = cameraPower["cameraPower"]
+            data["today"]["date"] = str(dateTime.dateTime.now())
+            dbCameraPower.update_one({}, {'$set': data})
+        return {"water_tank": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/rotationUser/<x>', methods=['GET', 'POST'])
 def rotationUser(x):
@@ -68,7 +97,10 @@ def rotationUser(x):
 
     if request.method == 'POST':
         if (int(x) < 1 and int(x) > 7): return {"rotationUser": "weekDay-fail"}, status.HTTP_401_UNAUTHORIZED
-        userList = request.json
+        try:
+            userList = request.json
+        except:
+            return {"rotationUser": "data-format-fail"}, status.HTTP_401_UNAUTHORIZED
         if (userList.get("user") == None or type(userList.get("user")) not in [list] ): return {"rotationUser": "data-fail"}, status.HTTP_401_UNAUTHORIZED
         if (dbServiceList.find_one() == None): 
                 data = {}
@@ -246,8 +278,15 @@ def daily_report():
             data["air_condiction_b"] = 0.0
             data["error"].append('air_condiction_b')
         
-        data["water_cooler"] = round(5*220*1.732*24/1000, 4)
-        data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"] + data["water_cooler"]), 4)
+        print("select AVG(Current)*220*24*1.732/1000 from Water_Tank where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+        try:
+            mysql_connection.execute("select AVG(Current)*220*24*1.732/1000 from Water_Tank where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+            data["water_tank"] = round(float(mysql_connection.fetchone()[0]), 4)
+        except:
+            data["water_tank"] = 0.0
+            data["error"].append('water_tank')
+
+        data["total"] = round(float(data["air_condiction_a"] + data["air_condiction_b"] + data["ups_a"] + data["ups_b"] + data["water_tank"]), 4)
     
         try:
             requestUrl = defaultUrl + "?Authorization=" + apiToken + "&locationName=" + locationName + "&startTime=" + data["date"] + timeStamp_a + "," + data["date"] + timeStamp_b + "," + data["date"] + timeStamp_c + "&dataTime=" + data["date"] + timeStamp_b
@@ -295,6 +334,18 @@ def power_box_update():
         else: dbPowerBox.update_one({'humi': dbPowerBox.find_one()['humi']},{'$set':data})
         return {"power_box": "data_ok"}, status.HTTP_200_OK
 
+@app.route('/water_tank')
+def water_tank_update():
+    if request.method == 'POST':
+        try:
+            request.json
+            data['current']
+            data["date"] = str(datetime.datetime.now())
+            if (dbWaterTank.find_one() == None): dbWaterTank.insert_one(data)
+            else: dbWaterTank.update_one({}, {'$set': data})
+        except:
+            return {"power_tank": "data_format_fail"}
+
 @app.route('/air_condiction/<module>/<sequence>', methods=['POST'])
 def air_condiction_update(module, sequence):
     if request.method == 'POST':
@@ -314,7 +365,7 @@ def air_condiction_update(module, sequence):
                 except:
                     return {"air-condiction-current": "data_fail"}, status.HTTP_401_UNAUTHORIZED
         except:
-            return {"air-condiction": "data_fail"}, status.HTTP_401_UNAUTHORIZED
+            return {"air-condiction": "data_format_fail"}, status.HTTP_401_UNAUTHORIZED
         data["sequence"] = sequence
         data["date"] = datetime.datetime.now()
         if (module == "environment"):

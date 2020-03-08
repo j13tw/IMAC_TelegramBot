@@ -35,6 +35,7 @@ dl303_owner = int(config['DEVICE']['DL303_OWNER'])
 et7044_owner = int(config['DEVICE']['ET7044_OWNER'])
 ups_owner = int(config['DEVICE']['UPS_OWNER'])
 air_condiction_owner = int(config['DEVICE']['AIR_CONDICTION_OWNER'])
+water_tank_owner = int(config['DEVICE']['WATER_TANK_OWNER'])
 
 # LineBot Sync
 linebotServerProtocol = config['LINE']['SERVER_PROTOCOL']
@@ -58,6 +59,7 @@ dbServiceCheck = myMongoDb["serviceCheck"]
 dbServiceList = myMongoDb["serviceList"]
 dbRotationUser = myMongoDb["rotationUser"]
 dbDeviceCount = myMongoDb['deviceCount']
+dbWaterTank = myMongoDb['waterTank']
 dbCameraPower = myMongoDb['cameraPower']
 
 # 懶人遙控器鍵盤定義
@@ -67,6 +69,43 @@ device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '�
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86-PC', 'Server Board', 'GPU Card', '離開設定狀態']
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
+
+# collect the AI CV Image recognition
+def getCameraPower():
+    data = "*[AI 辨識電錶 設備狀態回報]*\n"
+    if (dbCameraPower.find_one() != None):
+        data += "[[今日辨識結果]]\n"
+        data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date'])), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
+        data += "`統計度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power'])))
+        data += "[[上次辨識結果]]\n"
+        data += "`統計度數: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date'])), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
+        data += "`更新時間: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['yesterday']['power'])))
+    else:
+        data += "[[今日辨識結果]]"
+        data += "`更新時間: 未知`\n"
+        data += "`統計度數: None 度`\n"
+        data += "[[上次辨識結果]]"
+        data += "`統計度數: 未知`\n"
+        data += "`更新時間: None 度`\n"
+        tagOwner = 1
+
+# collect the water tank current in mLab
+def getWaterTank():
+    data = "*[冷氣水塔 設備狀態回報]*\n"
+    tagOwner = 0
+    brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
+    if (dbWaterTank.find_one() != None):
+        data += "`電流: {0:>6.2f} A`\n".format(round(float(dbWaterTank.find_one()['current']), 2)
+        if (dbWaterTank.find_one()['date'] < brokenTime): tagOwner = 1
+    else:
+        data += "`電流: None A`\n"
+        tagOwner = 1
+
+    if (tagOwner == 1): 
+        data += "----------------------------------\n"
+        data += "*[設備資料超時!]*\t"
+        data += "[維護人員](tg://user?id="+ str(water_tank_owner) + ")\n"
+    return data  
 
 # collect the smart-data-center number of the device
 def getDeviceCount():
@@ -170,6 +209,7 @@ def getDailyReport():
     broken = 0
     tagOwner = 0
     dailyReport = dbDailyReport.find_one()
+    cameraPower = dbCameraPower.find_one()
     brokenTime = str(datetime.datetime.now()).split(" ")[0]
     if (dailyReport != None):
         if (str(dailyReport["date"]) == str(brokenTime)):
@@ -194,8 +234,11 @@ def getDailyReport():
                 data += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
                 data += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
                 data += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
-                data += "`水塔功耗(預估): {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_cooler"]), float(float(dailyReport["water_cooler"])/float(dailyReport["total"])*100.0))
+                data += "`冷氣水塔功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_tank"]), float(float(dailyReport["water_tank"])/float(dailyReport["total"])*100.0))
                 data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
+            data += "`電表功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
+            data += "`統計區間: " + cameraPower['today']['date'] + "~" + cameraPower['yesterday']['date']+ "`\n"
+            
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
             broken = 1
@@ -596,6 +639,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('ET7044 工業控制器', callback_data = "device:" + "ET7044")],
             [InlineKeyboardButton('冷氣空調主機_A', callback_data = "device:" + "冷氣_A")],
             [InlineKeyboardButton('冷氣空調主機_B', callback_data = "device:" + "冷氣_B")],
+            [InlineKeyboardButton('冷氣空調-冷卻水塔', callback_data = "device:" + "水塔")],
             [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "device:" + "UPS_B")],
             [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "device:" + "UPS_B")],
             [InlineKeyboardButton('全部列出', callback_data = "device:" + "全部列出")]
@@ -642,6 +686,7 @@ def reply_handler(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('冷氣空調主機_A', callback_data = "current:" + "冷氣_A")],
             [InlineKeyboardButton('冷氣空調主機_B', callback_data = "current:" + "冷氣_B")],
+            [InlineKeyboardButton('冷氣空調-冷卻水塔', callback_data = "current:" + "水塔")],
             [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "current:" + "UPS_B")],
             [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "current:" + "UPS_B")],
             [InlineKeyboardButton('全部列出', callback_data = "current:" + "全部列出")]
@@ -649,6 +694,9 @@ def reply_handler(bot, update):
         return
         respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     
+    elif (text in ["水塔", "水塔狀態"]):
+        respText = getWaterTank()
+
     # UPS 功能 回覆
     elif (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態", 'Ups']):
         respText = '請選擇 UPS～'
@@ -662,11 +710,12 @@ def reply_handler(bot, update):
     elif (text in ['UPS_B', 'UPSB狀態', 'upsb狀態', 'UPSB', 'upsb', 'UpsB', 'Upsb']): respText = getUps("b", "all")
     
     # 冷氣功能 回覆
-    elif (text == '冷氣狀態' or text == '冷氣'): 
+    elif (text in ['冷氣狀態', '冷氣']): 
         respText = '請選擇 冷氣～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('冷氣_A', callback_data = "冷氣:" + "冷氣_A")],
             [InlineKeyboardButton('冷氣_B', callback_data = "冷氣:" + "冷氣_B")],
+            [InlineKeyboardButton('冷氣-水塔', callback_data = "冷氣:" + "水塔")],
             [InlineKeyboardButton('全部列出', callback_data = "冷氣:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
@@ -703,7 +752,7 @@ def reply_handler(bot, update):
                 respText += getServiceList()
         
         # 每日通報
-        if (text == "機房輪值" or text == "輪值"): respText = getRotationUser()
+        if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
 
         # 設定機房資訊
         if (text == "設定機房\n設備數量"):
@@ -774,7 +823,7 @@ def listCommand(bot, update):
     respText += "`2. 遠端控制`\n"
     respText += "`3. 進風扇狀態、加濕器狀態、排風扇狀態`\n"
     respText += "[[冷氣 空調主機 (A/B)]]\n"
-    respText += "`1. 冷氣、冷氣狀態`\n"
+    respText += "`1. 冷氣、冷氣狀態、水塔、水塔狀態`\n"
     respText += "`2. 電流、溫度、濕度、溫濕度`\n"
     respText += "`3. 冷氣_A、冷氣_a、冷氣A、冷氣a`\n"
     respText += "`4. 冷氣a狀態、冷氣A狀態`\n"
@@ -807,9 +856,10 @@ def device_select(bot, update):
     elif (device == "ET7044"): respText = getEt7044("all")
     elif (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "all")
+    elif (device == "水塔"): respText = getWaterTank()
     elif (device == "UPS_A"): respText = getUps("a", "all")
     elif (device == "UPS_B"): respText = getUps("b", "all")
-    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getUps("a", "all") + '\n' + getUps("b", "all")
+    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank() + '\n' + getUps("a", "all") + '\n' + getUps("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # 溫度 按鈕鍵盤 callback
@@ -837,9 +887,10 @@ def current_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "current")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "current")
+    elif (device == "水塔"): respText = getWaterTank()
     elif (device == "UPS_A"): respText = getUps("a", "current")
     elif (device == "UPS_B"): respText = getUps("b", "current")
-    else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
+    else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getWaterTank() + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # UPS 按鈕鍵盤 callback
@@ -855,7 +906,8 @@ def air_condiction_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "all")
-    else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all")
+    elif (device == "水塔"): respText = getWaterTank()
+    else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all") + "\n" + getWaterTank()
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # ET-7044 (選設備) 按鈕鍵盤 callback
