@@ -242,7 +242,7 @@ def getDailyReport():
             data += "[[昨日電錶功耗統計]]\n"
             data += "`電錶功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
             data += "`電錶統計區間: `\n"
-            data += "`" + str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0] + " ~ " + str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0] + "`\n"
+            data += "`" + str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(" ")[0] + " ~ " + str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(" ")[0] + "`\n"
             
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
