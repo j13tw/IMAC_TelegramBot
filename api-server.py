@@ -73,7 +73,7 @@ def cameraPower_update():
             date["power"] = cameraPower["cameraPower"]
             data["today"]["date"] = str(dateTime.dateTime.now())
             dbCameraPower.update_one({}, {'$set': data})
-        return {"water_tank": "data_ok"}, status.HTTP_200_OK
+        return {"cameraPower": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/rotationUser/<x>', methods=['GET', 'POST'])
 def rotationUser(x):
@@ -333,7 +333,7 @@ def power_box_update():
         else: dbPowerBox.update_one({'humi': dbPowerBox.find_one()['humi']},{'$set':data})
         return {"power_box": "data_ok"}, status.HTTP_200_OK
 
-@app.route('/water_tank')
+@app.route('/water_tank', methods=['POST'])
 def water_tank_update():
     if request.method == 'POST':
         try:

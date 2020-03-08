@@ -8,7 +8,7 @@ broker_port = 1883
 
 http_server_protocol = "http"
 #http_server_ip = "10.20.0.74"
-http_server_ip = "10.20.0.74"
+http_server_ip = "127.0.0.1"
 http_server_port = 5000
 
 mLab_et7044_history = [True, False, False, False, False, False, False, False]
@@ -99,7 +99,7 @@ def on_message(client, userdata, msg):
 
     if (msg.topic == "waterTank"):
         try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/ups/" + moduleName, json=json.loads(data))
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/water_tank/" + moduleName, json=json.loads(data))
         except:
             pass
 
