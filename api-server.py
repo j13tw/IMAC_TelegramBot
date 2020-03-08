@@ -71,10 +71,10 @@ def cameraPower_update():
             data = dbCameraPower.find_one()
             del data["yesterday"]
             data["yesterday"] = data["today"]
+            data["yesterday-1"] = data["today"]
             data["today"]["power"] = round(float(cameraPower["cameraPower"]), 2)
             data["today"]["date"] = str(datetime.datetime.now())
             dbCameraPower.update_one({}, {'$set': data})
-        print(data)
         return {"cameraPower": "data_ok"}, status.HTTP_200_OK
 
 @app.route('/rotationUser/<x>', methods=['GET', 'POST'])
