@@ -239,8 +239,7 @@ def getDailyReport():
             data += "[[昨日電錶功耗統計]]\n"
             data += "`電錶功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
             data += "`電錶統計區間: `\n"
-            data += "`開始時間: " + str(cameraPower['today']['date']).split(" ")[0] + "`\n"
-            data += "`結束時間: " + str(cameraPower['yesterday']['date']).split(" ")[0] + "`\n"
+            data += "`"str(cameraPower['today']['date']).split(" ")[0] + " ~ " + str(cameraPower['yesterday']['date']).split(" ")[0] + "`\n"
             
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
