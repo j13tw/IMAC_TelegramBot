@@ -75,18 +75,22 @@ def getCameraPower():
     data = "*[AI 辨識電錶 狀態回報]*\n"
     if (dbCameraPower.find_one() != None):
         data += "[[今日辨識結果]]\n"
+        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power'])))
         data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
-        data += "`統計度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power'])))
         data += "[[上次辨識結果]]\n"
-        data += "`統計度數: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
-        data += "`更新時間: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['yesterday']['power'])))
+        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['yesterday']['power'])))
+        data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
+        data += "[[消耗度數統計]]\n"
+        data += "`統計度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power']) - float(dbCameraPower.find_one()['yesterday']['power'])))
     else:
         data += "[[今日辨識結果]]"
+        data += "`辨識度數: None 度`\n"
         data += "`更新時間: 未知`\n"
-        data += "`統計度數: None 度`\n"
         data += "[[上次辨識結果]]"
-        data += "`統計度數: 未知`\n"
+        data += "`辨識度數: 未知`\n"
         data += "`更新時間: None 度`\n"
+        data += "[[消耗度數統計]]\n"
+        data += "`統計度數: None 度`\n"
     return data
 
 # collect the water tank current in mLab
