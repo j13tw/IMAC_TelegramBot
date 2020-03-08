@@ -71,7 +71,7 @@ def cameraPower_update():
             data = dbCameraPower.find_one()
             del data["yesterday"]
             data["yesterday"] = data["today"]
-            date["power"] = cameraPower["cameraPower"]
+            data["power"] = cameraPower["cameraPower"]
             data["today"]["date"] = str(datetime.datetime.now())
             dbCameraPower.update_one({}, {'$set': data})
         return {"cameraPower": "data_ok"}, status.HTTP_200_OK
