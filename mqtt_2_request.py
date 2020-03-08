@@ -99,7 +99,7 @@ def on_message(client, userdata, msg):
 
     if (msg.topic == "waterTank"):
         try:
-            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/water_tank/" + moduleName, json=json.loads(data))
+            requests.post(http_server_protocol + "://" + http_server_ip + ":" + str(http_server_port) + "/water_tank/", json=json.loads(data))
         except:
             pass
 
