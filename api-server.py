@@ -57,7 +57,7 @@ def cameraPower_update():
             cameraPower = request.json
         except:
             return {"cameraPower": "data-format-fail"}, status.HTTP_401_UNAUTHORIZED
-        if (cameraPower.get("cameraPower") == None or type(cameraPower.get("cameraPower")) not in [float]) return {"cameraPower": "data-fail"}, status.HTTP_401_UNAUTHORIZED
+        if (cameraPower.get("cameraPower") == None or type(cameraPower.get("cameraPower")) not in [float]): return {"cameraPower": "data-fail"}, status.HTTP_401_UNAUTHORIZED
         if (dbCameraPower.find_one() == None):
             data["today"] = {}
             data["today"]["power"] = cameraPower["cameraPower"] 
