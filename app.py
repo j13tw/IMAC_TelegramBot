@@ -75,13 +75,13 @@ def getCameraPower():
     data = "*[AI 辨識電錶 狀態回報]*\n"
     if (dbCameraPower.find_one() != None):
         data += "[[今日辨識結果]]\n"
-        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power'])))
+        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power']), 2))
         data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['today']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
         data += "[[上次辨識結果]]\n"
-        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['yesterday']['power'])))
+        data += "`辨識度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['yesterday']['power']), 2))
         data += "`更新時間: {0:>s}`\n".format(str(datetime.datetime.strptime(str(dbCameraPower.find_one()['yesterday']['date']), '%Y-%m-%d %H:%M:%S.%f') + datetime.timedelta(hours=8)).split(".")[0])
         data += "[[消耗度數統計]]\n"
-        data += "`統計度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power']) - float(dbCameraPower.find_one()['yesterday']['power'])))
+        data += "`統計度數: {0:>6.2f} 度`\n".format(round(float(dbCameraPower.find_one()['today']['power']) - float(dbCameraPower.find_one()['yesterday']['power']), 2))
     else:
         data += "[[今日辨識結果]]"
         data += "`辨識度數: None 度`\n"
@@ -205,7 +205,7 @@ def getServiceCheck():
     if (tagOwner == 1):
         data += "----------------------------------\n"
         data += "*[交接服務檢測資料異常!]*\t"
-        if (broken != 1): data += "*異常服務:* _" + str(checkService["error"]) + "_\n"
+        if (broken != 1): data += "*異常服務:* _" + str(serviceStatus["error"]) + "_\n"
     return data
 
 # collect the daily report data (weather / power usage) in mLab db.
