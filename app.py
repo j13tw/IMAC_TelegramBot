@@ -95,7 +95,7 @@ def getWaterTank():
     tagOwner = 0
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     if (dbWaterTank.find_one() != None):
-        data += "`電流: {0:>6.2f} A`\n".format(round(float(dbWaterTank.find_one()['current']), 2)
+        data += "`電流: {0:>6.2f} A`\n".format(round(float(dbWaterTank.find_one()['current']), 2))
         if (dbWaterTank.find_one()['date'] < brokenTime): tagOwner = 1
     else:
         data += "`電流: None A`\n"
