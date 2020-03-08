@@ -226,7 +226,7 @@ def getDailyReport():
                 data += "`室外溫度:{0:>5.1f} 度`\n".format(int(dailyReport["T"]))
                 data += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
                 data += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
-            data += "[[昨日功耗統計]]\n"
+            data += "[[昨日設備功耗統計]]\n"
             if ("power" in dailyReport["error"]): 
                 data += "`快取失敗`\n"
             else:
@@ -236,8 +236,11 @@ def getDailyReport():
                 data += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
                 data += "`冷氣水塔功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_tank"]), float(float(dailyReport["water_tank"])/float(dailyReport["total"])*100.0))
                 data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
-            data += "`電表功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
-            data += "`統計區間: \n" + str(cameraPower['today']['date']).split(".")[0] + "\n~" + str(cameraPower['yesterday']['date']).split(".")[0] + "`\n"
+            data += "[[昨日電錶功耗統計]]\n"
+            data += "`電錶功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
+            data += "`電錶統計區間: `\n"
+            data += "`開始時間: " + str(cameraPower['today']['date']).split(" ")[0] + "`\n"
+            data += "`結束時間: " + str(cameraPower['yesterday']['date']).split(" ")[0] + "`\n"
             
             if (len(dailyReport["error"]) > 0): tagOwner = 1
         else:
