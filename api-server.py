@@ -337,7 +337,7 @@ def power_box_update():
 def water_tank_update():
     if request.method == 'POST':
         try:
-            request.json
+            data = request.json
             data['current']
             data["date"] = str(datetime.datetime.now())
             if (dbWaterTank.find_one() == None): dbWaterTank.insert_one(data)
