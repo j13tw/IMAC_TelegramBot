@@ -580,9 +580,9 @@ def reply_handler(bot, update):
 
     settingMode = dbDeviceCount.find_one()['setting']
 
-    # print("settingMode = ", settingMode)
-    # print("data = " + text)
-    # print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
+    print("settingMode = ", settingMode)
+    print("data = " + text)
+    print(update.message.chat_id == devUser_id or update.message.chat_id == group_id)
 
     if (settingMode == True and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         settingObject = dbDeviceCount.find_one()['settingObject']
