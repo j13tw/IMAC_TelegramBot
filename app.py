@@ -97,7 +97,7 @@ def getCameraPower():
 def getWaterTank(mode):
     if mode == "all":
         data = "*[冷氣水塔 設備狀態回報]*\n"
-    elif: mode == "current"
+    elif mode == "current":
         data = "*[冷氣水塔]*\n"
     tagOwner = 0
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
