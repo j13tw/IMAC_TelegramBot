@@ -94,8 +94,11 @@ def getCameraPower():
     return data
 
 # collect the water tank current in mLab
-def getWaterTank():
-    data = "*[冷氣水塔 設備狀態回報]*\n"
+def getWaterTank(mode):
+    if mode == "all":
+        data = "*[冷氣水塔 設備狀態回報]*\n"
+    elif: mode == "current"
+        data = "*[冷氣水塔]*\n"
     tagOwner = 0
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     if (dbWaterTank.find_one() != None):
@@ -702,7 +705,7 @@ def reply_handler(bot, update):
     
     # 冷氣水塔 回覆
     elif (text in ["水塔", "水塔狀態"]):
-        respText = getWaterTank()
+        respText = getWaterTank("all")
 
     # AI 辨識點錶度數
     elif (text in ["電表", "電錶", "電表度數", "電錶度數", "電表狀態", "電錶狀態", "智慧電表", "智慧電錶"]):
@@ -870,11 +873,11 @@ def device_select(bot, update):
     elif (device == "ET7044"): respText = getEt7044("all")
     elif (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "all")
-    elif (device == "水塔"): respText = getWaterTank()
+    elif (device == "水塔"): respText = getWaterTank("all")
     elif (device == "UPS_A"): respText = getUps("a", "all")
     elif (device == "UPS_B"): respText = getUps("b", "all")
     elif (device == "電錶"): respText = getCameraPower()
-    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank() + '\n' + getUps("a", "all") + '\n' + getUps("b", "all") + '\n' + getCameraPower()
+    else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank("all") + '\n' + getUps("a", "all") + '\n' + getUps("b", "all") + '\n' + getCameraPower()
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # 溫度 按鈕鍵盤 callback
@@ -902,10 +905,10 @@ def current_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "current")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "current")
-    elif (device == "水塔"): respText = getWaterTank()
+    elif (device == "水塔"): respText = getWaterTank("current")
     elif (device == "UPS_A"): respText = getUps("a", "current")
     elif (device == "UPS_B"): respText = getUps("b", "current")
-    else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getWaterTank() + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
+    else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getWaterTank("current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # UPS 按鈕鍵盤 callback
@@ -921,8 +924,8 @@ def air_condiction_select(bot, update):
     device = update.callback_query.data.split(':')[1]
     if (device == "冷氣_A"): respText = getAirCondiction("a", "all")
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "all")
-    elif (device == "水塔"): respText = getWaterTank()
-    else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all") + "\n" + getWaterTank()
+    elif (device == "水塔"): respText = getWaterTank("all")
+    else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all") + "\n" + getWaterTank("all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
 
 # ET-7044 (選設備) 按鈕鍵盤 callback
