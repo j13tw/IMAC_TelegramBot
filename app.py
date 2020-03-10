@@ -693,7 +693,7 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('冷氣空調主機_A', callback_data = "current:" + "冷氣_A")],
             [InlineKeyboardButton('冷氣空調主機_B', callback_data = "current:" + "冷氣_B")],
             [InlineKeyboardButton('冷氣空調-冷卻水塔', callback_data = "current:" + "水塔")],
-            [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "current:" + "UPS_B")],
+            [InlineKeyboardButton('UPS不斷電系統_A', callback_data = "current:" + "UPS_A")],
             [InlineKeyboardButton('UPS不斷電系統_B', callback_data = "current:" + "UPS_B")],
             [InlineKeyboardButton('全部列出', callback_data = "current:" + "全部列出")]
         ]), parse_mode="Markdown")
