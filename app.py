@@ -805,6 +805,7 @@ def reply_handler(bot, update):
     #    update.message.reply_text(respText)
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         # update.message.reply_markdown(respText)
+    return
 
 # Command "/satrt" callback. 
 def addBot(bot, update):
@@ -812,6 +813,7 @@ def addBot(bot, update):
     respText += "[[快速使用]]\t`請輸入 \"輔助鍵盤\"。`\n"
     respText += "[[進階指令]]\t`請輸入 \"/command\"。`"
     bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # Command "/command" callback. 
 def listCommand(bot, update):
@@ -853,6 +855,7 @@ def listCommand(bot, update):
     respText += "`4. UPSA、upsa、UpsA、Upsa`\n"
     respText += "`5. UPS_A、UPSA狀態、upsa狀態`\n"
     bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # 每日通報 按鈕鍵盤 callback
 def daily_select(bot, update):
@@ -879,6 +882,7 @@ def device_select(bot, update):
     elif (device == "電錶"): respText = getCameraPower()
     else: respText = getDl303("all") + '\n' + getEt7044("all") + '\n' + getAirCondiction("a", "all") + '\n' + getAirCondiction("b", "all") + '\n' + getWaterTank("all") + '\n' + getUps("a", "all") + '\n' + getUps("b", "all") + '\n' + getCameraPower()
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # 溫度 按鈕鍵盤 callback
 def temp_select(bot, update):
@@ -890,6 +894,7 @@ def temp_select(bot, update):
     elif (device == "UPS_B"): respText = getUps("b", "temp")
     else: respText = getDl303("tc") + "\n" + getAirCondiction("a", "temp") + "\n" + getAirCondiction("b", "temp") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # 濕度 按鈕鍵盤 callback
 def humi_select(bot, update):
@@ -899,6 +904,7 @@ def humi_select(bot, update):
     elif (device == "冷氣_B"): respText = getAirCondiction("b", "humi")
     else: respText = getDl303("rh") + "\n" + getAirCondiction("a", "humi") + "\n" + getAirCondiction("b", "humi")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # 電流 按鈕鍵盤 callback
 def current_select(bot, update):
@@ -910,6 +916,7 @@ def current_select(bot, update):
     elif (device == "UPS_B"): respText = getUps("b", "current")
     else: respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getWaterTank("current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # UPS 按鈕鍵盤 callback
 def ups_select(bot, update):
@@ -918,6 +925,7 @@ def ups_select(bot, update):
     elif (device == "UPS_B"): respText = getUps("b", "all")
     else: respText = getUps("a", "all") + "\n" + getUps("b", "all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # 冷氣 按鈕鍵盤 callback
 def air_condiction_select(bot, update):
@@ -927,6 +935,7 @@ def air_condiction_select(bot, update):
     elif (device == "水塔"): respText = getWaterTank("all")
     else: respText = getAirCondiction("a", "all") + "\n" + getAirCondiction("b", "all") + "\n" + getWaterTank("all")
     bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, parse_mode="Markdown")
+    return
 
 # ET-7044 (選設備) 按鈕鍵盤 callback
 def et7044_select(bot, update):
