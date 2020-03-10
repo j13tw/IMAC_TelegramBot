@@ -95,11 +95,11 @@ def getCameraPower():
 
 # collect the water tank current in mLab
 def getWaterTank(mode):
-    if mode == "all":
-        data = "*[冷氣水塔 設備狀態回報]*\n"
-    elif mode == "current":
-        data = "*[冷氣水塔]*\n"
     tagOwner = 0
+    if (mode == "all"):
+        data = "*[冷氣水塔 設備狀態回報]*\n"
+    elif (mode == "current"):
+        data = "*[冷氣水塔]*\n"
     brokenTime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
     if (dbWaterTank.find_one() != None):
         data += "`電流: {0:>6.2f} A`\n".format(round(float(dbWaterTank.find_one()['current']), 2))
