@@ -779,12 +779,11 @@ def reply_handler(bot, update):
             respText += "----------------------------------\n"
             respText += '`機房資訊 設定模式開啟～`'
             dbDeviceCount.update_one({}, {'$set': {'setting': True}})
-            bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
+            bot.sendPhoto(chat_id=update.message.chat_id, caption=respText, reply_markup = ReplyKeyboardMarkup([
                 [str(s) for s in setting_list[0:3]],
                 [str(s) for s in setting_list[3:6]],
                 [str(s) for s in setting_list[6:9]]
-            ], resize_keyboard=True), parse_mode="Markdown")
-            bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+            ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
             return
     
     elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"]): 
@@ -865,13 +864,12 @@ def listCommand(bot, update):
 # 每日通報 按鈕鍵盤 callback
 def daily_select(bot, update):
     respText = '輔助鍵盤功能已開啟～'
-    bot.send_message(chat_id=update.callback_query.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
-        [str(s) for s in device_list[0:4]],
-        [str(s) for s in device_list[4:8]],
-        [str(s) for s in device_list[8:12]],
-        [str(s) for s in device_list[12:16]],
-    ], resize_keyboard=True), parse_mode="Markdown")
-    bot.sendPhoto(chat_id=update.callback_query.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+    bot.sendPhoto(chat_id=update.callback_query.message.chat_id, caption=respText, reply_markup=ReplyKeyboardMarkup([
+            [str(s) for s in device_list[0:4]],
+            [str(s) for s in device_list[4:8]],
+            [str(s) for s in device_list[8:12]],
+            [str(s) for s in device_list[12:16]]
+        ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
     return
 
 # 環控裝置 按鈕鍵盤 callback
