@@ -623,13 +623,18 @@ def reply_handler(bot, update):
     # 開啟 懶人遙控器鍵盤
     elif (text == '輔助鍵盤'):
         respText = '輔助鍵盤功能已開啟～'
-        bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = ReplyKeyboardMarkup([
+        # bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup=ReplyKeyboardMarkup([
+        #     [str(s) for s in device_list[0:4]],
+        #     [str(s) for s in device_list[4:8]],
+        #     [str(s) for s in device_list[8:12]],
+        #     [str(s) for s in device_list[12:16]]
+        # ], resize_keyboard=True), parse_mode="Markdown")
+        bot.sendPhoto(chat_id=update.message.chat_id, caption=respText, reply_markup=ReplyKeyboardMarkup([
             [str(s) for s in device_list[0:4]],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]],
             [str(s) for s in device_list[12:16]]
-        ], resize_keyboard=True), parse_mode="Markdown")
-        bot.sendPhoto(chat_id=update.message.chat_id, photo=open('./keyboard.jpg', 'rb'))
+        ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
         return
 
     
