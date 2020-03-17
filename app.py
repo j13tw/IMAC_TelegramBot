@@ -227,8 +227,8 @@ def getDailyReport():
                 data += "`天氣狀態:\t{0:s}`\n".format(dailyReport["Wx"])
                 data += "`舒適指數:\t{0:s}`\n".format(dailyReport["CI"])
                 data += "`降雨機率:{0:>5d} %`\n".format(int(dailyReport["PoP12h"]))
-                data += "`陣風風向:\t{0:s}`\n".format(dailyReport["WD"])
-                data += "`平均風速:{0:>5d} 公尺/秒`\n".format(int(dailyReport["WS"]))
+                # data += "`陣風風向:\t{0:s}`\n".format(dailyReport["WD"])
+                # data += "`平均風速:{0:>5d} 公尺/秒`\n".format(int(dailyReport["WS"]))
                 data += "`室外溫度:{0:>5.1f} 度`\n".format(int(dailyReport["T"]))
                 data += "`體感溫度:{0:>5.1f} 度`\n".format(int(dailyReport["AT"]))
                 data += "`室外濕度:{0:>5d} %`\n".format(int(dailyReport["RH"]))
@@ -323,7 +323,7 @@ def serviceCheck_update():
 def dailyReport_update():
     if request.method == 'GET':
         respText = getDailyReport()
-        bot.send_message(chat_id=devUser_id, text=respText, reply_markup = InlineKeyboardMarkup([
+        bot.send_message(chat_id=group_id, text=respText, reply_markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton("功能列表", callback_data = "daily")]
             ]), parse_mode="Markdown")
         return {"dailyReport": "data_ok"}, status.HTTP_200_OK

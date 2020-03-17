@@ -248,7 +248,7 @@ def daily_report():
         except:
             data["error"].append('power')
 
-        print("select AVG(Output_Watt)*24+(220.0*1.5*24/1000) from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+        print("select AVG(Output_Watt)*24+(220.0*1.0*24/1000) from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
         try:
             mysql_connection.execute("select AVG(Output_Watt)*24+(220.0*1.5*24/1000) from UPS_A where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["ups_a"] = round(float(mysql_connection.fetchone()[0]), 4)
@@ -256,7 +256,7 @@ def daily_report():
             data["ups_a"] = 0.0
             data["error"].append('ups_a')
         
-        print("select AVG(Output_Watt)*24+(220.0*1.5*24/1000) from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
+        print("select AVG(Output_Watt)*24+(220.0*1.0*24/1000) from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
         try:
             mysql_connection.execute("select AVG(Output_Watt)*24+(220.0*2.0*24/1000) from UPS_B where Time_Stamp between \"" + yesterdayDate + " 16:00:00\" and \"" + todayDate + " 16:00:00\";")
             data["ups_b"] = round(float(mysql_connection.fetchone()[0]), 4)
