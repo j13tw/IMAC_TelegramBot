@@ -809,7 +809,9 @@ def reply_handler(bot, update):
         return
 
     # 機房 Dashboard 服務檢測 回覆            
-    elif (text in ['服務狀態', '\U0001F468\U0000200D\U0001F4BB\n服務狀態', '服務檢測']): respText = getServiceCheck()
+    elif (text in ['服務狀態', '\U0001F468\U0000200D\U0001F4BB\n服務狀態', '服務檢測']): 
+        respText = getServiceCheck()
+        print(respText)
 
     #    print(dir(update.message))
     if (respText != ""): 
