@@ -63,7 +63,9 @@ dbWaterTank = myMongoDb['waterTank']
 dbCameraPower = myMongoDb['cameraPower']
 
 # 懶人遙控器鍵盤定義
-device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房\n設備數量', '機房資訊']
+device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房', '機房資訊']
+# 懶人遙控器 Emoji 定義
+emoji_list = ["\U0001F321", "\U0001F4A7", "\U00002601", "\U000026A1", '', '', '', "\U00002744", "\U0001F39B" ,"\U0001F579", "\U0001F4C6", "\U0001F4CB", "\U0001F468" + "\U0001F4BB", "\U0001F46C", "\U00002699", "\U0001F5A5"]
 
 # 設定機房資訊定義
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86-PC', 'Server Board', 'GPU Card', '離開設定狀態']
@@ -630,10 +632,10 @@ def reply_handler(bot, update):
         #     [str(s) for s in device_list[12:16]]
         # ], resize_keyboard=True), parse_mode="Markdown")
         bot.sendPhoto(chat_id=update.message.chat_id, caption=respText, reply_markup=ReplyKeyboardMarkup([
-            [str(s) for s in device_list[0:4]],
-            [str(s) for s in device_list[4:8]],
-            [str(s) for s in device_list[8:12]],
-            [str(s) for s in device_list[12:16]]
+            [str(s + e) for s, e in zip(emoji_list[0:4], device_list[0:4])],
+            [str(s + e) for s, e in zip(emoji_list[4:8], device_list[4:8])],
+            [str(s + e) for s, e in zip(emoji_list[8:12], device_list[8:12])],
+            [str(s + e) for s, e in zip(emoji_list[12:16], device_list[12:16])]
         ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
         return
 
@@ -809,14 +811,6 @@ def reply_handler(bot, update):
     # 機房 Dashboard 服務檢測 回覆            
     elif (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
 
-    elif (text == "測試"):
-        data = "*[測試功能]*\n"
-        bot.sendPhoto(chat_id=update.message.chat_id, caption=data, reply_markup=ReplyKeyboardMarkup([
-                ["\U0001F600", "\U0001F600" + "測試"],
-                ["![](https://i.imgur.com/ajMBl1b.jpg)"],
-            ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
-        return
-
     #    print(dir(update.message))
     if (respText != ""): 
     #    update.message.reply_text(respText)
@@ -878,7 +872,7 @@ def listCommand(bot, update):
 def daily_select(bot, update):
     respText = '輔助鍵盤功能已開啟～'
     bot.sendPhoto(chat_id=update.callback_query.message.chat_id, caption=respText, reply_markup=ReplyKeyboardMarkup([
-            [str(s) for s in device_list[0:4]],
+            [str(s) for s in device_list[0:4] ],
             [str(s) for s in device_list[4:8]],
             [str(s) for s in device_list[8:12]],
             [str(s) for s in device_list[12:16]]
