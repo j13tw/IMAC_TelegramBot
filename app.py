@@ -70,14 +70,6 @@ setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SD
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
-# 測試模組
-def testService():
-    data = "*[測試功能]*\n"
-    bot.sendPhoto(chat_id=update.message.chat_id, caption=data, reply_markup=ReplyKeyboardMarkup([
-            ["\U0001F600", "\U0001F600" + "測試"],
-            ["![](https://i.imgur.com/ajMBl1b.jpg)"],
-        ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
-
 # collect the AI CV Image recognition
 def getCameraPower():
     data = "*[AI 辨識電錶 狀態回報]*\n"
@@ -818,7 +810,11 @@ def reply_handler(bot, update):
     elif (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
 
     elif (text == "測試"):
-        testService()
+        data = "*[測試功能]*\n"
+        bot.sendPhoto(chat_id=update.message.chat_id, caption=data, reply_markup=ReplyKeyboardMarkup([
+                ["\U0001F600", "\U0001F600" + "測試"],
+                ["![](https://i.imgur.com/ajMBl1b.jpg)"],
+            ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
         return
 
     #    print(dir(update.message))
