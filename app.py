@@ -74,7 +74,7 @@ setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 def testService():
     data = "*[測試功能]*\n"
     bot.sendPhoto(chat_id=update.message.chat_id, caption=data, reply_markup=ReplyKeyboardMarkup([
-            ["\U0001F600", "\U0001F600" + "測試", "<img src="https://i.imgur.com/ajMBl1b.jpg" style="zoom:10%" />"],
+            ["\U0001F600", "\U0001F600" + "測試"],
             ["![](https://i.imgur.com/ajMBl1b.jpg)"],
         ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
 
