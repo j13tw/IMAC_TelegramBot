@@ -65,7 +65,7 @@ dbCameraPower = myMongoDb['cameraPower']
 # 懶人遙控器鍵盤定義
 device_list = ['溫度', '濕度', 'CO2', '電流', 'DL303', 'ET7044', 'UPS', '冷氣', '環控設備' ,'遠端控制', '每日通報', '服務列表', '服務狀態', '機房輪值', '設定機房', '機房資訊']
 # 懶人遙控器 Emoji 定義
-emoji_list = ["\U0001F321", "\U0001F4A7", "\U00002601", "\U000026A1", '', '', '', "\U00002744", "\U0001F39B" ,"\U0001F579", "\U0001F4C6", "\U0001F4CB", "\U0001F468" + "\U0000200D" + "\U0001F4BB", "\U0001F46C", "\U00002699", "\U0001F5A5"]
+emoji_list = ["\U0001F321", "\U0001F4A7", "\U00002601", "\U000026A1", '', '', "\U0001F50B", "\U00002744", "\U0001F39B" ,"\U0001F579", "\U0001F4C6", "\U0001F4CB", "\U0001F468" + "\U0000200D" + "\U0001F4BB", "\U0001F46C", "\U00002699", "\U0001F5A5"]
 
 # 設定機房資訊定義
 setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SDN Switch', 'x86-PC', 'Server Board', 'GPU Card', '離開設定狀態']
@@ -718,7 +718,7 @@ def reply_handler(bot, update):
         respText = getCameraPower()
 
     # UPS 功能 回覆
-    elif (text in ['UPS狀態', 'ups狀態', 'UPS', 'ups', "電源狀態", 'Ups']):
+    elif (text in ['UPS狀態', 'ups狀態', 'UPS', "\U0001F50BUPS", 'ups', "電源狀態", 'Ups']):
         respText = '請選擇 UPS～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('UPS_A', callback_data = "UPS:" + "UPS_A")],
