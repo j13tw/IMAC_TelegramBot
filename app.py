@@ -747,7 +747,7 @@ def reply_handler(bot, update):
         respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    elif (text in ["遠端控制", "\U0001F579\n遠端控制", "機房輪值", "\U0001F46C\n機房輪值", "輪值", "服務列表", "\U0001F4CB\n服務列表", "設定機房", "\U00002699\n設定機房"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    elif (text in ["遠端控制", "\U0001F579\n遠端控制", "機房輪值", "\U0001F46C\n機房輪值", "輪值", "服務列表", "\U0001F4CB\n服務列表", "設定機房", "\U00002699\n設定機房"] and (update.message.chat_id == devUser_id or update.message.chat_id == group_id)):
         # 遠端控制
         if (text in ['遠端控制', "\U0001F579\n遠端控制"]): 
             respText = '請選擇所需控制設備～'
