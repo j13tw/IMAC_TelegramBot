@@ -688,7 +688,7 @@ def reply_handler(bot, update):
         
     elif (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     elif (text == '露點溫度'): respText = getDl303("dc")
-    elif (text in ["CO2", "\U00002601CO2"): respText = getDl303("co2")
+    elif (text in ["CO2", "\U00002601CO2"]): respText = getDl303("co2")
 
     # ET7044 狀態 回復
     elif (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
