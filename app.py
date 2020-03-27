@@ -70,6 +70,14 @@ setting_list = ['vCPU (Core)', 'RAM (GB)', 'Storage (TB)', 'General Switch', 'SD
 setting_json_list = ['cpu', 'ram', 'storage', 'switch', 'sdn', 'pc', 'server','gpu']
 setting_unit_list = ['Core', 'GB', 'TB', '台', '台', '台', '台', '片']
 
+# 測試模組
+def testService():
+    data = "*[測試功能]*\n"
+    bot.sendPhoto(chat_id=update.message.chat_id, caption=data, reply_markup=ReplyKeyboardMarkup([
+            ["\U0001F600", "\U0001F600" + "測試", "<img src="https://i.imgur.com/ajMBl1b.jpg" style="zoom:10%" />"],
+            ["![](https://i.imgur.com/ajMBl1b.jpg)"],
+        ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
+
 # collect the AI CV Image recognition
 def getCameraPower():
     data = "*[AI 辨識電錶 狀態回報]*\n"
@@ -706,7 +714,6 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('全部列出', callback_data = "current:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
-        respText = getAirCondiction("a", "current") + "\n" + getAirCondiction("b", "current") + "\n" + getUps("a", "current") + "\n" + getUps("b", "current")
     
     # 冷氣水塔 回覆
     elif (text in ["水塔", "水塔狀態"]):
@@ -738,8 +745,12 @@ def reply_handler(bot, update):
             [InlineKeyboardButton('全部列出', callback_data = "冷氣:" + "全部列出")]
         ]), parse_mode="Markdown")
         return
-    elif (text in ['冷氣_A', '冷氣_a', '冷氣A狀態', '冷氣a狀態', '冷氣a', '冷氣A']): respText = getAirCondiction("a", "all")
-    elif (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): respText = getAirCondiction("b", "all")
+
+    elif (text in ['冷氣_A', '冷氣_a', '冷氣A狀態', '冷氣a狀態', '冷氣a', '冷氣A']): 
+        respText = getAirCondiction("a", "all")
+
+    elif (text in ['冷氣_B', '冷氣_b', '冷氣B狀態', '冷氣b狀態', '冷氣b', '冷氣B']): 
+        respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
     elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
@@ -752,6 +763,7 @@ def reply_handler(bot, update):
                 [InlineKeyboardButton('排風風扇', callback_data = "控制:" + "排風風扇")]
             ]), parse_mode="Markdown")
             return
+
         # 機房 Dashboard 服務列表
         if (text == '服務列表'):
             respText = "*[機房服務列表]*\n"
@@ -771,7 +783,8 @@ def reply_handler(bot, update):
                 respText += getServiceList()
         
         # 每日通報
-        if (text in ["機房輪值", "輪值"]): respText = getRotationUser()
+        if (text in ["機房輪值", "輪值"]): 
+            respText = getRotationUser()
 
         # 設定機房資訊
         if (text == "設定機房\n設備數量"):
@@ -803,6 +816,10 @@ def reply_handler(bot, update):
 
     # 機房 Dashboard 服務檢測 回覆            
     elif (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
+
+    elif (text == "測試"):
+        testService()
+        return
 
     #    print(dir(update.message))
     if (respText != ""): 
