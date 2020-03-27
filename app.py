@@ -647,7 +647,7 @@ def reply_handler(bot, update):
         return
 
     # 所有設備
-    elif (text == '環控設備'): 
+    elif (text in ["環控設備", "環控設備\n\U0001F39B"]): 
         respText = '請選擇 監測設備～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('DL303 工業監測器', callback_data = "device:" + "DL303")],
@@ -664,7 +664,7 @@ def reply_handler(bot, update):
 
     # DL303 + 環境監測 回復
     elif (text in ['DL303', 'dl303']): respText = getDl303("all")
-    elif (text == '溫度'): 
+    elif (text in ["溫度", "溫度\U0001F321"): 
         respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('DL303 工業監測器', callback_data = "temp:" + "DL303")],
@@ -676,7 +676,7 @@ def reply_handler(bot, update):
         ]), parse_mode="Markdown")
         return
         
-    elif (text == '濕度'): 
+    elif (text in ["濕度", "濕度\U0001F4A7"): 
         respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('DL303 工業監測器', callback_data = "humi:" + "DL303")],
@@ -688,7 +688,7 @@ def reply_handler(bot, update):
         
     elif (text == '溫濕度'): respText = getDl303("temp/humi") + "\n" + getAirCondiction("a", "temp/humi") + "\n" + getAirCondiction("b", "temp/humi") + "\n" + getUps("a", "temp") + "\n" + getUps("b", "temp")
     elif (text == '露點溫度'): respText = getDl303("dc")
-    elif (text == 'CO2'): respText = getDl303("co2")
+    elif (text in ["CO2", "CO2\U00002601"): respText = getDl303("co2")
 
     # ET7044 狀態 回復
     elif (text == 'ET7044' or text == 'et7044'): respText = getEt7044("all")
@@ -697,7 +697,7 @@ def reply_handler(bot, update):
     elif (text == '排風扇狀態'): respText = getEt7044("sw2")
 
     # Power Meter + UPS 電流 回覆
-    elif (text == '電流'): 
+    elif (text in ["電流", "電流\U000026A1"]): 
         respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('冷氣空調主機_A', callback_data = "current:" + "冷氣_A")],
@@ -730,7 +730,7 @@ def reply_handler(bot, update):
     elif (text in ['UPS_B', 'UPSB狀態', 'upsb狀態', 'UPSB', 'upsb', 'UpsB', 'Upsb']): respText = getUps("b", "all")
     
     # 冷氣功能 回覆
-    elif (text in ['冷氣狀態', '冷氣']): 
+    elif (text in ['冷氣狀態', '冷氣', '冷氣\U00002744']): 
         respText = '請選擇 冷氣～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('冷氣_A', callback_data = "冷氣:" + "冷氣_A")],
@@ -747,9 +747,9 @@ def reply_handler(bot, update):
         respText = getAirCondiction("b", "all")
 
     # 私密指令處理, 僅限制目前機房管理群 & 開發者使用
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
+    elif (text in ["遠端控制", "遠端控制\n\U0001F579", "機房輪值", "機房輪值\n\U0001F46C", "輪值", "服務列表", "服務列表\n\U0001F4CB", "設定機房"] and update.message.chat_id == devUser_id or update.message.chat_id == group_id):
         # 遠端控制
-        if (text == '遠端控制'): 
+        if (text in ['遠端控制', "遠端控制\n\U0001F579"]): 
             respText = '請選擇所需控制設備～'
             bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton('進風風扇', callback_data = "控制:" + "進風風扇")],
@@ -759,7 +759,7 @@ def reply_handler(bot, update):
             return
 
         # 機房 Dashboard 服務列表
-        if (text == '服務列表'):
+        if (text in ['服務列表', "服務列表\n\U0001F4CB"]):
             respText = "*[機房服務列表]*\n"
             try:
                 serviceList = getServiceList()["service"]
@@ -776,12 +776,12 @@ def reply_handler(bot, update):
             except:
                 respText += getServiceList()
         
-        # 每日通報
-        if (text in ["機房輪值", "輪值"]): 
+        # 機房輪值
+        if (text in ["機房輪值", "機房輪值\n\U0001F46C"]): 
             respText = getRotationUser()
 
         # 設定機房資訊
-        if (text == "設定機房\n設備數量"):
+        if (text == "設定機房", "設定機房\n\U00002699"):
             respText = getDeviceCount()
             respText += "----------------------------------\n"
             respText += '`機房資訊 設定模式開啟～`'
@@ -793,15 +793,15 @@ def reply_handler(bot, update):
             ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
             return
     
-    elif (text in ["遠端控制", "機房輪值", "輪值", "服務列表", "設定機房\n設備數量"]): 
+    elif (text in ["遠端控制", "遠端控制\n\U0001F579", "機房輪值", "機房輪值\n\U0001F46C", "服務列表\n\U0001F4CB", "設定機房", "設定機房\n\U00002699"]): 
         respText = '您的權限不足～, 請在機器人群組內使用。'
         bot.send_message(chat_id=update.message.chat_id, text=respText, parse_mode="Markdown")
         return
         
-    elif (text == "機房資訊"):
+    elif (text in ["機房資訊", "機房資訊\n\U0001F5A5"]):
         respText = getDeviceCount()
 
-    elif (text == '每日通報'): 
+    elif (text in ['每日通報', '每日通報\n\U0001F4C6']): 
         respText = getDailyReport()
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
                 [InlineKeyboardButton("功能列表", callback_data = "daily")]
@@ -809,7 +809,7 @@ def reply_handler(bot, update):
         return
 
     # 機房 Dashboard 服務檢測 回覆            
-    elif (text in ['服務狀態', '服務檢測']): respText = getServiceCheck()
+    elif (text in ['服務狀態', '服務狀態\n\U0001F468\U0000200D\U0001F4BB', '服務檢測']): respText = getServiceCheck()
 
     #    print(dir(update.message))
     if (respText != ""): 
