@@ -664,7 +664,7 @@ def reply_handler(bot, update):
 
     # DL303 + 環境監測 回復
     elif (text in ['DL303', 'dl303']): respText = getDl303("all")
-    elif (text in ["溫度", "溫度\U0001F321"): 
+    elif (text in ["溫度", "溫度\U0001F321"]): 
         respText = '請選擇 監測節點～'
         bot.send_message(chat_id=update.message.chat_id, text=respText, reply_markup = InlineKeyboardMarkup([
             [InlineKeyboardButton('DL303 工業監測器', callback_data = "temp:" + "DL303")],
