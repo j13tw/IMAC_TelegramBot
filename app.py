@@ -874,10 +874,10 @@ def listCommand(bot, update):
 def daily_select(bot, update):
     respText = '輔助鍵盤功能已開啟～'
     bot.sendPhoto(chat_id=update.callback_query.message.chat_id, caption=respText, reply_markup=ReplyKeyboardMarkup([
-            [str(s) for s in device_list[0:4] ],
-            [str(s) for s in device_list[4:8]],
-            [str(s) for s in device_list[8:12]],
-            [str(s) for s in device_list[12:16]]
+            [str(s + e) for s, e in zip(emoji_list[0:4], device_list[0:4])],
+            [str(s + e) for s, e in zip(emoji_list[4:8], device_list[4:8])],
+            [str(s + "\n" + e) for s, e in zip(emoji_list[8:12], device_list[8:12])],
+            [str(s + "\n" + e) for s, e in zip(emoji_list[12:16], device_list[12:16])]
         ], resize_keyboard=True), photo=open('./keyboard.jpg', 'rb'), parse_mode="Markdown")
     return
 
