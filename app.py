@@ -263,11 +263,11 @@ def getDailyReport():
         data += "`資料快取失敗`\n"
         tagOwner = 1
 
-    # if (tagOwner == 1):
-    #     data += "----------------------------------\n"
-    #     data += "*[每日通報資料異常!]*\t"
-    #     data += "[維護人員](tg://user?id="+ str(devUser_id) + ")\n"
-    #     if (broken != 1): data += "*異常模組:* _" + str(dailyReport["error"]) + "_\n"
+    if (tagOwner == 1):
+        data += "----------------------------------\n"
+        data += "*[每日通報資料異常!]*\t"
+        data += "[維護人員](tg://user?id="+ str(devUser_id) + ")\n"
+        if (broken != 1): data += "*異常模組:* _" + str(dailyReport["error"]).replace('_', "-") + "_\n"
     print(data)
     return data
         
