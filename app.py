@@ -268,6 +268,7 @@ def getDailyReport():
         data += "*[每日通報資料異常!]*\t"
         data += "[維護人員](tg://user?id="+ str(devUser_id) + ")\n"
         if (broken != 1): data += "*異常模組:* _" + str(dailyReport["error"]) + "_\n"
+    print(data)
     return data
         
 # test api function, can test the ("message", "photo", "audio", "gif") reply to develope user.
