@@ -208,7 +208,7 @@ def getServiceCheck():
 
     if (tagOwner == 1):
         data += "----------------------------------\n"
-        data += "*[交接服務檢測資料異常!]*\t"
+        data += "*[交接服務檢測資料異常!]*\n"
         if (broken != 1): data += "*異常服務:* _" + str(serviceStatus["error"]) + "_\n"
     return data
 
