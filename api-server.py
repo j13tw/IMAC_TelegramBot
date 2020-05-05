@@ -149,20 +149,21 @@ def serviceList():
             data["error"].append("輪播 Dashboard")
 
         if (not updateService):
-            for x in range(0, len(data["service"])):
-                try:
-                    if (data["service"][x]["name"] != "Kubernetes Dashboard"): r = requests.get(data["service"][x]["url"])
-                    else: r = requests.get(data["service"][x]["url"], verify=False)
-                    if (r.status_code == 200): 
-                        data["service"][x]["status"] = "正常"
-                    else: 
-                        data["service"][x]["name"]["status"] = "異常"
-                        data["error"].append(data["service"][x]["name"])
-                except:
-                    data["service"][x]["status"] = "異常"
-                    data["error"].append(data["service"][x]["name"])
-
-                if (data["service"][x].get("notice") != None):
+            for x in range(len(data["service"])-1, -1, -1):
+                if data["service"][x]["enabled"] == False:
+                    data["service"].pop(x)
+                # try:
+                #     if (data["service"][x]["name"] != "Kubernetes Dashboard"): r = requests.get(data["service"][x]["url"])
+                #     else: r = requests.get(data["service"][x]["url"], verify=False)
+                #     if (r.status_code == 200): 
+                #         data["service"][x]["status"] = "正常"
+                #     else: 
+                #         data["service"][x]["name"]["status"] = "異常"
+                #         data["error"].append(data["service"][x]["name"])
+                # except:
+                #     data["service"][x]["status"] = "異常"
+                #     if (data["service"][x]["enabled"] == True): data["error"].append(data["service"][x]["name"])
+                elif (data["service"][x].get("notice") != None):
                     if (data["service"][x]["notice"].find("帳") >= 0 and data["service"][x]["notice"].find("密") >= 0):
                         data["service"][x]["user"] = data["service"][x]["notice"].split("帳")[1].split(" ")[0]
                         data["service"][x]["pass"] = data["service"][x]["notice"].split("密")[1]
@@ -200,7 +201,7 @@ def serviceCheck():
                         data["service"][x]["status"] = "正常"
                     else: 
                         data["service"][x]["name"]["status"] = "異常"
-                        data["error"].append(data["service"][x]["name"])
+                        if (data["service"][x]["enabled"] == True): data["error"].append(data["service"][x]["name"])
                 except:
                     data["service"][x]["status"] = "異常"
                     data["error"].append(data["service"][x]["name"])
