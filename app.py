@@ -238,12 +238,18 @@ def getDailyReport():
             if ("power" in dailyReport["error"]): 
                 data += "`快取失敗`\n"
             else:
-                data += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))
-                data += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
-                data += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
-                data += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
-                data += "`冷氣水塔功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_tank"]), float(float(dailyReport["water_tank"])/float(dailyReport["total"])*100.0))
-                data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
+                if ("air_condiction_a" in dailyReport["error"]): data += "`冷氣_A 功耗: 0.0 度`\n"
+                else: data += "`冷氣_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_a"]), float(float(dailyReport["air_condiction_a"])/float(dailyReport["total"])*100.0))
+                if ("air_condiction_b" in dailyReport["error"]): data += "`冷氣_B 功耗: 0.0 度`\n"
+                else: data += "`冷氣_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["air_condiction_b"]), float(float(dailyReport["air_condiction_b"])/float(dailyReport["total"])*100.0))
+                if ("ups_a" in dailyReport["error"]): data += "`UPS_A 功耗: 0.0 度`\n"
+                else: data += "`UPS_A 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_a"]), float(float(dailyReport["ups_a"])/float(dailyReport["total"])*100.0))
+                if ("ups_b" in dailyReport["error"]): data += "`UPS_B 功耗: 0.0 度`\n"
+                else: data += "`UPS_B 功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["ups_b"]), float(float(dailyReport["ups_b"])/float(dailyReport["total"])*100.0))
+                if ("water_tank" in dailyReport["error"]): data += "`冷氣水塔功耗: 0.0 度`\n"
+                else: data += "`冷氣水塔功耗: {0:>6.2f} 度 ({1:>4.1f}%)`\n".format(float(dailyReport["water_tank"]), float(float(dailyReport["water_tank"])/float(dailyReport["total"])*100.0))
+                if (dailyReport["total"] == 0): data += "`機房功耗加總: 0.0 度`\n"
+                else: data += "`機房功耗加總: {0:>6.2f} 度`\n".format(float(dailyReport["total"]))
             data += "[[昨日電錶功耗統計]]\n"
             data += "`電錶功耗統計: {0:>6.2f} 度`\n".format(float(cameraPower['today']['power'])-float(cameraPower['yesterday']['power']))
             data += "`電錶統計區間: `\n"
